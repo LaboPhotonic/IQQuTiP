@@ -1,0 +1,149 @@
+
+\chapter{Installation de QuTiP et commandes usuelles}
+\label{sec:QuTiP}
+
+QuTiP (\textbf{Qu}antum \textbf{T}oolbox \textbf{i}n \textbf{P}ython) est un 
+logiciel \emph{libre ou open-source} de calculs d'optique quantique avec des 
+applications en information quantique. C'est un excellent outil d'appropriation 
+et de simulation des concepts fondamentaux de la théorie quantique. Grâce à ce 
+logiciel dont la maîtrise est aisée, l'étudiant peut facilement représenter un 
+état quantique ou un opérateur, calculer une valeur moyenne, simuler l'évolution 
+d'un système, implémenter des algorithmes de l'information quantique.
+
+QuTiP étant rédiger en Python, il est nécessaire, pour utilisant optimale, 
+d'avoir quelques notions de base du langage de programmation Python. Pour 
+cela nous vous conseillons le cours gratuit \emph{Apprenez à programmer 
+en Python} disponible sur le site du zéro \url{
+http://uploads.siteduzero.com/pdf/223267-apprenez-a-programmer-en-python.pdf}. 
+Il est important de souligner que Python est un langage de programmation 
+\textbf{interprété}, c'est-à-dire que les instructions que vous lui envoyez sont 
+transcrites en langage machine au fur et à mesure de leur lecture. Les langages 
+comme le C / C++ ou le fortran sont appelés \textbf{langages compilés} car, 
+avant de pouvoir les exécuter, un logiciel spécialisé se charge de transformer 
+le code du programme en langage machine par la \emph{compilation}. À chaque 
+modification du code, il faut rappeler une étape de compilation.
+ 
+Nous présentons ici les étapes à suivre pour l'installation de QuTiP sous le 
+système d'exploitation libre \textbf{Linux}. Il est à noter que QuTiP fonctionne 
+aussi sous les systèmes d'exploitation \textbf{Mac OS X} et \textbf{Windows}. 
+
+\section{Installation de QuTiP pour Ubuntu 12.04 et plus récente}
+
+Pour commencer, il faut déjà un ordinateur sur lequel est installé une variante 
+la distribution Linux Ubuntu (Ubuntu, Xubuntu, Kubuntu, Lubuntu, etc.). Se 
+connecter à Internet pour télécharger les \emph{paquets} nécessaires\footnote{Il 
+faut aussi préciser qu'il y a deux possibilités d'installer QuTiP : manuellement 
+et automatiquement. Nous allons présenter seulement l'installation automatique 
+pour sa simplicité. Pour l'installation manuel et l'installation sur d'autres 
+systèmes d'exploitation veuillez consulter le manuel de QuTiP \emph{QuTiP : The 
+Quantum Toolbox in Python release 2.2.0} disponible sur le site 
+\url{http://qutip.googlecode.com/files/QuTiP-2.2.0-DOC.pdf}.}
+
+Aller sur le terminal et entrez la commande suivante, pour ajouter le dépôt 
+de QuTiP à la \emph{sourcelist}:\\
+\begin{tt}
+sudo add-apt-repository ppa:jrjohansson/qutip-releases\\
+\end{tt}
+Mettre ensuite cette liste de dépôt grâce à la commande\\
+\begin{tt}
+sudo apt-get update\\
+\end{tt}
+et installer QuTiP avec la commande\\
+\begin{tt}
+sudo apt-get install python-qutip\\
+\end{tt}
+
+Il est recommandé d'installer d'autres paquets afin de compléter l'installation. 
+Pour cela dans votre terminal, tapez les commandes suivantes:\\
+\begin{tt}
+sudo apt-get install texlive-latex-extra\\
+sudo apt-get install python-nose
+\end{tt}
+
+La dernière étape de la procédure consiste à installer une console Python ou 
+interpréteur. A cet effet nous suggérons \texttt{IPython} ou \texttt{bpython} 
+qui permet une bonne complétion. Taper sur le terminal\\
+\texttt{sudo apt-get install ipython}\\
+ou\\
+\texttt{sudo apt-get install bpython}
+
+\section{Vérification de l'installation}
+
+Il est possible de vérifier si votre installation de QuTiP s'est bien dérouler. 
+Le temps de cette vérification est fonction de la puissance de votre ordinateur. 
+Pour vérifier, il faut taper sur terminal les commandes :\\
+\begin{tt}
+ipython \# ou bpython si vous l'avez installé\\
+import qutip.testing as qt\\
+qt.run()
+\end{tt}
+
+Une fois la vérification faite vous pouvez utiliser QuTiP.
+
+\section{Commandes usuelles}
+
+\subsection{Quantum object class}
+Expliquer clairement la notion de Qobj()
+
+\subsection{États et opérateurs}
+Donner ici les Qobj prédéfinis pour les états et les opérateurs qui seront 
+utilisés dans les divers exercices de ce cours.
+
+\subsection{Les attribues d'une classe Qobj}
+
+Expliquer et donner le tableau.
+
+\subsection{Qobj Math}
+
+Expliquer à travers quelques exemples.
+
+\subsection{Fonction opérant sur une classe Qobj}
+
+En plus des attribues, une classe d'objet quantique à des fonctions qui 
+agissent sur les instances Qobj. Les plus usuelles sont:
+
+Donner le tableau et illustrer par quelques exemples.
+
+\section{Manipuler les états et opérateurs}
+
+\subsection{États ket et bra}
+
+Expliquer en prenant des exemples compatibles avec le niveau de compréhension 
+ou de connaissances des étudiants.
+
+\subsection{Qubit}
+
+Exemples simples.
+
+\subsection{Valeurs moyennes}
+
+Exemples simples.
+
+\section{Produit tensoriel et trace partielle}
+
+Présenter tenant compte du niveau de connaissances du cours.
+
+\subsection{Produit tensoriel}
+
+Exemples simples.
+
+\subsection{Trace partielle}
+
+Exemples simples.
+
+\section{Sphère de Bloch}
+
+
+\subsection{Bloch class}
+
+Exemples simples.
+
+\subsection{Bloch3d class}
+
+Exemples simples.
+
+\subsection{Différences entre Bloch and Bloch3d}
+
+
+\section{Évolution temporelle unitaire}
+

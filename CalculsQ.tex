@@ -1,0 +1,2148 @@
+\chapter{Calculs quantiques}
+\label{sec:CalQ}
+\minitoc
+
+\bigskip
+
+Qu'est-ce qu'un calculateur quantique, ou comme on le dit abusivement, un
+ordinateur quantique? Ce chapitre nous permettra d'en acquérir les éléments de
+base à travers les notions de circuits quantiques (\textbf{section
+\ref{sec:CircuitsQ}}), de portes logiques quantiques universelles
+(\textbf{section \ref{sec:PQUniv}}). Pour effectuer des calculs de façon
+automatique, il faut des algorithmes. Bien qu'il n'existe pour le moment que
+très peu d'algorithmes quantiques, elles mettent toutes en exergue la
+supériorité des calculs quantiques par rapport aux calculs classiques. A la
+\textbf{section \ref{sec:DeutJ}}, nous présentons l'un des tous premiers de ces
+algorithmes, l'algorithme de Deutsch-Jozsa. Mais commençons par revisiter la
+notion de calculateur à la \textbf{section \ref{sec:calc}}.
+
+\section{Notion de calculateur}
+\label{sec:calc}
+
+Un état de $n$ bits d'un calculateur classique ou \textbf{registre classique}
+de taille $n$, ne peut stocker, en instant donné, qu'\textbf{un seul entier}
+$i\in[0,2^n-1]$ décrit en notation binaire par%
+\begin{equation}
+i=i_{n-1}2^{n-1}+\cdots+i_12^1+i_02^0=\sum_{m=0}^{n-1}i_{m}2^{m},
+\end{equation}
+où $i_{m}\in[0,1]$. Ainsi, $3$ bits physiques peuvent être préparés dans
+$2^{3}=8$ configurations différentes, représentant les nombres de $0$ à $7$.
+Par exemple, les chaînes binaires%
+\begin{subequations}%
+\begin{align}
+011,\\
+111,
+\end{align}%
+\end{subequations}%
+représentent respectivement les nombres $3$ et $7$.
+
+Un calculateur quantique est une collection de $n$ qubits qui représente un
+\textbf{registre quantique} de taille $n$. L'état de $n$ qubits d'un
+calculateur quantique est%
+\begin{equation}%
+\label{eq:QSuperp}%
+\begin{split}
+\ket{\psi} &  =\sum_{i=0}^{2^n-1}c_{i}\ket{i} \\
+&  =\sum_{i_{n-1}=0}^1\cdots\sum_{i_1=0}^1\sum_{i_0=0}^1c_{i_{n-1},
+\cdots i_1,i_0}\ket{i_{n-1}}\otimes\cdots\otimes\ket{i_1}
+\otimes\ket{i_0} \\
+&  =\sum_{i_{n-1},\cdots i_1,i_0=0}^1c_{i_{n-1},\cdots i_1,i_0}
+\ket{i_{n-1}\cdots i_1i_0}
+\end{split}%
+\end{equation}%
+avec la contrainte (complétude)%
+\begin{equation}
+\sum_{i=0}^{2^n-1}|c_{i}|^2=1.
+\label{eq:Complet2}%
+\end{equation}
+
+Ainsi, en vertu du principe de superposition clairement visible dans l'Eq.
+(\ref{eq:QSuperp}), un registre quantique de $n$ qubits peut être préparé non
+seulement dans l'état $\ket{i} $ de la base de calcul, mais
+aussi dans une superposition d'états et donc stocker $2^n$ nombres, qui
+augmente exponentiellement avec le nombre de qubits. Par conséquent, le
+principe de superposition offre de nouvelles possibilités de calculs comme le
+\textbf{parallélisme} qui permet le calcul en parallèle d'un grand nombre
+d'opérations.
+
+Un état de $n$ qubits d'un calculateur quantique est un vecteur d'état d'un
+espace de Hilbert de $2^n$ dimensions, construit comme produit tensoriel de
+$n$ espaces de Hilbert de $2$ dimensions, une pour chaque qubit. En prenant en
+compte la relation de complétude (\ref{eq:Complet2}) et le fait que l'état de
+tout système quantique n'est définit qu'à un facteur de phase global près sans
+signification physique, l'état d'un calculateur est déterminé par $2(2^n-1)$
+paramètres indépendants. Par exemple, pour $n=2$, un état générique de $2$
+qubits d'un calculateur quantique s'écrit%
+\begin{equation}
+\begin{split}
+\ket{\psi} &  =c_0\ket{0}+c_1\ket{1} +c_2\ket{2} +c_{3}\ket{3} \\
+&  =c_{0,0}\ket{0} \ket{0} +c_{0,1}\ket{0} \ket{1} +c_{1,0}\ket{1} \ket{0}
++c_{1,1}\ket{1}\ket{1} \\
+&  =c_{00}\ket{00} +c_{01}\ket{01}+c_{10}\ket{10} +c_{11}\ket{11}
+\end{split}
+\end{equation}
+
+Dans la suite, $i\in\{0,1\}^n$, i.e., $i$ est une chaîne binaire de taille
+$n$, implique que $\ket{i} $ appartient à l'espace de Hilbert à $2^n$
+dimensions $\mathcal{H}^{\otimes n}$.
+
+Pour effectuer un calcul quantique, il faut effectuer les trois étapes de base
+suivantes (voir la figure \ref{fig:calq}):
+
+\begin{itemize}
+\item La \textbf{préparation} de $n$ qubits dans l'état initial
+$\ket{\psi_{i}(t_0)}$ (input state) au temps $t_0$. Le vecteur d'état
+initial est un vecteur de l'espace de Hilbert à $2^n$ dimensions
+$\mathcal{H}^{\otimes n}$.
+
+\item L'\textbf{implémentation} de la transformation unitaire désirée ou
+souhaitée $U(t,t_0)$ qui agira sur l'état initial en évitant tout interaction
+avec l'environnement, $\ket{\psi_{f}(t)} =U(t,t_0)\ket{\psi_{i}(t_0)} $.
+
+\item La \textbf{mesure} à l'instant $t$ sur les $n$ qubits afin d'obtenir
+l'état final (ouput state).
+\end{itemize}
+
+\begin{figure}[ptbh]
+\[
+\Qcircuit @C=1em @R=0em {
+& \multigate{5}{U(t,t_0)}  & \qw \\
+& \ghost{U(t,t_0)} & \qw \\
+& \ghost{U(t,t_0)} & \qw \\
+& \ghost{U(t,t_0)} & \qw \\
+& \ghost{U(t,t_0)} & \qw \\
+& \ghost{U(t,t_0)} & \qw \\
+ \ustick{t_0} & &\ustick{t}
+}
+\]
+\caption{Schéma de principe d'un calcul quantique: $n$ qubits sont préparés dans
+l'état initial $\ket{0} $. Ils subissent une évolution unitaire dans l'espace
+$\mathcal{H}^{\otimes n}$ de l'instant $t_0$ à l'instant $t$, décrite par un
+opérateur unitaire $U(t,t_0)$ agissant dans $\mathcal{H}^{\otimes n}$. Une
+mesure des qubits est effectuée au temps $t$.}%
+\label{fig:calq}%
+\end{figure}
+
+Il est à noter que l'évolution unitaire $U(t,t_0)$ est \textbf{réversible}:
+connaissant le vecteur d'état au temps $t$, on peut remonter à celui au temps
+$t_0$ par $U^{-}(t,t_0)=U(t_0,t)$.
+
+\medskip\colorbox[gray]{0.8}{
+\parbox[c]{0.9\textwidth}{
+\begin{center}
+\emph{Un calcul quantique est évolution quantique.}
+\end{center}
+}}
+
+\section{Circuits quantiques}
+\label{sec:CircuitsQ}
+
+\subsection{Énergie - information - réversibilité}
+
+L'information, malgré son caractère abstrait est porté par un support physique.
+Il est donc intéressant de se demander s'\emph{\textbf{il est possible de
+calculer sans dissiper de l'énergie}}.
+
+\medskip\colorbox[gray]{0.8}{
+\parbox[c]{0.9\textwidth}{
+\begin{principe}
+\textbf{Landauer.} Chaque fois qu'un bit d'information est effacé, la quantité
+d'énergie dissipée dans l'environnement vaut au moins $k_{B}T\ln2$. De façon
+équivalente, on dit que l'entropie de l'environnement décroît d'au moins de
+$k_{B}\ln2$. $k_{B}$ est la constante de Boltzmann et $T$ est la température
+absolue de l'environnement (ordinateur).
+\end{principe}
+}}\medskip
+
+La valeur $k_{B}T\ln2$ représente donc la limite inférieure théorique de
+l'énergie dissipée d'une porte logique irréversible. Cependant, malgré l'énorme
+réduction de l'énergie dissipée par porte logique tout au long des décennies
+passées du fait des progrès techniques, les ordinateurs actuels dissipent encore
+jusqu'à environ $500k_{B}T$ par bit effacé, en raison de la consommation de
+l'énergie électrique.
+
+\emph{Puisque le principe de Landauer est lié à l'irréversibilité, il est
+légitime de se poser la question de savoir si les opérations logiques
+habituelles peuvent être conduites de façon réversible, et donc sans dissipation
+de l'énergie, afin de transposer au calcul quantique des algorithmes
+classiques\footnote{La plupart des portes logiques classiques, nous le savons,
+sont irréversibles car elles correspondent à un passage de $2$ bits à $1$ bit,
+et l'état final d'un bit ne permet pas de remonter à l'état initial de deux
+bits.}.}
+
+En effet, toute fonction irréversible $f:\{0,1\}^{m}\rightarrow\{0,1\}^n$
+peut être transformée en fonction réversible en définissant une fonction%
+\begin{equation}
+\tilde{f}:\{0,1\}^{m+n}\rightarrow\{0,1\}^{m+n}%
+\end{equation}
+telle que%
+\begin{equation}
+\tilde{f}(x,y)=(x,y\oplus^n f(x)),
+\end{equation}
+où $\oplus^n$ est l'addition modulo $2^n$, $x$ représente $m$ bits lors que
+$y$ et $f(x)$ représentent $n$ bits. Puisque $\tilde{f}$ transforme des entrées
+distinctes en sorties distinctes, elle est une fonction $(m+n)$-bits inversible.
+
+En effet, puisque $f(x)\oplus f(x)=0, \forall f(x)$,
+\begin{equation}
+(x,y)\mapsto(x,y\oplus f(x))\mapsto(x,(y\oplus f(x))\oplus f(x))=(x,y).
+\end{equation}
+Il est donc possible de trouver une porte logique universelle.
+
+Comme la porte \texttt{NAND} et l'opération \texttt{COPY} suffisent à
+construire tous les circuits logiques classiques, la transposition au calcul
+quantique des algorithmes classiques nécessite le remplacement de l'opérateur
+\texttt{NAND} par une opération réversible et de trouver l'équivalent de
+l'opérateur \texttt{COPY} sans entrer en conflit avec le théorème de non clonage
+quantique. La solution de ce problème est l'objet de la \textbf{Section
+\ref{sec:PQUniv}}.
+
+\subsection{Parallélisme quantique}
+
+Dans la notation $\ket{x}$, où le nombre $x$ est un des huit
+nombres (en binaire)%
+\begin{equation}
+\ket{000},\ \ket{001},\ \ket{010},\ \ket{011},\ \ket{100},\ \ket{101} ,\
+\ket{110} ,\ \ket{111} ,
+\end{equation}
+un registre quantique de taille $3$ peut stocker les entiers individuels comme
+$3$ ou $7$%
+\begin{subequations}%
+\label{eq:Qubits1}%
+\begin{align}
+\ket{0} \otimes\ket{1} \otimes\ket{1}  & \equiv\ket{011}\equiv\ket{3} ,\\
+\ket{1} \otimes\ket{1} \otimes\ket{1}  & \equiv\ket{111} \equiv\ket{7} ,
+\end{align}%
+\end{subequations}%
+mais, aussi les stocker simultanément. On parle alors de \textbf{parallélisme
+quantique}. En effet, si au lieu de prendre le premier single-qubit dans l'état
+$\ket{0} $ ou $\ket{1} $, on le prend plutôt dans l'état superposé
+$\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$, alors%
+\begin{equation}
+\frac{1}{\sqrt{2}}(\ket{0} +\ket{1})\otimes\ket{1} \otimes\ket{1} =\frac
+{1}{\sqrt{2}}(\ket{011}+\ket{111})=\frac{1}{\sqrt{2}}(\ket{3} +\ket{7} ).
+\end{equation}
+On peut évidement préparer ce registre de taille $3$ dans une superposition
+d'état des huit entiers, en mettant chaque single-qubit de (\ref{eq:Qubits1})
+dans l'état superposé $\frac{1}{\sqrt{2}}(\ket{0} +\ket{1})$:%
+\begin{equation}
+\begin{split}
+&\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})\otimes\frac{1}{\sqrt{2}}(\ket{0}
++\ket{1})\otimes\frac{1}{\sqrt{2}}(\ket{0}+\ket{1} )\\
+&  =\frac{1}{\sqrt{2^{3}}}(\ket{000}+\ket{001}+\ket{010}+\ket{011}
++\ket{100}+\ket{101} +\ket{110}+\ket{111})\\
+&  =\frac{1}{\sqrt{2^{3}}}(\ket{0} +\ket{1} +\ket{2} +\ket{3}
++\ket{4} +\ket{5} +\ket{6}+\ket{7})
+=\frac{1}{\sqrt{2^{3}}}\sum_{x=0}^{2^{3}-1}\ket{x}
+\end{split}
+\end{equation}
+
+Ces préparations, et toutes autres manipulations sur les qubits, doivent être
+effectués par des opérations unitaires et donc des portes réversibles.
+L'opération unitaire la plus générale est une transformation dans l'espace de
+Hilbert de dimension $2^n$ des $n$-qubits, $\mathcal{H}^{\otimes n}$, et la
+porte logique la plus générale est une matrice $2^n\times2^n$ opérant dans
+$\mathcal{H}^{\otimes n}$.
+
+On appellera
+\begin{itemize}
+\item \textbf{porte logique quantique}, un dispositif qui réalise une
+opération unitaire fixe sur un qubit donné, pendant une période de temps donnée;
+
+\item \textbf{réseau ou circuit quantique}, un dispositif constitué de portes
+logiques quantiques dont les séquences de calculs sont synchronisées dans le
+temps.
+\begin{itemize}
+\item La \textbf{\emph{taille du circuit}} est le nombre de portes logiques
+quantiques qu'il contient.
+\item La \textbf{\emph{largeur du circuit}} est le nombre de fils qu'il
+contient.
+\end{itemize}
+\end{itemize}
+
+\medskip\colorbox[gray]{0.8}{
+\parbox[c]{0.9\textwidth}{
+\emph{Si $f:\{0,1\}^n\mapsto \{0,1\}^{m}$ est calculable
+par un circuit réversible de $p$ portes et de largeur $w$ alors il est
+calculable \textbf{proprement} par un circuit réversible de $2p + m$ portes et
+de largeur $w + m$.}
+}}
+
+\subsection{Portes single-qubit}
+
+\emph{Les opérations sur un single-qubit (1-qubit) sont décrites par des
+matrices unitaires $2\times2$. Les plus utilisées sont les matrices de Pauli,}
+\texttt{X, Y, Z}\emph{, la porte de} \texttt{Walsh-Hadamard} \emph{et la porte}
+\texttt{Phase-Shift}.
+
+\subsubsection{Porte de \texttt{Walsh-Hadamard}}
+
+La \textbf{porte de} \texttt{Walsh-Hadamard}, ou de \texttt{Walsh-Hadamard}
+simplement, définie par la matrice%
+\begin{equation}
+\mathtt{W}=\frac{1}{\sqrt{2}}\begin{pmatrix}
+1 & 1\\
+1 & -1
+\end{pmatrix},
+\label{eq:MHw}%
+\end{equation}
+permet de transformer les états de base $\{\ket{0},\ket{1}\}$ en état
+superposés,%
+\begin{subequations}%
+\begin{align}
+\mathtt{W}\ket{0}  &  =\frac{1}{\sqrt{2}}(\ket{0}+\ket{1} ),\\
+\mathtt{W}\ket{1}  &  =\frac{1}{\sqrt{2}}(\ket{0}-\ket{1} ),
+\end{align}%
+\end{subequations}%
+soit sous forme compacte,
+\begin{equation}
+\mathtt{W}\ket{k}=\frac{1}{\sqrt{2}}(\ket{0}+(-1)^{k}\ket{1})
+=\frac{1}{\sqrt{2}}((-1)^{k}\ket{k} +\ket{1-k}),\ k=\{0,1\},
+\end{equation}
+ou schématiquement par le diagramme
+\[
+\Qcircuit @C=1em @R=.7em {
+ \lstick{\ket{k}} & \gate{W}&
+\rstick{\frac{1}{\sqrt{2}}((-1)^{k}\ket{k}+\ket{1-k})} \qw
+}
+\]
+
+\medskip\colorbox[gray]{0.8}{
+\parbox[c]{0.9\textwidth}{
+\emph{Comme $\mathtt{W}^2=\mathbb{I}$, la transformation inverse $\mathtt{W}
+^{-1}=\mathtt{W}$. La forme de la matrice (\ref{eq:MHw}) montre que $\mathtt{W}$
+est hermitien.}
+}}
+\medskip
+
+Le diagramme ci-dessous représente un circuit quantique de taille $3$ qui
+affecte la transformation de \texttt{Walsh-Hadamard} à $3$ single-qubits,
+$\mathtt{W}^{\otimes3}\ket{0}\ket{0}\ket{0}=\mathtt{W}\ket{0}\otimes\mathtt{W}
+\ket{0}\otimes\mathtt{W}\ket{0}$:
+
+\hspace{6em}\Qcircuit @C=1em @R=.7em {
+\lstick{\ket{0}}  &  \gate{W} & \rstick{\frac{1}{\sqrt{2}}(\ket{0} +\ket{1})}
+\qw & \\
+\lstick{\ket{0}}  &  \gate{W} & \rstick{\frac{1}{\sqrt{2}}(\ket{0} +\ket{1})
+ \mapsto\frac{1}{\sqrt{2^{3}}}(\ket{0}
++\ket{1}+\ket{2}+\ket{3}+\ket{4}+\ket{5}+\ket{6}+\ket{7})} \\
+\lstick{\ket{0}}  &  \gate{W} & \rstick{\frac{1}{\sqrt{2}}(\ket{0} +\ket{1})}
+\qw &\\
+}
+\medskip
+
+Le résultat (\emph{output}) est une superposition de tous les huit entiers, de
+$0$ à $7$. Si les $3$ single-qubits sont initialement dans un autre état que
+$\ket{000}$, le résultat de leur transformation par \texttt{Walsh-Hadamard} est
+une superposition de tous les huit entiers, de $0$ à $7$, mais avec la moitié
+signée positivement. Par exemple,
+\begin{equation}
+\mathtt{W}^{\otimes3}\ket{101}=\frac{1}{2^{3/2}}(\ket{0}-\ket{1}+\ket{2}
+-\ket{3} +\ket{4} -\ket{5} +\ket{6} -\ket{7})
+\end{equation}
+
+En général, si initialement on a un registre de taille $n$ dans un état
+$y\in\{0,1\}^n$, alors
+\begin{equation}
+\mathtt{W}^{\otimes n}\ket{y}=\frac{1}{\sqrt{2^n}}\sum_{x=0}^{2^n-1}(-1)^{yx}
+\ket{x}=\frac{1}{\sqrt{2^n}}\sum_{x=0}^{2^n-1}e^{i\pi yx}\ket{x},
+\end{equation}
+où le produit de $y=(y_0y_{n-2}\cdots y_1y_0)$ et de $x=(x_{n-1}x_{n-2}\cdots
+x_1x_0)$ est fait bit par bit,
+\begin{equation}
+yx=(y_0x_{n-1}+y_{n-2}x_{n-2}+\cdots+y_1x_1+y_0x_0).
+\end{equation}
+
+Si l'on prend $\ket{0_{m}}$ comme état initial du registre de résultats, alors%
+\begin{equation}
+U\ket{x\otimes0_{m}} =\ket{x\otimes f(x)}.
+\end{equation}
+Si on applique $\mathtt{W}$ sur le registre de données dans l'état
+$\ket{0_{n}}$ avant
+$U$, le vecteur d'état dans l'état final sera par linéarité%
+\begin{equation}
+\ket{\psi_{fin}}=U\ket{(\mathtt{W}0_{n})\otimes0_{m}}=\frac{1}{\sqrt{2^n}}
+\sum_{x=0}^{2^n-1}\ket{x\otimes f(x)} .
+\end{equation}
+Ce vecteur contient en principe $2^n$ valeurs de la fonction $f(x)$ obtenu en
+une seule action de $U$. Par exemple, si $n=100$, il contient $\sim10^{30}$
+valeurs de $f(x)$: c'est le miracle du \textbf{\emph{parallélisme quantique}}.
+Mais une mesure sur $\ket{\psi_{fin}}$ ne donnera qu'une et une seule de ces
+valeurs. Cependant, on peut extraire des informations utiles sur des relations
+entre valeurs de $f(x)$ pour un ensemble de valeurs de $x$ différentes, mais
+bien sûr au prix de la perte de ces valeurs individuelles, alors qu'un
+ordinateur classique devrait évaluer $f(x)$ $2^n$ fois pour obtenir la même
+information. C'est là l'origine de l'accélération exponentielle d'un calcul
+quantique pour la résolution de certains problèmes.
+
+\begin{remark}
+ Les rotations de la sphère de Bloch autour d'un axe arbitraire
+$\boldsymbol{\hat{u}}$, que nous avons étudiée à la \textbf{section
+\ref{sec:SpinArbitr1}} sont une classe importante de transformations unitaires:
+\begin{equation}
+R_{\boldsymbol{\hat{u}}}(\delta)=e^{-i\frac{\delta}{2}(\boldsymbol{\hat{u}}
+\cdot\sigma)}=\mathbb{I}\cos\frac{\delta}{2}-(\boldsymbol{\hat{u}}
+\cdot\sigma)i\sin\frac{\delta}{2}.
+\end{equation}
+
+On note que la porte de \texttt{Walsh-Hadamard} est une opération de rotation
+d'angle $\delta=\pi$ autour de l'axe $\boldsymbol{\hat{u}}^{\prime}
+=(\frac{1}{\sqrt{2}},0,\frac{1}{\sqrt{2}})$. En effet,%
+\begin{equation}
+\mathtt{W}=\frac{1}{\sqrt{2}}(\sigma_{x}+\sigma_{z})
+=-iR_{\boldsymbol{u}^{\prime}}(\pi).
+\end{equation}
+\end{remark}
+
+\begin{remark}
+ L'application de la porte $\mathtt{W}$ à un 1-qubit arbitraire
+$\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$ est un exemple de l'\textbf{interférence
+quantique} qui se manifeste mathématiquement par l'addition des amplitudes de
+probabilités. En effet,
+\begin{equation}
+\mathtt{W}\ket{\psi}=\frac{\alpha+\beta}{2}\ket{0}+\frac{\alpha-\beta}{2}\ket{1}
+.
+\end{equation}
+
+\begin{itemize}
+ \item La probabilité d'obtenir $\ket{0}$ après une mesure a augmentée par
+\textbf{interférence constructive}:
+\begin{equation}
+ \alpha\rightarrow\frac{\alpha+\beta}{2}
+\end{equation}
+\item La probabilité d'obtenir $\ket{1}$ après une mesure a diminuée par
+\textbf{interférence destructive}:
+\begin{equation}
+ \alpha\rightarrow\frac{\alpha-\beta}{2}
+\end{equation}
+\end{itemize}
+Si par exemple $\ket{\psi}=\frac{1}{\sqrt{2}}(\ket{0}+(-1)^x\ket{1})$,
+$x\in\{0,1\}$,
+\begin{equation}
+\ket{\psi}=\frac{1+(-1)^x}{2}\ket{0}+\frac{1+(-1)^x}{2}\ket{1}.
+\end{equation}
+Pour $x=0$, on a
+\begin{equation}
+ \mathtt{W}\left(\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})\right)=\ket{0}.
+\end{equation}
+Ainsi, par interférence constructive, la mesure de $\ket{0}$ est certaine.
+Alors que par interférence destructive, on a aucune chance de trouver $\ket{1}$
+la mesure.
+\end{remark}
+
+\begin{exercise}
+ En utilisant $\mathtt{W}=\frac{1}{\sqrt{2}}(\mathtt{X}+\mathtt{Z})$ et les
+propriétés des matrices de Pauli, montrer que  $\mathtt{W}^2=\mathbb{I}$,
+$\mathtt{W}\mathtt{X}\mathtt{W}=\mathtt{Z}$ et
+$\mathtt{W}\mathtt{Z}\mathtt{W}=\mathtt{X}$.
+\end{exercise}
+
+
+\subsubsection{Porte \texttt{Phase-Shift}}
+
+La \textbf{porte \texttt{Phase-Shift}} définie par la matrice%
+\begin{equation}
+R_{z}(\delta)=\begin{pmatrix}
+1 & 0\\
+0 & e^{i\delta}
+\end{pmatrix},
+\end{equation}
+et symboliquement représentée par le diagramme de la figure
+\ref{fig:PhaseShift}, laisse inchangée l'état de base $\ket{0} $ et change la
+phase globale de l'état $\ket{1} $, $e^{i\delta}\ket{1}$.
+\begin{figure}[ptbh]
+\begin{minipage}[c]{.48\linewidth}
+\[
+\Qcircuit @C=1em @R=.4em {
+\lstick{\ket{k}} & \qw & \gate{R_z(\delta)} \qw & \qw &
+\rstick{e^{ik\delta}\ket{k}} \qw
+}
+\]
+\caption{Représentation schématique de l'action de la porte
+\texttt{Phase-Shift} sur un single-qubit dans l'état $\ket{k}, \ k=\{0,1\}$.}%
+\label{fig:PhaseShift}%
+\end{minipage}
+\hfill\begin{minipage}[c]{.48\linewidth}
+\[
+\Qcircuit @C=1em @R=.2em {
+\lstick{\ket{0}} & \gate{W} & \gate{R_z(\theta)}\qw & \gate{W}&
+\gate{R_z(\frac{\pi}{2}+\varphi)} \qw & \rstick{\ket{\psi}} \qw
+}
+\]
+\caption{Construction du single-qubit générique
+$\ket{\psi}=\cos\frac{\theta}{2}\ket{0}+e^{i\varphi}\sin\frac{\theta}{2}\ket{1}$
+à partir single-qubit $\ket{0} $.}
+\label{fig:SQbitGener}%
+\end{minipage}
+\end{figure}
+
+La porte de \texttt{Walsh-Hadamard} et la porte \texttt{Phase-Shift} peuvent
+être combinées pour construire le circuit de taille $4$ de la figure
+\ref{fig:SQbitGener}, qui génère, au facteur de phase globale
+$e^{i\frac{\theta}{2}}$ près, le single-qubit générique
+\begin{equation}
+\ket{\psi}=\cos\frac{\theta}{2}\ket{0}+e^{i\varphi}\sin\frac{\theta}{2}\ket{1} .
+\label{eq:SQbitGener}
+\end{equation}
+
+Ce circuit quantique s'écrit vectoriellement sous la forme\footnote{Le diagramme
+se lit de gauche à droite alors que le produit d'opérateurs se lit de droite à
+gauche.}
+\begin{equation}
+R_{z}(\frac{\pi}{2}+\varphi)\mathtt{W}R_{z}(\theta)\mathtt{W}\ket{0}
+=e^{i\frac{\theta}{2}}(\cos\frac{\theta}{2}\ket{0}
++e^{i\varphi}\sin\frac{\theta}{2}\ket{1}).
+\end{equation}
+
+\medskip\colorbox[gray]{0.8}{
+\parbox[c]{0.9\textwidth}{
+\emph{Conséquemment, la porte de \texttt{Walsh-Hadamard} et la porte
+\texttt{Phase-Shift} suffisent pour construire \textbf{toute} opération
+unitaire sur un single-qubit.}
+}}\medskip
+
+Et d'un manière générale, ces deux portes peuvent être utilisées pour
+transformer l'état initial $\ket{0_1} \ket{0_2} \ldots\ket{0_{n}}$ d'un
+registre de $n$ qubits en n'importe quel état de type $\ket{\psi_1}
+\ket{\psi_2}\ldots\ket{\psi_{n}} $, où $\ket{\psi_{i}} $ est un état superposé
+arbitraire de $\ket{0}$ et $\ket{1}$. Ce sont ces états $n$-qubits qu'on appelle
+\textbf{états produit tensoriel ou état séparables}.
+
+Le tableau (\ref{tab:PorteUnit}) présente les portes unitaires single-qubit les
+plus usuelles.
+\begin{table}[htbp]
+\centering
+\begin{tabular}
+[c]{|l|p{6cm}|l|}\hline
+\rowcolor[gray]{.8}\textbf{Nom} & \textbf{Diagramme} & \textbf{Matrice dans}
+$\{\ket{0},\ket{1}\}$\\\hline
+\texttt{Walsh-Hadamard} $\mathtt{W}$ & \hspace*{1em} \mbox{\Qcircuit @C=1em
+@R=.7em {
+\lstick{\ket{k}} & \gate{W} &
+\rstick{\frac{1}{\sqrt{2}}((-1)^{k}\ket{k}+\ket{1-k})} \qw
+}} & \multicolumn{1}{|c|}{$\frac{1}{\sqrt{2}}\begin{pmatrix}1 & 1\\1 & -1
+\end{pmatrix}$}\\\hline
+\texttt{Pauli X} & \hspace*{1em} \mbox{\Qcircuit @C=1em @R=.7em {
+\lstick{\ket{k}} & \gate{X} & \rstick{\ket{1-k}}\qw
+}} & \multicolumn{1}{|c|}{$\begin{pmatrix}0 & 1\\1 & 0
+\end{pmatrix}$}\\\hline
+\texttt{Pauli Y} & \hspace*{1em}  \mbox{\Qcircuit @C=1em @R=.7em {
+\lstick{\ket{k}} & \gate{Y} & \rstick{i(-1)^{k}\ket{1-k}}\qw
+}}  & \multicolumn{1}{|c|}{$\begin{pmatrix}0 & -i\\i & 0
+\end{pmatrix}$}\\\hline
+\texttt{Pauli Z} & \hspace*{1em}  \mbox{\Qcircuit @C=1em @R=.7em {
+\lstick{\ket{k}} & \gate{Z} & \rstick{(-1)^{k}\ket{k}}\qw
+}}  & \multicolumn{1}{|c|}{$\begin{pmatrix}1 & 0\\0 & -1
+\end{pmatrix}$}\\\hline
+\texttt{Phase} & \hspace*{1em}  \mbox{\Qcircuit @C=1em @R=.7em {
+\lstick{\ket{k}} & \gate{S} & \rstick{(i)^{k}\ket{k}}\qw
+}}  & \multicolumn{1}{|c|}{$\begin{pmatrix}1 & 0\\0 & i
+\end{pmatrix}$}\\\hline
+\texttt{Phase-Shift} & \hspace*{1em}  \mbox{\Qcircuit @C=1em @R=.7em {
+\lstick{\ket{k}} & \gate{R_z(\delta)} & \rstick{e^{ik\delta}\ket{k}}\qw
+}}  & \multicolumn{1}{|c|}{$\begin{pmatrix}1 & 0\\0 & e^{ik\delta}
+\end{pmatrix}$}\\\hline
+\end{tabular}
+\caption{Représentation symbolique et matricielle des portes unitaires les plus
+usuelles.}
+\label{tab:PorteUnit}%
+\end{table}%
+
+\begin{exercise}
+On considère les états $\ket{0} $ et $\ket{1}$ orthonormés, élément de l'espace
+de Hilbert $\mathcal{H}$.
+
+\begin{enumerate}
+\item On appelle opérateur de \texttt{Hubbard}, les opérateurs $X^{ik}$ $(
+i,k=1,2)$ dont les matrices sont carrées et ont un élément de matrice unité à
+l'intersection de la $i$-ième ligne et de la $k$-ième colonne. Les autres
+éléments de matrices sont nuls. En notation de Dirac,
+\begin{equation}
+X^{ik}=\ket{i-1}\bra{k-1}.
+\end{equation}
+
+\begin{enumerate}
+\item Écrire en notation de Dirac les quatre opérateurs $X^{ik}$ et donner leur
+forme matricielle.
+
+\item Évaluer $X^{12}\ket{1} $ et $X^{21}\ket{0}$ et conclure.
+
+\item Donner l'expression générale de la multiplication de deux opérateurs
+$X^{ik}$, $X^{ik}X^{mn}$.
+\end{enumerate}
+
+\item On définit l'opérateur porte logique \texttt{NOT} par%
+\begin{equation}
+\mathtt{NOT}=X^{12}+X^{21}.
+\end{equation}
+
+\begin{enumerate}
+\item Exprimer \texttt{NOT} en notation de Dirac et sous forme matricielle.
+
+\item Vérifier que \texttt{NOT} est un opérateur hermitien et unitaire.
+
+\item Évaluer \texttt{NOT}$\ket{1}$ et \texttt{NOT}$\ket{0} $ et conclure.
+
+\item Soit un système représenté par le qubit%
+\begin{equation}
+\ket{\psi}=\alpha\ket{0} +\beta\ket{1},\text{ avec }|\alpha|^2+|\beta|^2=1.
+\end{equation}
+Que représente $|\alpha|^2$ et $|\beta|^2$ avant et après l'action de
+l'opérateur porte logique \texttt{NOT}?
+\end{enumerate}
+\end{enumerate}
+\end{exercise}
+
+\subsection{Portes de contrôle et génération de l'intrication}
+\label{sec:CU}
+
+En général, un registre de taille $n>1$ peut être préparé dans des \textbf{états
+intriqués ou non séparables}. On rappelle que, par exemple pour $n=2$, l'état
+\begin{equation}
+\alpha\ket{00} +\beta\ket{01} =\ket{0}\otimes(\alpha\ket{0}+\beta\ket{}1),
+\end{equation}
+est séparable, en $\ket{\psi_1} =\ket{0}$ et $\ket{\psi_2} =\alpha\ket{0}
++\beta\ket{1} $. Par contre, l'état
+\begin{equation}
+\alpha\ket{00} +\beta\ket{11} \neq \ket{\psi_1}\otimes \ket{\psi_2},
+\end{equation}
+est intriqué ($\alpha, \beta \neq 0$).
+
+Afin d'intriquer au moins deux qubits, il nous faut étendre notre répertoire de
+portes logiques quantiques aux portes logiques 2-qubits qui réalise une
+dynamique conditionnelle. Ces portes sont des \textbf{portes de contrôle} $U$
+qui traduisent quantiquement \texttt{if ( x ) then y := Ux} par
+\begin{equation}
+\ket{x}\ket{y}\mapsto\ket{x}U^{x}\ket{y},
+\label{eq:CU}
+\end{equation}
+qui correspond, pour $x,y\in\{0,1\}$, à
+\begin{subequations}%
+\begin{align}
+\ket{0} \ket{0}  &  \rightarrow\ket{0}\ket{0} \\
+\ket{0} \ket{1}  &  \rightarrow\ket{0}\ket{1} \\
+\ket{1} \ket{0}  &  \rightarrow\ket{1}U\ket{0} \\
+\ket{1} \ket{1}  &  \rightarrow\ket{1}U\ket{1}
+\end{align}%
+\end{subequations}%
+Usuellement, on l'appelle porte \texttt{Controlled-U ou CU} et on la représente
+sous formes de décomposition spectrale et matricielle, dans la base
+$\{\ket{00},\ket{01},\ket{10},\ket{11}\}$, par
+
+\begin{minipage}[c]{.48\linewidth}
+\[
+\ket{0}\bra0\otimes\mathbb{I}+\ket{1}\bra{1}\otimes U=
+\begin{pmatrix}
+\mathbb{I} & \mathbb{O}\\
+\mathbb{O} & U
+\end{pmatrix}
+\]
+\end{minipage} \hfill\begin{minipage}[c]{.48\linewidth}
+\[
+\Qcircuit @C=1em @R=1.4em {
+\lstick{\ket{x}}  &  \ctrl{1} & \rstick{\ket{x}} \qw \\
+\lstick{\ket{y}}  & \gate{U}   & \rstick{U^{x}\ket{y}} \qw \\
+& \mbox{Porte \texttt{CU}} &
+}
+\]
+\end{minipage}
+où $\mathbb{I},$ $\mathbb{O}$ et $U$ sont des matrices $2\times2$.
+
+Le premier bit $\ket{x}$ agit comme \textbf{contrôle} et sa valeur reste
+inchangée à la sortie. Le second bit $\ket{y}$ est appelé \textbf{cible}.  Sur
+le diagramme, le contrôle est représenté le point noir.
+
+\medskip\colorbox[gray]{0.8}{
+\parbox[c]{0.9\textwidth}{
+\emph{Une porte} \texttt{CU} \emph{applique la transformation identité
+$\mathbb{I}$ au bit cible lorsque le bit de contrôle est dans l'état $\ket{0}$.
+Elle applique la transformation $U$ au bit cible lorsque le bit de contrôle est
+dans l'état $\ket{1}$.}
+}}\medskip
+
+Puisque pour $x\in\{0,1\}$, $U^{2x}=\mathbb{I}$ et les opérateurs \texttt{CU}
+sont unitaires.
+
+Pour une transformation unitaire quelconque $U:\ (x,y)\rightarrow(x,y\oplus
+f(x))$, on a%
+\begin{equation}
+\ket{\psi}=\mathtt{CU}(\alpha\ket{0}+\beta\ket{1})\ket{0} =\alpha\ket{0f(0)}
++\beta\ket{1f(1)},
+\label{eq:PhiCU}%
+\end{equation}
+qui contient \textbf{\emph{à la fois}} l'information sur $f(0)$ et sur $f(1)$.
+
+\subsubsection{Porte \texttt{CNOT}}
+
+La plus populaire des portes \texttt{CU} est la porte \texttt{CNOT} ou
+\texttt{CX} qui opère la transformation décrite par %
+\begin{equation}
+\mathtt{CNOT}=\ket{0}\bra0\otimes\mathbb{I}+\ket{1}\bra{1}\otimes\mathtt{X} =
+\begin{pmatrix}
+\mathbb{I} & \mathbb{O}\\
+\mathbb{O} & \mathtt{X}
+\end{pmatrix}
+=\begin{pmatrix}
+1 & 0 & 0 & 0\\
+0 & 1 & 0 & 0\\
+0 & 0 & 0 & 1\\
+0 & 0 & 1 & 0
+\end{pmatrix},
+\end{equation}
+autrement qui inverse le bit cible $\ket{y}$ lorsque le bit de contrôle
+$\ket{x}$ est dans l'état $\l\ket{1}$. On l'a résume par
+
+\begin{minipage}[c]{.41\linewidth}
+\[
+\texttt{CNOT}\ket{x}\ket{y}=\ket{x}\ket{x\oplus y}, \ x,y\in\{0,1\},
+\]
+\end{minipage} \hfill\begin{minipage}[c]{.25\linewidth}
+\[
+\Qcircuit @C=1em @R=1.4em {
+\lstick{\ket{x}}  &  \ctrl{1} &  \rstick{\ket{x}} \qw \\
+\lstick{\ket{y}}  &  \targ  & \rstick{\ket{x\oplus y}} \qw \\
+& \mbox{Porte \texttt{CNOT}} &
+}
+\]
+\end{minipage}\hfill\begin{minipage}[c]{.25\linewidth}
+\centering
+\begin{tabular}
+[c]{|l|l||l|c|}\hline
+\rowcolor[gray]{.8}$x$ & $y$ & $x$ & $x\oplus y$\\\hline
+0 & 0 & 0 & 0\\\hline
+0 & 1 & 0 & 1\\\hline
+1 & 0 & 1 & 1\\\hline
+1 & 1 & 1 & 0\\\hline
+\end{tabular}
+\end{minipage}
+\medskip
+
+On note sur la table de vérité que lorsque la cible est dans l'état $\ket{1}$,
+la porte \texttt{CNOT} devient la porte \texttt{COPY}:
+\begin{equation}
+\ket{x}\ket{0} \mapsto\ket{x}\ket{x}, \ x\in\{0,1\}.
+\end{equation}
+Par conséquent,
+\begin{equation}
+\mathtt{CNOT}(\alpha\ket{0} +\beta\ket{1})\ket{0} =\alpha\ket{00}
++\beta\ket{11},
+\end{equation}
+qui est non factorisable pour $\alpha,\beta\neq0$. Donc, la porte \texttt{CNOT}
+génère des états intriqués.
+
+On peut penser que cette porte pourrait aussi être utilisée pour copier un état
+superposé comme $\ket{\psi}=\alpha\ket{0}+\beta\ket{1} $, si bien que
+\begin{equation}
+\ket{\psi}\ket{0} \mapsto\ket{\psi}\ket{\psi}.
+\end{equation}
+\emph{\textbf{Ceci n'est pas possible}} en vertu du théorème du non-clonage.
+
+\colorbox[gray]{0.8}{
+\parbox[c]{0.9\textwidth}{
+\begin{theorem}\label{theo:TransU}
+Toute opération unitaire sur $\mathcal{H}^{\otimes n}$ peut se décomposer
+en produit d'opérations unitaires single qubit (1-qubit) et de \texttt{CNOT}.
+\end{theorem}
+}}
+\begin{exercise}
+Implémenter, en utilisant QuTiP, la porte logique quantique $CX$.
+\end{exercise}
+
+\begin{exercise}
+The most general separable state of the two qubits can be written, up to an
+overall phase, as%
+\begin{equation}
+\ket{\psi}=a(\ket{0} +b_1e^{i\varphi_1}\ket{1})\otimes(\ket{0}
++b_0e^{i\varphi_0}\ket{1}),
+\end{equation}
+where $a$ is set to the completure. What conditions should the real
+coefficients $b_0$, $b_1$, $\varphi_0$ and $\varphi_1$ satisfy in
+order that $\mathtt{CNOT}\ket{\psi}$ be entangled?
+\end{exercise}
+
+\begin{remark}
+Il est possible de définir une porte \texttt{CNOT} généralisée, dépendante du
+fait que
+\begin{itemize}
+\item le bit de contrôle est le premier ou le second qubit,
+\item ou encore que la porte agit trivialement\footnote{L'action de la porte
+se réduit à l'identité.} quand le bit de contrôle est $\ket{0}$ ou
+$\beta\ket{1}$.
+\end{itemize}
+
+Ainsi, les trois autres matrices \texttt{CNOT}, leurs représentations
+symboliques et actions sont:%
+\begin{center}%
+\begin{tabular}
+[c]{|p{4.8cm}|p{4.8cm}|p{4.8cm}|}\hline\hline
+$B=\begin{pmatrix}
+0 & 1 & 0 & 0\\
+1 & 0 & 0 & 0\\
+0 & 0 & 1 & 0\\
+0 & 0 & 0 & 1
+\end{pmatrix}$ & $C=\begin{pmatrix}
+1 & 0 & 0 & 0\\
+0 & 0 & 0 & 1\\
+0 & 0 & 1 & 0\\
+0 & 1 & 0 & 0
+\end{pmatrix}$ & $D=\begin{pmatrix}
+0 & 0 & 1 & 0\\
+0 & 1 & 0 & 0\\
+1 & 0 & 0 & 0\\
+0 & 0 & 0 & 1\end{pmatrix}$\\\hline\hline
+\[\Qcircuit @C=1em @R=1.7em {
+& \ctrlo{1} &  \qw \\
+& \targ & \qw
+}
+\]
+&
+\[\Qcircuit @C=1em @R=1.7em {
+ & \targ & \qw \\
+ & \ctrl{-1} & \qw
+}\]
+&
+\[\Qcircuit @C=1em @R=1.7em {
+ & \targ & \qw \\
+ & \ctrlo{-1} & \qw
+}
+\]
+\\\hline
+$B$ inverse le $2^{e}$ qubit lorsque le $1^{er}$ est dans l'état $\ket{0}$ &
+\multicolumn{1}{|p{4.8cm}|}{$C$ inverse le $1^{er}$ qubit lorsque le $2^{e}$ est
+dans l'état $\ket{1} $} & $D$ inverse le $1^{er}$ qubit lorsque le $2^{e}$ est
+dans l'état $\ket{1}$\\\hline
+\end{tabular}%
+\end{center}%
+\end{remark}
+
+\subsubsection{Base de Bell}
+
+\label{sec:BBell}
+
+Comme vu à la \textbf{Section \ref{sec:CU}}, la porte \texttt{CNOT} peut
+générer l'intrication, et en particulier les états intriqués de la base de
+Bell, définis par \ref{eq:BellBase},%
+\begin{subequations}%
+\begin{align}
+\ket{\Phi^{+}}&  =\frac{1}{\sqrt{2}}(\ket{00} +\ket{11} )\\
+\ket{\Phi^{-}}&  =\frac{1}{\sqrt{2}}(\ket{00} -\ket{11} )\\
+\ket{\psi^{+}} &  =\frac{1}{\sqrt{2}}(\ket{01} +\ket{10} )\\
+\ket{\psi^{-}} &  =\frac{1}{\sqrt{2}}(\ket{01} -\ket{10} )
+\end{align}%
+\end{subequations}%
+peuvent être obtenus de la base de calcul $\{\ket{0} ,\ket{1} \}$ à travers le
+circuit
+\[
+\Qcircuit @C=1em @R=1.4em {
+\lstick{\ket{x}} & \gate{W}&  \ctrl{1} &  \multimeasureD{1}{\text{Bell}} \\
+\lstick{\ket{y}}  & \qw & \targ  & \ghost{\text{Bell}}
+}
+\]
+
+Il est facile de vérifier que ce circuit produit les transformations%
+\begin{equation}
+\ket{00} \rightarrow\ket{\Phi^{+}};\ \ket{10} \rightarrow\ket{\Phi^{-}}
+;\ \ket{01} \rightarrow\ket{\psi^{+}};\ \ket{11} \rightarrow\ket{\psi^{-}}.
+\end{equation}
+On note que cette transformation peut être inversée simplement en exécutant le
+circuit de la droite vers la gauche, puisque les portes \texttt{CNOT} et de
+\texttt{Walsh-Hadamard} sont inversibles. Par conséquent, tout état de la base
+de Bell est transformé en état factorisable. Et il est donc possible, via une
+mesure standard dans la base de calcul, d'établir laquelle des quatre états de
+base de Bell était présente au début.
+
+\subsubsection{Porte \texttt{Controlled Phase-Shift}}
+
+La deuxième porte \texttt{CU} usuelle est la porte \texttt{Controlled
+Phase-Shift} définie, dans la base $\{\ket{00},\ket{01},\ket{10},\ket{11}\}$,
+par
+
+\begin{minipage}[c]{.48\linewidth}
+\[
+\mathtt{CPS}(\delta)=\begin{pmatrix}
+\mathbb{I} & \mathbb{O}\\
+\mathbb{O} & \mathtt{R}_{z}(\delta)
+\end{pmatrix}=\begin{pmatrix}
+1 & 0 & 0 & 0\\
+0 & 1 & 0 & 0\\
+0 & 0 & 1 & 0\\
+0 & 0 & 0 & e^{i\delta}
+\end{pmatrix}
+\]
+\end{minipage} \hfill\begin{minipage}[c]{.48\linewidth}
+\[
+\Qcircuit @C=1em @R=1.em {
+\lstick{\ket{x}}  &  \ctrl{1} & \qw & \rstick{\ket{x}}\\
+\lstick{\ket{y}}  &  \gate{R_z(\delta)} &  \qw &
+\rstick{e^{ixy\delta}\ket{y}} \\
+& \mbox{Porte \texttt{CPS}} & \\
+}
+\]
+\end{minipage}
+\medskip
+
+Elle applique la phase global $e^{i\delta}$ lorsque le qubit de contrôle
+$\ket{y}$ est dans l'état $\ket{1} $, $\mathtt{CPS}\ket{11}
+=e^{i\delta}\ket{11}$. La porte \texttt{Controlled Phase-Shift} n'a pas
+d'analogue classique.
+
+\begin{exercise}
+ \begin{enumerate}
+\item Find the action of the $\mathtt{CW}$ gate using (\ref{eq:CU}) when the
+input state are $\ket{01}$ and $\ket{11}$.
+\item Give the matrix representation and the Dirac notation representation of
+$\mathtt{CW}$.
+\end{enumerate}
+\end{exercise}
+
+\begin{footnotesize}
+\begin{solution}
+\begin{enumerate}
+\item From (\ref{eq:CU}) is this easy to obtain
+\begin{subequations}
+\begin{align}
+\mathtt{CW}\ket{01} & =\ket{0}W^0 \ket{1}=\ket{0}\ket{1}=\ket{01},\\
+\mathtt{CW}\ket{11} & =\ket{1}W^1 \ket{1}=\ket{1}\frac{1}{\sqrt{2}}
+(\ket{0}-\ket{1})= \frac{1}{\sqrt{2}}(\ket{10}-\ket{11}).
+\end{align}
+\end{subequations}
+\item The matrix representation and the Dirac notation representation are
+respectively
+\begin{subequations}
+\begin{align}
+ \mathtt{CW} & =\begin{pmatrix}\mathbb{I} & \mathbb{O}\\
+ \mathbb{O} & W\end{pmatrix}
+=\begin{pmatrix} 1 & 0 & 0 & 0\\0 & 1 & 0 & 0\\
+     0 & 0 & \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}}\\
+     0 & 0 & \frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{2}}
+    \end{pmatrix}\\
+\mathtt{CW} &
+=\ket{00}\bra{00}+\ket{01}\bra{01}+\frac{1}{\sqrt{2}}(\ket{10}\bra{10}+
+\ket{10}\bra{11}+\ket{11}\bra{10}-\ket{11}\bra{11}).
+\end{align}
+\end{subequations}
+\end{enumerate}
+\end{solution}
+\end{footnotesize}
+
+\begin{remark}
+La porte \texttt{CZ} ou \texttt{CMINUS} est définie par \texttt{CPS}$(\pi)$
+=\texttt{CZ}, soit%
+
+\begin{minipage}[c]{.5\linewidth}
+ \[
+\mathtt{CZ}=\begin{pmatrix}
+1 & 0 & 0 & 0\\
+0 & 1 & 0 & 0\\
+0 & 0 & 1 & 0\\
+0 & 0 & 0 & -1
+\end{pmatrix}
+\]
+\end{minipage} \hfill\begin{minipage}[c]{.5\linewidth}
+$\Qcircuit @C=1em @R=1.em {
+\lstick{\ket{x}} & \qw  &  \ctrl{1} & \qw & \qw & \rstick{\ket{x}} \\
+\lstick{\ket{y}} & \gate{W} &  \gate{X} & \gate{W} &\qw  &
+\rstick{(-1)^{xy}\ket{y}} \\
+&  & \mbox{Porte \texttt{CZ}} &
+}$
+\end{minipage}
+\medskip
+
+Cette porte est importante en ce sens qu'elle est plus facile à implémenter
+que la porte \texttt{CX}. Comme $\mathtt{CZ}^{-1}=\mathtt{CZ}$, l'action de
+$\mathtt{CZ}$ ne dépend pas de quel qubit est la cible ou le contrôle.
+
+On a les relations suivantes entre \texttt{CX} et
+\texttt{CZ}%
+\begin{subequations}%
+\begin{align}
+\mathtt{CZ}  & =(\mathbb{I}\otimes W)\mathtt{CX}(\mathbb{I}\otimes W)\\
+\mathtt{CX}  & =(\mathbb{I}\otimes W)\mathtt{CZ}(\mathbb{I}\otimes W)
+\end{align}%
+\end{subequations}%
+\end{remark}
+
+\begin{exercise}
+ Montrer que l'équivalence suivante:
+\[
+ \Qcircuit @C=1em @R=1.em {
+& \gate{W}  &  \ctrl{1} & \gate{W} & \qw &
+\push{\rule{.3em}{0em}\equiv\rule{.3em}{0em}}  &&  \gate{X} &  \qw  \\
+ & \gate{W} &  \gate{X} & \gate{W} &\qw  &&&  \ctrl{-1} &\qw
+}
+\]
+\end{exercise}
+
+\begin{remark}
+Nous utiliserons une notation abrégée pour exprimer les opérateurs agissant sur
+un ou plusieurs qubits d'un registre à $n$ qubits.
+\begin{itemize}
+\item Si $U$ agit sur $\mathcal{H}^{\otimes 2}$, alors
+$U_{[i]}=\mathbb{I}^{\otimes i-1}\otimes U\otimes\mathbb{I}^{\otimes n-i}$.
+
+\item Si $U$ agit sur $\mathcal{H}^{\otimes 2}\otimes\mathcal{H}^{\otimes 2}$
+alors $U_{[i,j]}$ agit dans l'ordre sur les qubits $i$ et $j$ sans toucher les
+autres qubits. Par exemple, $\texttt{CNOT}_{[2,1]}\ket{x}\ket{y}=\ket{x\oplus
+y}\ket{y}$.
+\end{itemize}
+
+Cette définition peut se généraliser à un nombre arbitraire de qubits.
+\end{remark}
+
+\section{Portes quantiques universelles}
+\label{sec:PQUniv}
+
+L'intérêt de ces portes universelles est de faciliter l'intégration à partir
+de portes pré-caractérisées.
+
+Nous savons déjà que n'importe quelle fonction peut être synthétisée à l'aide
+de:
+\begin{itemize}
+\item {\texttt{porte NAND, constantes 0 et 1}} dans le cas classique,
+
+\item {\texttt{porte CNOT, portes single-qubit}}
+($\mathtt{W},\mathtt{R}_{\boldsymbol{u}}(\delta)$) dans le cas quantique. On dit
+que (\texttt{CNOT}, $W,R_{\boldsymbol{u}}(\delta)$) forme un ensemble
+\emph{infini} de portes quantiques universelles.
+\end{itemize}
+
+Il existe cependant d'autres ensembles de portes quantiques universelles.
+
+\subsection{Porte \texttt{CV}}
+
+\medskip\colorbox[gray]{0.8}{
+\parbox[c]{0.9\textwidth}{
+\begin{proposition}
+Toute porte quantique qui peut intriquer deux qubits peut être utilisée comme
+porte quantique universelle. Mathématiquement, un choix élégant consiste en une
+paire de portes de \texttt{Walsh-Hadamard} et des portes \texttt{CV}, où
+$\mathtt{V}$ est la matrice%
+\begin{equation}
+\mathtt{V}=\begin{pmatrix}
+1 & 0\\
+0 & i
+\end{pmatrix}
+\equiv \mathtt{R}_{z}(\frac{\pi}{2}).
+\end{equation}
+\end{proposition}
+}}\medskip
+
+Ces deux portes forment un ensemble fini de portes quantiques universelles.
+Les circuits quantiques contenant alors un nombre fini des portes $\mathtt{W}$
+et \texttt{CV} peuvent implémenter toute transformation unitaire sur $n\geq2$
+qubits.
+
+Lorsqu'on applique quatre fois \texttt{CV}, on obtient l'identité, ainsi trois
+applications consécutives de \texttt{CV} donne l'inverse de \texttt{CV} ou
+\texttt{CV}$^{\dagger}$.
+
+On construit une porte \texttt{CNOT} à partir des portes $\mathtt{W}$ et
+\texttt{CV} de la manière suivante:
+\[
+\Qcircuit @C=.5em @R=1.em {
+& \ctrl{1} & \qw & \push{\rule{.3em}{0em}\equiv\rule{.3em}{0em}} & & \qw & \qw &
+\ctrl{1} & \qw &
+\ctrl{1} & \qw & \qw & \qw \\
+& \targ & \qw & & & \gate{W}& \qw &
+\gate{V} & \qw & \gate{V} & \qw & \gate{W}& \qw
+}
+\]
+
+On montre que toute matrice $2\times2$ unitaire $U$, telle que
+$U=\mathtt{V}^2$, peut être simulée par le circuit
+\[
+\Qcircuit @C=.5em @R=1.em {
+& \ctrl{1} & \qw & & & \qw & \ctrl{1} & \qw &
+\ctrl{1} & \ctrl{2} & \qw\\
+& \ctrl{1} & \qw &
+\push{\rule{.3em}{0em}\equiv\rule{.3em}{0em}} & &
+\ctrl{1} & \targ & \ctrl{1} & \targ & \qw &
+\qw\\
+& \gate{U} & \qw & & & \gate{V} & \qw &
+\gate{V^\dag} & \qw & \gate{V} & \qw\\
+& & & & & & \mbox{Construction de Sleator-Weinfurter}
+}
+\]
+
+Il est noter que
+\begin{equation}
+\texttt{CCU}\ket{xyz}=\ket{xy}U^{xy}\ket{z}.
+\end{equation}
+
+\subsection{Porte de TOFFOLI}
+
+Les portes $\mathtt{W}$ et \texttt{CV} permettent aussi de construire une porte
+fort utile, à trois bits d'entrée et de sortie, appelée de \texttt{TOFFOLI} ou
+porte \texttt{Controlled-Controlled-NOT (CCNOT, C$^2$NOT)}.
+\[
+\Qcircuit @C=.5em @R=1.em {
+& \ctrl{1} & \qw & & & \qw & \qw & \ctrl{1} & \qw &
+\ctrl{1} & \ctrl{2} & \qw & \qw &\qw \\
+& \ctrl{1} & \qw &
+\push{\rule{.3em}{0em}\equiv\rule{.3em}{0em}} & &
+\qw & \ctrl{1}  &\targ & \ctrl{1} & \targ & \qw &
+\qw & \qw &\qw \\
+& \targ & \qw & & & \gate{W}& \gate{V} & \qw &
+\gate{V^\dag} & \qw & \gate{V} & \qw & \gate{W}& \qw \\
+& & & & &&&\mbox{Implémentation de la porte de \texttt{TOFFOLI}} &
+}
+\]
+
+Cette porte, dont les deux bits de contrôle $x$ et $y$ restent inchangés alors
+que le bit cible $z$ est inversé lorsque les deux bits de contrôle sont à $1$,
+c'est-à-dire $z^{\prime}=z\oplus xy$, est représentée par la table de vérité
+suivante:
+
+\begin{minipage}[c]{.31\linewidth}
+\[
+\Qcircuit @C=1.em @R=1.4em {
+\lstick{\ket{x}} & \ctrl{1} & \rstick{\ket{x}} \qw \\
+\lstick{\ket{y}} & \ctrl{1} & \rstick{\ket{y}} \qw \\
+\lstick{\ket{z}} & \targ & \rstick{\ket{z\oplus x\wedge y}} \qw \\
+& \mbox{Porte de \texttt{TOFFOLI}}
+}
+\]
+\end{minipage} \hfill\begin{minipage}[c]{.65\linewidth}
+\centering
+\begin{tabular}
+[c]{|l|l|l|l||l|l|c|}\hline
+\rowcolor[gray]{.8} N$^\circ$& $x$ & $y$ & $z$ & $x$ & $y$ & $z\oplus x\wedge
+y$\\\hline
+1&0 & 0 & 0 & 0 & 0 & 0\\\hline
+2&0 & 0 & 1 & 0 & 0 & 1\\\hline
+3&0 & 1 & 0 & 0 & 1 & 0\\\hline
+4&0 & 1 & 1 & 0 & 1 & 1\\\hline
+5&1 & 0 & 0 & 1 & 0 & 0\\\hline
+6&1 & 0 & 1 & 1 & 0 & 1\\\hline
+7&1 & 1 & 0 & 1 & 1 & 1\\\hline
+8&1 & 1 & 1 & 1 & 1 & 0\\\hline
+\end{tabular}
+\end{minipage}
+\medskip
+
+La porte \texttt{CCNOT} nous donne la connectivité logique nécessaire à
+l'arithmétique.
+\begin{itemize}
+\item Lorsque le qubit cible $\ket{z}$ est dans l'état $\ket{0}$ (lignes 1, 3,
+5, 7), la porte de \texttt{CCNOT} effectue l'opération \texttt{AND}
+\begin{equation}
+\texttt{CCNOT}\ket{x}\ket{y}\ket{0}=\ket{x}\ket{y}\ket{x\wedge y}.
+\end{equation}
+
+\item Lorsque le qubit cible $\ket{z}$ est dans l'état $\ket{1}$ (lignes 2, 4,
+6, 7), la porte de \texttt{CCNOT} effectue l'opération \texttt{NAND}
+\begin{equation}
+\texttt{CCNOT}\ket{x}\ket{y}\ket{1}=\ket{x}\ket{y}\ket{x\barwedge y}.
+\end{equation}
+
+\item Lorsque le premier qubit de contrôle $\ket{x}$ est dans l'état $\ket{1}$
+(lignes 5-8), la porte de \texttt{CCNOT} effectue l'opération \texttt{CNOT}
+\begin{equation}
+\texttt{CCNOT}\ket{1}\ket{y}\ket{z}=\ket{1} \ket{y}\ket{z\oplus y}.
+\end{equation}
+
+\item Lorsque le premier qubit de contrôle $\ket{x}$ est dans l'état $\ket{1}$
+et le qubit cible $\ket{z}$ est dans l'état $\ket{0}$ (lignes 5 et 7), la porte
+de \texttt{CCNOT} effectue l'opération \texttt{COPY}
+\begin{equation}
+\texttt{CCNOT}\ket{1}\ket{y}\ket{0}=\ket{1}\ket{y}\ket{y}.
+\end{equation}
+\end{itemize}
+
+Ainsi donc, avec la porte de \texttt{CCNOT}, on peut reproduire de façon
+réversible tous les circuits logiques classiques.
+
+\medskip\colorbox[gray]{0.8}{
+\parbox[c]{0.9\textwidth}{
+\emph{La porte de \texttt{CCNOT} est une porte universelle pour toutes
+les opérations réversibles de la logique booléenne.}
+}}
+
+De ce qui précède, il apparaît que les portes logiques irréversibles comme
+\texttt{AND} et \texttt{OR} peuvent être transformées en portes réversibles.
+Cependant, le prix à payer est la production d'un bit ou de plusieurs
+\textbf{bits résiduels} qui ne peuvent être re-utilisés pour le calcul. Ils
+sont plutôt utiles pour le stockage de l'information à des fins de
+réversibilité. Par exemple, lorsque dans la porte \texttt{CCNOT} $z=1$, on a
+$z^{\prime}=x\wedge y$ et deux bits résiduels, $x^{\prime}=x$ et $y^{\prime
+}=y$. On peut penser que de l'énergie est nécessaire pour effacer ces
+résiduels et annuler l'effet avantageux de la réversibilité. Ce n'est point le
+cas puisque d'après Bennett, on peut effectuer le calcul ou l'opération voulu,
+imprimer le résultat et ensuite faire l'opération inverse, en utilisant à
+nouveau les portes logiques, afin de retrouver l'état initial du calculateur.
+Conséquemment, les bits résiduels reviennent à leur état initial sans dépense
+d'énergie.
+
+\begin{exercise}
+Construct the \texttt{NOT} and \texttt{OR} gates from \texttt{CCNOT} gate.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Additionneur quantique.} Donner les expressions et les tables de vérité
+de $S$ et $C$ du circuit suivant:
+\[
+\Qcircuit @C=1.em @R=1.4em {
+\lstick{\ket{x}} & \ctrl{1} & \ctrl{1} & \rstick{\ket{x}} \qw \\
+\lstick{\ket{y}} & \ctrl{1} & \targ & \rstick{\ket{S}} \qw \\
+\lstick{\ket{0}} & \targ & \qw & \rstick{\ket{C}} \qw
+}
+\]
+\end{exercise}
+
+\subsection{Resumé}
+
+On retient que
+
+\medskip\colorbox[gray]{0.8}{
+\parbox[c]{0.9\textwidth}{
+\begin{itemize}
+\item \emph{Pour toute rotation $U$ à un qubit, l'opération $\texttt{CU}$ peut
+être décomposée en portes single-qubit et une porte \texttt{CNOT};}
+\item \emph{La porte \texttt{CCNOT} peut être implémentée en utilisant les
+portes \texttt{CNOT} et de \texttt{Walsh-Hadamard};}
+\item \emph{Toute porte \texttt{C$^{k}$-U}, $k>2$, peut être décomposée
+en portes de \texttt{CCNOT} et en portes \texttt{CU};}
+\item \emph{Une opération unitaire générique $U^{(n)}$ agissant dans l'espace
+$\mathcal{H}^{\otimes n}$ peut être décomposée au moyen des portes
+\texttt{C}$^{k}$-U}.
+\end{itemize}
+}}
+
+De façon réductrice, on peut dire qu'il suffit de savoir réaliser les rotations
+single-qubits et des \texttt{CNOT} pour fabriquer le calculateur quantique!
+
+Mais pourquoi donc est-ce si difficile? Parce que
+
+\begin{itemize}
+\item Il faut pouvoir agir sur chaque qubit séparément des autres;
+
+\item Il faut pouvoir intriquer n'importe quelle paire de qubits;
+
+\item Chaque opération doit être très précise;
+
+\item Le calcul doit être effectué rapidement (\textbf{\emph{décohérence}}).
+\end{itemize}
+
+\subsection{Évaluation quantique d'une fonction}
+
+Pour évaluer une fonction $f:\{0,1\}^n\rightarrow\{0,1\}^{m}$, on a besoin
+d'au moins deux registres. Le premier, le registre de données (\emph{input
+register}) de taille $n$ pour stocker les arguments $x$ de la fonction $f$, le
+second, le registre de résultat (\emph{output register}) de taille $m$ pour
+stocker les valeurs de $f(x)$. La fonction d'évaluation est une évolution
+unitaire des deux registres,%
+\begin{equation}
+\ket{x,y} \longmapsto\ket{x,(y+f(x))\operatorname{mod}2^{m}},\ y\in\{0,1\}^{m}.
+\end{equation}
+Par exemple, le circuit calculant la fonction%
+\begin{equation}%
+\begin{array}
+[c]{c}%
+f:\{0,1\}^2\rightarrow\{0,1\}^{3}\\
+x\rightarrow f(x)=x^2%
+\end{array}
+\end{equation}
+agit ainsi qu'il suit%
+\begin{equation}%
+\begin{array}
+[c]{ccc}%
+\ket{00} \ket{000}\longmapsto\ket{00}\ket{000} &  & \ket{10}
+\ket{000}\longmapsto\ket{01}\ket{100}\\
+\ket{01} \ket{000}\longmapsto\ket{01}\ket{001} &  & \ket{11}
+\ket{000}\longmapsto\ket{11}\ket{001}
+\end{array}
+\end{equation}
+On peut l'écrire sous la forme%
+\begin{equation}
+\ket{x,0} \longmapsto\ket{x,x^2\operatorname{mod}2^{3}}.
+\end{equation}
+Comme $3^2\operatorname{mod}2^{3}=1$, on écrit $\ket{11}
+\ket{000}\longmapsto\ket{11}\ket{001}$.
+
+En réalité, pour ce genre d'opérations, on a aussi besoin d'un troisième
+registre qui stocke initialement dans l'input des qubits à l'état zéro et
+retourne des qubits à l'état zéro dans l'output, mais qui ont des valeurs
+non-nulles durant le calcul.
+
+Ce qui rend intéressant l'évaluation quantique d'une fonction est son action
+sur la superposition d'état des différents inputs $x$. Par exemple,%
+\begin{equation}
+\sum_{x}\ket{x,0} \longmapsto\sum_{x}\ket{x,f(x)},
+\end{equation}
+produit $f(x)$ pour $x$ dans un cycle. Le bémol est que nous ne pouvons les
+avoir toutes dans l'état intriqué $\sum_{x}\ket{x,f(x)} $ puisque tout bit
+obtenu par mesure sur le premier registre donnera une valeur particulière
+$x^{\prime}\in\{0,1\}^n$ et le deuxième registre se trouvera donc avec la
+valeur $f(x^{\prime})\in\{0,1\}^{m}$.
+
+\section{Algorithme de Deutsch-Jozsa}
+\label{sec:DeutJ}
+
+L'\textbf{algorithme de Deutsch-Jozsa} est un algorithme quantique, proposé
+par David Deutsch et Richard Jozsa en 1992 avec des améliorations de R. Cleve
+\emph{et al.} en 1998\footnote{R. Cleve, A. Ekert, C. Macchiavello, et M.
+Mosca, \emph{\textbf{Quantum algorithms revisited}, Proceedings of the Royal
+Society of London A}, vol. 454, 1998, p. 339-354}. \emph{Bien qu'il ne soit
+pas d'un grand intérêt pratique, il s'agit d'un des premiers algorithmes
+quantiques qui est plus efficace qu'un algorithme classique.}
+
+\subsection{Problème et solution classique}
+
+Dans le cas du problème de Deutsch-Jozsa, nous disposons d'une \emph{boîte
+noire quantique}, connu sous le nom d'\textbf{oracle}, qui implémente une
+fonction mathématique $f:\{0,1\}^n\rightarrow\{0,1\}$. Nous savons que cette
+fonction est soit \emph{constante} ($f(0)=f(1)=0$ ou $f(0)=f(1)=1$) soit
+\emph{équilibrée} ($f(0)=0,f(1)=1$ et $f(0)=1,f(1)=0$). Le but du problème est
+de savoir si la fonction est constante ou équilibrée par invocation de l'oracle.
+
+\begin{itemize}
+\item Si un algorithme \emph{classique et déterministe} est utilisé, il faut
+$2^{n-1}+1$ évaluation de la fonction mathématique $f$ dans le pire des cas
+pour trouver la solution.
+
+\item Dans le cas de l'utilisation d'un algorithme \emph{probabiliste}, un
+nombre constant d'évaluation est suffisant pour trouver la bonne réponse avec
+une forte probabilité, néanmoins $2^{n-1}+1$ évaluation sont toujours
+nécessaire pour que la réponse soit toujours correcte.
+\end{itemize}
+
+L'algorithme quantique de Deutsch-Jozsa permet de trouver une réponse toujours
+correcte avec une seule évaluation de $f$.
+
+
+\subsection{Algorithme quantique de Deutsch-Jozsa}
+
+Le but est de tester la parité de la fonction $f:\{0,1\}\rightarrow\{0,1\}$ ou
+la condition $f(0)=f(1)$, ce qui équivaut à vérifier $f(0)\oplus f(1)$. Si
+cela vaut zéro alors $f$ est constante, sinon $f$ est équilibrée. Le circuit
+implémentant cet algorithme est donné par la figure \ref{fig:DJ1}.
+
+\begin{figure}[htpb]
+\[
+\Qcircuit @C=1em @R=1em {
+\lstick{\ket{0}} & \gate{W}& \ctrl{1} & \gate{W}& \meter \\
+\lstick{\ket{1}} & \gate{W}& \gate{f} & \qw      & \qw &\qw
+}
+\]
+\caption{Algorithme quantique de Deutsch-Jozsa avec un 1-qubit en entrée.}
+\label{fig:DJ1} 
+\end{figure}
+
+\begin{enumerate}
+\item L'algorithme commence avec deux qubit dans l'état $\ket{0}\ket{1}$.
+
+\item Une transformation de Walsh-Hadamard est d'abord appliquée à chaque
+qubit. Cela
+donne
+\begin{equation}
+W\ket{0} W\ket{1}=\frac{1}{2}(\ket{0}+\ket{1})(\ket{0}-\ket{1}).
+\end{equation}
+
+\item Une implémentation quantique (oracle) de la fonction $f$ permet de
+passer de $\ket{x}\ket{y}$ à $\ket{x}\ket{y\oplus f(x)}$, i.e., le
+second qubit est inversé si et seulement si $f(x)=1$. Soit pour $x\in\{0,1\}$,%
+\begin{equation}
+U_{f}\ket{x}(\ket{0}-\ket{1})=(-1)^{f(x)}\ket{x}(\ket{0}-\ket{1}),
+\end{equation}
+où le facteur $(-1)^{f(x)}$ s'est retropropagé (\emph{kicked back})
+devant le premier qubit. Ainsi, l'évaluation de la fonction nous donne%
+\begin{equation}
+\begin{split}
+&  \frac{1}{2}\left[  (-1)^{f(0)}\ket{0}+(-1)^{f(1)}\ket{1}\right]
+(\ket{0}-\ket{1}))\\
+&  =(-1)^{f(0)}\frac{1}{2}(\ket{0}+(-1)^{f(0)\oplus f(1)}\ket{1}
+)(\ket{0}-\ket{1}).
+\end{split}
+\end{equation}
+Le second qubit n'est plus utile, de même que le facteur de phase global, on
+peut donc les ignorer. On a alors l'état
+\begin{equation}
+\frac{1}{\sqrt{2}}(\ket{0}+(-1)^{f(0)\oplus f(1)}\ket{1}).
+\end{equation}
+
+\item En appliquant une transformation de Walsh-Hadamard à cet état, on a
+\begin{equation}
+\begin{split}
+&  \frac{1}{2}(\ket{0}+\ket{1}+(-1)^{f(0)\oplus f(1)}\ket{0}
+-(-1)^{f(0)\oplus f(1)}\ket{1})\\
+&  =\frac{1}{2}([1+(-1)^{f(0)\oplus f(1)}])\ket{0}+[1-(-1)^{f(0)\oplus
+f(1)}]\ket{1})  .
+\end{split}
+\end{equation}
+$f(0)\oplus f(1)=0$, i.e., $f(0)=f(1)$ si et seulement si on observe
+$\ket{0}$.
+
+\item Donc, l'état final du premier qubit est $|f(0)\oplus f(1)\rangle$ et la
+fonction est constante si et seulement si on mesure $\ket{0}$.
+\end{enumerate}
+
+Comme on le constate, la parité de la fonction $f(x)$ a été encodé par un
+1-qubit après une seule invocation de $f$. Ceci parce qu'un calculateur
+quantique peut évaluer simultanément $f(0)$ et $f(1)$. Les deux chemins
+alternatifs ou complémentaires sont recombinés par la dernière porte de
+\texttt{Walsh-Hadamard}. L'interférence est constructive pour l'une des valeurs
+de $f(0)\oplus f(1)$ et destructive pour la valeur alternative.
+
+Dans le cas général, on a $n+1$ bit dans l'état $\ket{0}^{\otimes n}\ket{1}$ et
+la figure \ref{fig:DJn} représente l'implémentation de l'algorithme de
+Deutsch-Jozsa correspondant.
+\begin{figure}[htpb]
+ \[
+\Qcircuit @C=1em @R=1em {
+\lstick{\ket{0}^{\otimes n}} & \gate{W^{\otimes n}}& \ctrl{1} &
+\gate{W^{\otimes n}}& \meter \\
+\lstick{\ket{1}} & \gate{W}& \gate{f} & \qw      & \qw &\qw
+}
+\]
+\caption{Algorithme quantique de Deutsch-Jozsa avec un n-qubit entrée.}
+\label{fig:DJn} 
+\end{figure}
+
+Les premiers $n$ bits sont tous dans l'état $\ket{0}$ et les derniers bit dans
+l'état $\ket{1}$. Nous appliquons ensuite la transformation de Walsh-Hadamard à
+chaque qubit, pour obtenir 
+\begin{equation}
+\ket{\psi_1} =\mathtt{W}^{\otimes n}\ket{0}^{\otimes n}\otimes\mathtt{W}
+\ket{1} =\frac{1}{\sqrt{2^n}}\sum_{x\in\{0,1\}^{\otimes n}}\ket{x}
+\left(\frac{\ket{0}-\ket{1}}{\sqrt{2}}\right). 
+\end{equation}
+Après l'oracle, le système est dans l'état
+\begin{equation}
+\ket{\psi_2} =\frac{1}{\sqrt{2^n}}\sum_x(-1)^{f(x)}\ket{x} \left(\frac{\ket{0}-
+\ket{1}}{\sqrt{2}}\right).
+\end{equation} 
+Comme l'application de \texttt{W} sur le n-qubit $\ket{x}$ donne
+\begin{equation}
+ \mathtt{W}^{\otimes n}\ket{x}=\frac{1}{\sqrt{2^n}}\sum_y(-1)^{x\cdot y}\ket{y},
+\end{equation} 
+on a à la sortie du circuit
+\begin{equation}
+\ket{\psi_f} =\frac{1}{\sqrt{2^n}}\sum_x\sum_y(-1)^{x\cdot y+f(x)}\ket{y}
+\left(\frac{\ket{0}-\ket{1}}{\sqrt{2}}\right).
+\end{equation} 
+Les résultats possibles de la mesure sur $\ket{y}$ donnent
+\begin{itemize}
+ \item seulement la valeur $0$ et dans ce cas la fonction $f(x)$ est constante,
+ \item au moins une valeur $1$ et dans ce cas la fonction $f(x)$ est équilibrée.
+\end{itemize}
+
+\begin{exercise}
+\begin{enumerate}
+\item On considère une fonction à 2-qubit telle que $f(x)=1$. Montrer
+explicitement que la sortie de l'algorithme de Deutsch-Jozsa donne
+$\ket{y}=\ket{00}$.
+
+\item On suppose que $f(00)=f(10)=0$ et $f(10)=f(11)=1$. Montrer
+explicitement que des deux bits de la sortie $y$ de l'algorithme de
+Deutsch-Jozsa au moins un à la valeur $1$.
+\end{enumerate}
+
+\end{exercise}
+
+\section{Transformation de Fourier quantique}
+
+La \textbf{transformation de Fourier \emph{discrète}} d'un vecteur avec $N$
+composantes complexes $\{{f(0),f(1),\ldots,f(N-1)\}}$ est un nouveau vecteur
+complexe $\{{\tilde{f}(0),\tilde{f}(1),\ldots,\tilde{f}(N-1)\}}$, défini par%
+\begin{equation}
+{\tilde{f}(y)=}\frac{1}{\sqrt{N}}\sum_{x=0}^{N-1}e^{2i\pi\frac{xy}{N}}f(x).
+\label{eq:TFD}%
+\end{equation}
+La transformation de Fourier quantique (\textbf{QFT, Quantum Fourier Transform})
+fait exactement la même chose. Elle est définie sur un registre de $n$ qubits
+($N=2^n$) comme une opération unitaire $F_N$ dont l'action sur les états de la
+base de calcul est%
+\begin{subequations}%
+\label{eq:QTFD}%
+\begin{align}
+\mathtt{F}_{N}\ket{x}=\frac{1}{\sqrt{N}}\sum_{y=0}^{N-1}e^{2i\pi\frac{xy}{N}}
+\ket{y},
+\end{align}%
+ou
+\begin{align}
+\mathtt{F}_{N}=\frac{1}{\sqrt{N}}\sum_{x,y=0}^{N-1}\ket{y}e^{2i\pi\frac{xy}{N}}
+\bra{x}.
+\end{align}%
+\end{subequations}%
+Par conséquent, un état arbitraire $\ket{\psi}=\sum_{x}f(x)\ket{x}$ est
+transformé en
+\begin{equation}
+\ket{\tilde{\psi}}=\sum_{k=0}^{N-1}{\tilde{f}(y)}\ket{y},
+\end{equation}
+où les coefficients $\{{\tilde{f}(y)}\}$ sont les transformées de Fourier
+discrètes des coefficients $\{f(y)\}$, en vertu de (\ref{eq:TFD}).
+
+On vérifie facilement que $\mathtt{F}_N$ est unitaire. En effet,%
+\begin{subequations}%
+\begin{align}
+\mathtt{F}_N^{\dagger}F_{N}  &  =\left(  \frac{1}{\sqrt{N}}\sum_{y,x=0}%
+^{N-1}\ket{x}e^{-2i\pi\frac{xy}{N}}\bra{y}\right)  \left(
+\frac{1}{\sqrt{N}}\sum_{y,x=0}^{N-1}\ket{y} e^{2i\pi\frac{xy}{N}}\bra{x}
+\right) \\
+&  =\frac{1}{N}\sum_{y,x=0}^{N-1}\left(  \sum_{y,x=0}^{N-1}\ket{x} e^{-2\pi
+i\frac{xy}{N}}\langle y\ket{y}e^{2i\pi\frac{xy}{N}}\bra{x} \right) \\
+&  =\frac{1}{N}\sum_{x=0}^{N-1}\left(  \sum_{x=0}^{N-1}\ket{x}\bra{x}
+\right)
+=\mathbb{I}%
+\end{align}%
+\end{subequations}%
+
+\begin{exercise}
+Montrer que
+\begin{equation}
+\mathtt{F}_4=\frac{1}{2}\begin{pmatrix}
+1 & 1 & 1 & 1\\
+1 & i & -1 & -i\\
+1 & -1 & 1 & -1\\
+1 & -i & -1 & i
+\end{pmatrix}.
+\label{eq:F4}
+\end{equation}
+\end{exercise}
+
+Si on pose $\omega_N=e^{\frac{2i\pi}{N}}$,
+\begin{equation}
+\mathtt{F}_N=\frac{1}{2}\begin{pmatrix}
+1 & 1 & 1 & \cdots & 1\\
+1 & \omega_N & \omega_N^2 & \cdots & \omega_N^{N-1}\\
+1 & \omega_N^2 & \omega_N^4 & \cdots & \omega_N^{2(N-1)}\\
+\vdots & \vdots & \vdots & \vdots & \vdots\\
+1 & \omega_N^{N-1} & \omega_N^{2(N-1)} & \cdots & \omega_N^{(N-1)(N-1)}\\
+\end{pmatrix}.
+\end{equation}
+
+Utilisons maintenant une technique standard des transformées de Fourier
+rapides (\textbf{FFF} ou \textbf{Fast Fourier Transform}) pour montrer que la
+QFT ne génère pas d'intrication entre les qubits sur lesquels elle agit.
+
+Adoptons la représentation binaire pour écrire $x$ et $y$,
+\begin{subequations}%
+\begin{align}
+x & =x_{n-1}x_{n-2}\cdots x_1x_0=x_{n-1}2^{n-1}+x_{n-2}2^{n-2}+
+\cdots+x_12^1+x_02^0,\\
+y & =y_{n-1}y_{n-2}\cdots y_1y_0=y_{n-1}2^{n-1}+y_{n-2}2^{n-2}+
+\cdots+y_12^1+y_02^0.
+\end{align}
+\end{subequations}
+En vertu de ce que $\omega_N=e^{\frac{2i\pi}{N}}$ est un racine N-ième de
+l'unité, on peut ignorer dans le produit $xy$ de l'exponentielle de
+(\ref{eq:QTFD}), tous les termes divisibles par $N=2^n$ puisqu'il ne contribuent
+pas à l'exponentielle\footnote{Si $xy=aN+b$, avec $a,b\in\mathbb{N}$,
+$\omega_N^{xy}=\omega_N^b$.}. Ainsi,
+\begin{equation}
+ \frac{xy}{2^n}=y_{n-1}(.x_0)+y_{n-2}(.x_1x_0)+\cdots+y_0(.x_{n-1}x_{n-2}\cdots
+x_1x_0).
+\end{equation}
+Les termes entre parenthèses sont les fractions binaires, i.e.,
+\begin{equation}
+ 0.x_{n-1}x_{n-2}\cdots x_1x_0=\frac{x_{n-1}}{2^1}+\frac{x_{n-2}}{2^2}+\cdots+
+\frac{x_1}{2^{n-1}}+\frac{x_0}{2^n}.
+\end{equation}
+Ainsi pour, $y_i\in\{0,1\}$, l'amplitude
+\begin{equation}
+ \sum_{y=0}^{2^n-1}e^{2i\pi\frac{xy}{2^n}}=\left(\sum_ye^{2i\pi y_{n-1}(.x_0)}
+\right)\cdots\left(\sum_ye^{2i\pi y_0(.x_{n-1}x_{n-2}\cdots x_1x_0)}\right),
+\end{equation}
+permet d'écrire l'équation (\ref{eq:QTFD}) sous la forme d'un produit tensoriel
+\begin{equation}
+\label{eq:QTFD2}
+\mathtt{F}_N\ket{x}=\frac{1}{\sqrt{2^n}}[\ket{0}+e^{2i\pi(.x_0)}
+\ket{1}]_{n-1}\otimes\cdots\otimes[\ket{0}+e^{2i\pi(.x_{n-1}x_{n-2}\cdots
+x_1x_0)} \ket{1}]_0.
+\end{equation}
+La QFT ne génère donc pas un état intriqué.
+
+\begin{example} Pour $n=2$
+ \begin{equation}%
+\begin{split}
+\mathtt{F}_4\ket{x} & =\mathtt{F}_{4}\ket{x_1x_0}=\frac{1}{\sqrt{2^2}}[\ket{0}
++e^{2i\pi(.x_0)}\ket{1}]_1[\ket{0}+e^{2i\pi(.x_1x_0)}\ket{1}]_0 \\
+& =\frac{1}{2}[\ket{00}+e^{2i\pi(.x_1x_0)}\ket{01}+e^{2i\pi(.x_0)}\ket{10}
++e^{2i\pi(.x_0+.x_1x_0)}\ket{11}].
+\end{split}
+\end{equation}
+Si en plus on prend $\ket{x}=\ket{01}$,
+\begin{equation}
+\begin{split}
+\mathtt{F_4}\ket{01}& =\frac{1}{2}[\ket{00}+e^{2i\pi(.01)}\ket{01}+e^{2i\pi(.1)}
+\ket{10}+e^{2i\pi(.1+.01)}\ket{11}]\\
+ & =\frac{1}{2}[\ket{00}+i\ket{01}-\ket{10}-i\ket{11}].
+\end{split}
+\end{equation}
+Ce résultat est conforme à (\ref{eq:F4}).
+\end{example}
+
+
+\begin{figure}[ptbh]
+\begin{footnotesize}
+{\hspace*{2em}
+$
+\Qcircuit @C=1em @R=1.em {
+\lstick{\ket{x_{n-1}}} & \gate{W}& \gate{R_2} & \qw & {\cdots} & &
+\gate{R_{n-1}} & \gate{R_{n}} & \qw & \qw & \qw & \qw & \qw & \qw  & \qw & \qw &
+\qw & \qw & \qw & \qw  & \qw &\qw & \rstick{\ket{y_{n-1}}} \\
+\lstick{\ket{x_{n-2}}} & \qw & \ctrl{-1} & \qw & {\cdots}  & & \qw & \qw & \qw
+&\gate{W}&\qw & {\cdots} & & \gate{R_{n-2}} & \gate{R_{n-1}} & \qw & \qw & \qw
+& \qw & \qw & \qw  & \qw & \rstick{\ket{y}_{n-2}}\\
+\lstick{\vdots} &\\
+\lstick{\ket{x_1}}& \qw & \qw & \qw & \qw & \qw & \ctrl{-3} & \qw & \qw &
+\qw & \qw \qw & \qw & \qw & \ctrl{-2} & \qw \qw & \qw & {\cdots} & &\gate{W}&
+\gate{R_2} & \qw &\qw & \rstick{\ket{y}_1}\\
+\lstick{\ket{x_0}}& \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{-4} & \qw &
+\qw & \qw & \qw & \qw  & \qw & \ctrl{-3} &\qw & {\cdots} & & \qw& \ctrl{-1}
+&\gate{W}& \qw & \rstick{\ket{y}_0}
+}
+$
+}
+\end{footnotesize}
+\caption{Circuit implémentant la transformation de Fourier quantique, avec
+$\ket{y}_k=\frac{1}{\sqrt{2}}[\ket{0}+e^{2i\pi(.x_{k}x_{k-1}\cdots x_1x_0)}
+\ket{1}]$. Les portes \texttt{SWAP} qui inversent l'ordre des qubits de sortie
+ne sont pas représentées. On note que la transformation de Fourier d'un vecteur
+complexe de taille $N=2^n$ peut être implémenté de manière efficiente sur un
+registre de $n$ qubits en utilisant $n$ portes de \texttt{W} et
+$\frac{n(n-1)}{2}$ portes $\mathtt{CR}_k$. Soit au total $\mathcal{O}(n^2)$
+portes quantiques élémentaires. L'algorithme classique le plus efficace, la
+transformée de Fourier rapide (FFF), calcule la transformée de Fourier discrète
+en $\mathcal{O}(2^n n)$ opérations élémentaires.}
+\label{fig:CircuitQFT}
+\end{figure}
+
+Le produit tensoriel (\ref{eq:QTFD2}) rend aisée l'implémentation d'un circuit
+qui calcule la QFT de façon \emph{efficiente}. Un tel circuit, qu'illustre la
+figure \ref{fig:CircuitQFT}, n'a besoin que des opérateurs de base $\mathtt{W}$
+et \texttt{Controlled Phase Rotation} $\mathtt{CR}_{k\geq2}(\frac{2\pi}{2^{k}})$
+avec
+\begin{equation}
+\mathtt{R}_{k}=\begin{pmatrix}
+1 & 0\\
+0 & e^{\frac{2i\pi}{2^{k}}}
+\end{pmatrix}.
+\end{equation}
+
+Considérons l'action que circuit sur l'état $\ket{x_{n-1}x_{n-2}\cdots x_1x_0}$
+de la base de calcul.
+
+\begin{itemize}
+\item La première porte de \texttt{W} agit sur le qubit le plus significatif
+$\ket{x_{n-1}}$ et, en vertu de $e^{2i\pi(.x_{n-1})}=(-1)^{x_{n-1}}$, génère
+l'état
+\begin{equation}
+(\mathtt{W}\ket{x_{n-1}})\ket{x_{n-2}\cdots x_1x_0}=\frac{1}{\sqrt{2}}
+[\ket{0}+e^{2i\pi(.x_{n-1})}\ket{1}]_{n-1}\ket{x_{n-2}\cdots x_1x_0}.
+\end{equation}
+
+\item L'application de la porte $\mathtt{CR}_2$ génère l'état
+\begin{equation}
+\frac{1}{\sqrt{2}}[\ket{0}+e^{2i\pi(.x_{n-1})}e^{\frac{2i\pi x_{n-2}}{2^2}}
+\ket{1}]_{n-1}\ket{x_{n-2}\cdots x_1x_0}=\frac{1}{\sqrt{2}}[\ket{0}
++e^{2i\pi(.x_{n-1}{x_{n-2}})}\ket{1}]_{n-1}\ket{x_{n-2}\cdots x_1x_0}
+\end{equation}
+
+\item Les portes $\mathtt{CR}_{k\geq3}$ subséquentes, $\mathtt{CR}_3$ à
+$\mathtt{CR}_n$ ajoute les phases de $\frac{\pi}{2^2}$ à $\frac{\pi}{2^{n-1}}$
+lorsque le qubit de contrôle à pour valeur $1$. Après ces $n-1$ portes à $2$
+qubits, le calculateur quantique est dans l'état%
+\begin{equation}
+\frac{1}{\sqrt{2}}[\ket{0}+e^{2i\pi(.x_{n-1}x_{n-2}\cdots x_1x_0)}\ket{1}]_{n-1}
+\ket{x_{n-2}\cdots x_1x_0}.
+\end{equation}
+\item La même procédure est répétée aux autres qubits et on obtient finalement%
+\begin{equation}
+\frac{1}{\sqrt{2^n}}[\ket{0}+e^{2i\pi(.x_{n-1}x_{n-2}\cdots x_1x_0)}\ket{1}
+]_{n-1}\otimes\cdots\otimes[\ket{0}+e^{2i\pi(.x_0)}\ket{1}]_0.
+\end{equation}
+Cet état coïncide avec (\ref{eq:QTFD2}), excepté que le fait que l'ordre des
+qubits est inversé. Le bon ordre est obtenu, soit en utilisant $\mathcal{O}(n)$
+portes \texttt{SWAP}, soit en renumérotant simplement les qubits à la
+sortie.
+\end{itemize}
+
+\begin{exercise}
+Dessiner le circuit qui implémente la QFT du 3-qubit $\ket{x}=\ket{x_2x_1x_0}$
+et évaluer pas à pas, l'état final de ce circuit.
+\end{exercise}
+
+\begin{remark}
+Il faut souligner qu'on ne peut pas vraiment parler d'une accélération
+exponentielle dans le calcul de la QFT, puisqu'un état arbitraire
+$\ket{\psi}=\sum_{x}f(x)\ket{x}$ ne peut pas être préparé de manière efficace et
+l'état transformé $\ket{\tilde{\psi}}=\sum_{k=0}^{N-1}{\tilde{f}(y)}\ket{y}$
+n'est pas facilement accessible. En effet, une mesure standard donne simplement
+un résultat avec $y$ probabilité $|\tilde{f}(y)|$. Le problème est que la
+transformée de Fourier quantique est effectués sur les amplitudes de la fonction
+d'onde, qui ne sont pas \emph{directement accessibles}. Ils ne peuvent être
+reconstitués avec une précision finie qu'après de itérations (chaque itération
+calcule la transformée de Fourier de l'état $\ket{\psi}$ et se termine avec une
+mesure standard projective).
+\end{remark}
+
+\section{Réalisations physiques}
+
+Les approches expérimentales proposées pour la réalisation d'un ordinateur
+quantique sont nombreuses et variées:
+\begin{itemize}
+\item les qubits supraconducteurs à base de jonctions Josephson,
+\item les qubits à boites quantiques semiconductrices,
+\item les ions piégés dans le vide,
+\item les spins nucléaires de molécules en solution, pilotés par résonance
+magnétique nucléaire (RMN),
+\item les atomes de Rydberg,
+\item les défauts optiques cristallins, les cavités résonantes relevant du
+domaine de l'optique quantique.
+\end{itemize}
+
+Dans un premier temps, il s'agit de réaliser une porte logique élémentaire,
+c'est-à-dire d'arriver à coupler deux systèmes quantiques de façon suffisamment
+forte pour que l'état de l'un puisse être modifié par l'état de l'autre avant
+que la décohérence n'entre en jeu.
+
+L'étape suivante consiste à augmenter le nombre de qubits en interaction pour
+construire un vrai ordinateur. Des propositions ont été faites pour cette
+dernière étape, mais la plupart soulève des difficultés technologiques
+considérables.
+
+Les points forts et faibles des différentes approches expérimentales sont
+résumés dans le tableau \ref{tab:RealPhysExp}, qui reprend les cinq critères de
+Di Vincenzo avec en plus, deux critères de connectivité:
+
+\begin{itemize}
+\item[\textbf{C1}]Capacité d'initialiser les qubits dans un état bien défini.
+
+\item[\textbf{C2}]Capacité de mesurer les qubits avec fiabilité.
+
+\item[\textbf{C3}]Temps de décohérence suffisamment long (beaucoup plus long que
+le temps d'opération des portes quantiques).
+
+\item[\textbf{C4}]Disposer d'un jeu universel de portes quantiques.
+
+\item[\textbf{C5}]Capacité d'accommoder un grand nombre de qubits.
+
+\item[\textbf{C6}]Capacité de convertir les qubits fixes en qubits mobiles.
+
+\item[\textbf{C7}]Capacité de transmettre efficacement les qubits mobiles entre
+plusieurs endroits.
+\end{itemize}
+
+\begin{table}[ptbh]
+{
+\newcommand{\mc}[3]{\multicolumn{#1}{#2}{#3}}
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l||l|l|}\hline
+Approche Expérimentale & \mc{5}{l}{Critères de Di Vincenzo} &
+\mc{2}{||l|}{Connectivité}\\\hline
+ & C1 & C2 & C3 & C4 & C5 & C6 & C7\\\hline
+Supraconducteur& $\spadesuit$ & $\spadesuit$ & $\clubsuit$ & $\clubsuit$ &
+$\clubsuit$ & $\clubsuit$ & $\clubsuit$\\\hline
+Semiconducteur & $\clubsuit$ & $\clubsuit$ & $\clubsuit$ & $\clubsuit$ &
+$\clubsuit$ & $\blacktriangledown$ & $\blacktriangledown$\\\hline
+RMN & $\clubsuit$ & $\clubsuit$ & $\clubsuit$ & $\spadesuit$ &
+$\blacktriangledown$ & $\blacktriangledown$ & $\blacktriangledown$\\\hline
+Ions piégés & $\spadesuit$ & $\spadesuit$ & $\clubsuit$ & $\spadesuit$ &
+$\clubsuit$ & $\clubsuit$ & $\clubsuit$\\\hline
+Cavités QED & $\clubsuit$ & $\spadesuit$ & $\clubsuit$ & $\spadesuit$ &
+$\spadesuit$ & $\clubsuit$ & $\clubsuit$\\\hline
+Atomes neutres & $\spadesuit$ & $\clubsuit$ & $\clubsuit$ & $\clubsuit$ &
+$\clubsuit$ & $\clubsuit$ & $\clubsuit$\\\hline
+Optique quantique & $\spadesuit$ & $\spadesuit$ & $\clubsuit$ & $\clubsuit$ &
+$\clubsuit$ & $\clubsuit$ & $\clubsuit$\\\hline
+\end{tabular}
+\end{center}
+}
+\caption{\textbf{Synthèse des réalisations physiques}. $\spadesuit$=approche
+viable ayant suffisamment fait ses preuves; $\clubsuit$=approche viable mais
+requérant plus de preuves expérimentales; $\blacktriangledown$=aucune approche
+viable connue actuellement. [Crédits: \emph{A quantum information science and
+technology roadmap, report of the quantum information science and technology
+experts panel}, v2.0 Avril 2004, \url{http://qist.lanl.gov/qcomp_map.shtml}]}
+\label{tab:RealPhysExp}
+\end{table}
+
+\section{Conclusion}
+
+L'ordinateur quantique a pu apparaître un temps comme un calculateur magique,
+à l'origine de la révolution informatique du prochain millénaire. Ceci a été
+largement sur-évalué par l'imagination populaire, à cause principalement du
+mystère planant autour des concepts de théorie quantique, souvent mal compris
+et mal interprétés. Il est très peu probable en effet, que l'ordinateur
+quantique supplante intégralement l'ordinateur classique, pour la même raison
+que la physique quantique ne remplace pas la physique classique pour la grande
+majorité des problèmes quotidiens. Dans le monde macroscopique, personne ne
+s'aventure en effet dans la résolution de l'équation de Schrödinger pour
+concevoir un avion ou une voiture. De la même manière, l'ordinateur quantique
+sera réservé à la résolution de problèmes particuliers, pour lesquels le
+parallélisme quantique apporte un avantage décisif.
+
+En particulier, l'ordinateur quantique donne l'espoir de pouvoir un jour
+résoudre efficacement (en temps polynomial) des problèmes complexes, qui sont
+insolubles avec des ordinateurs classiques, à cause de l'explosion exponentielle
+de leur temps de calcul. Des algorithmes quantiques efficaces ont déjà vu le
+jour, avec la découverte spectaculaire des \textbf{algorithmes de Shor et de
+Grover} dans les années '90, suivie de la mise au point de nombreuses variantes
+et améliorations. Malgré leur nombre encore restreint, ces algorithmes
+quantiques sont théoriquement très efficaces, et apporteront à terme des
+avantages calculatoires notables. S'ajoute à cela la mise au point de codes
+correcteurs d'erreur, autorisant une certaine dose de décohérence sans laquelle
+l'ordinateur quantique ne verrait certainement jamais le jour.
+
+\newpage
+\section{Exercices}
+
+
+\subsection{Effets des erreurs d'amplitude et de phase}
+
+On définit \emph{\textbf{l'erreur d'amplitude}} par la transformation%
+\begin{equation}
+\ket{\psi}\rightarrow\ket{\psi_{a}}=\beta\ket{0} +\alpha\ket{1} ,
+\end{equation}
+et \emph{\textbf{l'erreur de phase}} par la transformation%
+\begin{equation}
+\ket{\psi}\rightarrow\ket{\psi_{p}}=\alpha\ket{0} -\beta\ket{1} .
+\end{equation}
+Afin d'étudier les effets de ces deux transformations sur le qubit contrôle ou
+cible d'une porte logique \texttt{CNOT}, on considère l'état initial%
+\begin{equation}
+(\alpha\ket{0} +\beta\ket{1})\otimes\frac{1}{\sqrt{2}}(\ket{0}+\ket{1}).
+\end{equation}
+
+\begin{enumerate}
+\item Montrer que l'action de l'erreur de phase sur le qubit cible est
+transférée au qubit de contrôle après application de l'opérateur porte logique
+\texttt{CNOT}. On parle alors de \emph{propagation régressive du signe}.
+
+\item Qu'en est-il lorsque l'erreur de phase agit d'abord sur le qubit de
+contrôle et qu'on applique ensuite de l'opérateur porte logique \texttt{CNOT}?
+
+\item Étudier de la même façon l'effet de l'erreur d'amplitude.
+\end{enumerate}
+
+\subsection{Opérateur racine carrée NOT}
+
+On considère l'opérateur linéaire $\mathtt{H}=i\hbar\omega(\ket{0}\bra{1}
+-\ket{1} \bra0)$ qui agit dans l'espace de Hilbert $\mathbb{C}^2$, où
+$\{\ket{0},\ket{1}\}$ est une base orthonormée dans $\mathbb{C}^2$ et
+$\omega\in\mathbb{R}$.
+
+\begin{enumerate}
+\item $\mathtt{H}$ est-il hermitien?
+
+\item Quels sont les valeurs propres et les vecteurs propres normalisés de
+$\mathtt{H}$?
+
+\item Développer $\mathtt{U}(t)=e^{-i\mathtt{H}t/\hbar}$ sous la forme d'un
+$\cos$ et d'un $\sin$ et trouver les valeurs de $t$ telles que $\mathtt{U}$
+réalise l'opération \texttt{FNOT} (\textbf{Fake NOT}):%
+\begin{equation}
+\begin{cases}
+\mathtt{U}(t)\ket{0} =-\ket{1} \\
+\mathtt{U}(t)\ket{1} =\ket{0}
+\end{cases}
+\end{equation}
+
+\item Calculer $\mathtt{U}(t=\frac{\pi}{4\omega})$ et 
+$[\mathtt{U}(t=\frac{\pi}{4\omega})]^2$. Que peut-on conclure?
+
+\item Sachant que traditionnellement en calcul quantique, l'opérateur
+\texttt{NOT} est
+\begin{equation}
+	\mathtt{X}=\ket{0}\bra{1}+\ket{1}\bra0,
+\end{equation}
+utiliser l'opérateur $\mathtt{U}(t)=e^{i\frac{\pi}{2}}e^{-i\mathtt{H}t/\hbar}$,
+$\mathtt{H}$ étant à définir, pour montrer que l'opérateur \textbf{racine carrée
+NOT} est
+\begin{equation}
+	\mathtt{V}=\frac{1+i}{2}(\mathbb{I}_2-i\mathtt{X})=\frac{1+i}{\sqrt{2}}
+	e^{-i\frac{\pi}{4}\mathtt{X}}.
+\end{equation}
+\end{enumerate}
+
+\subsection{Algorithme quantique}
+
+Soit $x_1,x_2,y_1,y_2\in\{0,1\}$ où Alice a $x_1$ et $x_2$ et Bob, $y_1$ et
+$y_2$. Alice et Bob veulent calculer la fonction booléenne%
+\begin{equation}
+g(x_1,x_2,y_1,y_2)=x_2\oplus y_2\oplus(x_1\wedge y_1),
+\end{equation}
+où $\oplus$ désigne l'opération \texttt{XOR} et $\wedge$ l'opération
+\texttt{AND}. En plus Alice et Bob échange la paire EPR%
+\begin{equation}
+\ket{\Phi^-}=\frac{1}{\sqrt{2}}(\ket{00} -\ket{11}).
+\end{equation}
+Alice applique la matrice unitaire $R(\theta_1)\otimes\mathbb{I}_2$ à son
+qubit EPR alors que Bob applique au sien $\mathbb{I}_2\otimes R(\theta_2)$%
+avec $\theta_1=-\frac{\pi}{16}+x_1\frac{\pi}{4}$,
+$\theta_2=-\frac{\pi}{16}+y_1\frac{\pi}{4}$ et
+\begin{equation}
+\mathtt{R}(\theta)=\begin{pmatrix}
+\cos\theta & -\sin\theta\\
+\sin\theta & \cos\theta
+\end{pmatrix}.
+\end{equation}
+
+On note $a$ le résultat de la mesure d'Alice sur son qubit EPR et $b$ le
+résultat de la mesure de Bob sur le sien.
+
+\begin{enumerate}
+\item Donner l'expression de $\ket{\psi}=\mathtt{R}(\theta_1)\otimes R(\theta_2)
+\ket{\Phi^-}$, l'état de la paire EPR après l'application de opérateurs de
+rotation unitaires par Alice et Bob.
+
+\item Si $\mathcal{P}(a,b)$ est la probabilité de trouver $a$ et $b$, remplir la
+table de vérité suivante:
+\begin{center}
+\begin{tabular}
+[c]{|c|c|c|c|}\hline
+\rowcolor[gray]{.8}$a$ & $b$ & $a\oplus b$ & $\mathcal{P}(a,b)$\\\hline
+$0$ & $0$ &  & \\\hline
+$0$ & $1$ &  & \\\hline
+$1$ & $0$ &  & \\\hline
+$1$ & $1$ &  & \\\hline
+\end{tabular}
+\end{center}
+\item Remplir la table de vérité suivante
+\begin{center}
+\begin{tabular}
+[c]{|c|c|c|c|}\hline
+\rowcolor[gray]{.8}$x_1$ & $y_1$ & $x_1\wedge y_1$ & $\mathcal{P}(a
+\oplus b=x_1\wedge y_1)$\\\hline
+$0$ & $0$ &  & \\\hline
+$0$ & $1$ &  & \\\hline
+$1$ & $0$ &  &\\\hline
+$1$ & $1$ &  & \\\hline
+\end{tabular}
+\end{center}
+ et en déduire la probabilité pour que%
+\begin{equation}
+a\oplus b=x_1\wedge y_1.
+\end{equation}
+\end{enumerate}
+
+
+\subsection{Circuit intraportation}
+\label{sec:CircIntr}
+
+\emph{La \textbf{téléportation quantique} est un protocole de communications
+quantiques consistant à \textbf{transférer} l'état quantique d'un système vers
+un autre système similaire et séparé spatialement du premier en mettant à profit
+l'intrication quantique.} Nous l'avons introduite à la section
+\ref{sec:TelQ}. Résumons la problématique.
+
+Il était une fois Alice et Bob qui, avant de se séparer, prirent chacun un qubit
+d'une même paire EPR $\ket{\Phi^{+}}$. Puis Bob s'en alla, vers une galaxie
+ignorée d'Alice.
+
+C'est alors que, bien plus tard, un qubit dans un état inconnu, $\ket{\psi}
+=\alpha\ket{0}+\beta\ket{1}$, arriva chez Alice. Mission d'Alice: transmettre
+l'état $\ket{\psi}$ à Bob. Mais Alice ne pouvait pas
+\begin{itemize}
+\item porter ce qubit à Bob,
+\item ni cloner $\ket{\psi}$ pour en disperser des copies dans l'univers,
+\item ni connaître $\alpha$ et $\beta$ pour diffuser leurs valeurs sur les ondes
+dans l'espace intergalactique.
+\end{itemize}
+Alors Alice devait téléporter $\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$. Ils
+avaient prévu tout ce qu'il fallait:
+\begin{itemize}
+ \item Un \emph{canal quantique}, la paire EPR $\ket{\Phi^{+}}$, dont ils
+avaient soigneusement gardé chacun un qubit avant de se séparer.
+
+\item Deux opérateurs, \texttt{W} et \texttt{CX}, qu'Alice avait chez elle, et
+deux détecteurs $D_0,D_1$.
+
+\item Et quatre autres opérateurs unitaires $U\equiv\mathbb{I},\mathtt{X},
+i\mathtt{Y},\mathtt{Z}$ que Bob avait pris dans son vaisseau.
+\end{itemize}
+
+Le circuit quantique ci-dessous qui présente cette téléportation\footnote{Voir
+G. Brassard, S.L. Braunstein and R. Cleve, \emph{Teleportation as a quantum
+computation}, Physica \textbf{D120}, 43, (1998). Ce circuit est très souvent
+appelé \textbf{intraportation} puisque la portes \texttt{CX} s'exécutent entre
+les premier-second et second-troisième qubits. Ainsi, pour implémenter ces
+portes \texttt{CX}, les deux premiers qubits ne peuvent être arbitrairement
+éloignés du troisième.}. La première ligne représente le qubit $\ket{\psi}$ à
+téléporter. La deuxième ligne appartient à Alice et la troisième ligne
+appartient à Bob. La mesure effectuée par Alice (BSM), à travers les détecteurs
+$D_0$ et $D_1$, donne deux bits classiques $b_0$ et $b_1$ (communiqués par un
+canal classique (Téléphone, Internet) à Bob) qui conditionnent ou contrôlent la
+transformation unitaire \texttt{U} effectuée par Bob.
+
+\[
+\Qcircuit @C=1em @R=1.em {
+&&&&\mbox{BSM} \gategroup{2}{4}{3}{6}{.7em}{--}\\
+\lstick{\ket{\psi}} &\qw &\qw
+&\ctrl{1} &\gate{W} &\measureD{D_0} &\qw &\ctrl{2} & \rstick{b_0} \qw \\
+\lstick{\ket{0}}    & \gate{W}&\ctrl{1}& \gate{X} &\qw & \measureD{D_1} &
+\ctrl{1} & \qw    &\rstick{b_1} \qw \\
+\lstick{\ket{0}}  & \qw &\gate{X}  &\qw &\qw  & \qw &\gate{X} & \gate{Z}
+ &\rstick{\ket{\psi}} \qw \\
+ & \mbox{\hspace*{2em}EPR}\gategroup{3}{2}{4}{3}{.7em}{--}&
+&&&&\mbox{\hspace*{2em}U}\gategroup{2}{7}{4}{8}{.7em}{--}\\
+&& & &\mbox{Circuit intraportation}
+}
+\]
+
+\begin{enumerate}
+ \item Donner l'expression de la paire EPR $\ket{\Phi^{+}}$ que Alice et Bob se
+sont partagés.
+
+\item Alice fait interagir $\ket{\psi}$ avec sa moitié de l'EPR. Exprimer le
+3-qubit $\ket{\psi}_{123}=\ket{\psi}\otimes\ket{\Phi^{+}}$ qu'elle obtient dans
+la base de Bell
+$\{\ket{\Phi^{+}},\ket{\Phi^{-}},\ket{\psi^{+}},\ket{\psi^{-}}\}$, avec
+$\ket{\Phi^{\pm}}=\frac{1}{\sqrt{2}}(\ket{00}\pm\ket{11})$,
+$\ket{\psi^{\pm}}=\frac{1}{\sqrt{2}}(\ket{01}\pm\ket{10})$.
+
+On posera
+$\ket{\psi_0}=\alpha\ket{0}+\beta\ket{1}$,
+$\ket{\psi_1}=\alpha\ket{1}+\beta\ket{0}$,
+$\ket{\psi_{2}}=\alpha\ket{0}-\beta\ket{1}$,
+$\ket{\psi_{3}}=\alpha\ket{1}-\beta\ket{0}$.
+
+\item Lorsque Alice effectue des mesures de Bell (c'est-à-dire dans la
+base de Bell), quelles résultats peut-elle obtenir et avec quelles probabilités?
+
+\item Cependant, les états propres des appareils de mesure ou détecteurs d'Alice
+ne sont pas les états de Bell, mais états standards $\ket{b_0b_1}\equiv
+\{\ket{00},\ket{01},\ket{10},\ket{11}\}$.
+\begin{enumerate}
+\item Trouver la porte q-logique \texttt{B} qui permet le passage base de Bell
+$\rightarrow$ base standard ($B\ket{\Phi^{+}}=\ket{00},B\ket{\Phi^{-}}
+=\ket{10},B\ket{\psi^{+}}=\ket{01},B\ket{\psi^{-}}=\ket{11}$), en représentation
+matricielle et comme produit des opérateurs 1-qubit et \texttt{CX}.
+
+\item Quelle est maintenant l'expression de $\ket{\psi}_{123}$ (dans la base
+standard)?
+\end{enumerate}
+
+\item Alice mesure les deux bits classiques en sa possession dans la base
+standard. Cette mesure projette l'état du qubit de Bob dans un des états
+$\ket{\psi_{i}}$, $i=0,1,2,3$. Faire un tableau où apparaîtra les résultats
+possibles de la mesure d'Alice, l'état du qubit de Bob et les probabilités
+correspondantes.
+
+\begin{center}
+\begin{tabular}
+[c]{|p{4cm}|p{4cm}|p{3cm}|p{3cm}|}\hline\hline
+\rowcolor[gray]{0.8}Résultat de la mesure de Alice &
+État du qubit projeté reçu par Bob & Probabilité & \texttt{U}\\\hline\hline
+&  &  & \\\hline
+&  &  & \\\hline
+&  &  & \\\hline
+&  &  & \\\hline
+\end{tabular}
+\end{center}
+
+\item Alice transmet à Bob par un canal classique le résultat de sa mesure, et
+Bob sait que le qubit $\ket{\psi_{i}}$ lui arrive dans l'état inconnu de départ,
+mais qui reste tout aussi inconnu!
+
+En fonction de $\ket{\psi_{i}}$, dire quel opérateur unitaire \texttt{U} (que
+l'on exprimera en fonction des puissances de $\mathtt{X},\mathtt{Z}$) Bob doit
+appliquer pour reconstituer $\ket{\psi}$. Ce résultat sera inclut dans le
+tableau de la question précédente.
+
+\textbf{ L'état du qubit de départ $\ket{\psi}$ a été téléporté, mais il n'y a
+jamais eu une mesure de cet état.}
+
+\item Montrer, en parcourant le circuit, qu'on a effectivement à la sortie de
+la 3e ligne, $\ket{\psi}$.
+
+\end{enumerate}
+
+\subsection{Circuit intraportation avec QuTiP}
+En utilisant le logiciel QuTiP, simuler le circuit de l'exercice 
+\ref{sec:CircIntr}. Votre programme devrait faire ce qui suit:
+
+\begin{enumerate}
+\item Définir toutes les portes logiques du circuit intraportation.
+\item Définir particulièrement l'opérateur \texttt{B} qui permet de générer 
+la paire EPR $\ket{\Phi^{+}}$ partager par Alice et Bob.
+\item Définir l'état d'entrée $\ket{\psi}_{in}=\ket{\psi}\otimes\ket{\Phi^{+}}$ 
+du circuit.
+\item Évaluer l'état de sortie $\ket{\psi}_{out}$ du circuit.
+\item Évaluer $\rho_{Bob}$, en prenant la trace partielle de $\ket{\psi}_{out}$,
+\item Calculer $\bra{\psi}\rho_{Bob}\ket{\psi}$. Vous devez trouver le résultat $1$.
+\end{enumerate}
+
+
+\subsection{Téléportation d'une paire EPR}
+
+Le circuit quantique ci-dessous qui présente la téléportation d'une paire 
+EPR\footnote{voir V.N. Gorbachev and A.I. Trubilko, \emph{Quantum teleportation 
+of EPR pair by three-particle entanglement}, J. Exp. Phys. \textbf{91}, 894 
+(2000).}. Les premières portes génèrent l'état intriqué%
+\begin{equation}
+\alpha\ket{01} +\beta\ket{10} ,
+\label{eq:EPRTelep}%
+\end{equation}
+et l'état GHZ (Greenberger, Horne et Zeilinger)%
+\begin{equation}
+\frac{1}{\sqrt{2}}(\ket{000}+\ket{111}).
+\end{equation}
+
+\begin{enumerate}
+\item Montrer qu'à la sortie, l'état EPR (\ref{eq:EPRTelep}) est retrouvé aux 
+deux dernières lignes du circuit.
+\[
+\Qcircuit @C=1em @R=1.em {
+&\mbox{EPR}\\
+\lstick{\alpha\ket{0}+\beta\ket{1}} & \ctrl{1} & \qw      & \qw      & \qw
+&  \qw     & \qw        & \qw      & \qw      & \qw      & \qw      & \qw
+& \ctrl{3} & \gate{X}     & \qw \\
+\lstick{\ket{1}} 		    & \gate{X}    & \qw      & \qw      &
+\gate{W}
+& \ctrl{1} & \gate{W}  & \qw      & \ctrl{2} & \qw      & \qw      & \qw       &
+\qw      & \qw       & \qw \\
+\lstick{\ket{0}} 		    & \gate{W}& \ctrl{1} & \ctrl{2} & \qw
+& \gate{X}    & \ctrl{1}   & \qw      & \qw      & \qw      & \ctrl{2} & \qw
+& \qw      & \qw       & \qw \\
+\lstick{\ket{0}}    		    & \qw      & \gate{X}    & \qw      & \qw
+& \qw      & \gate{X}      & \gate{W}& \gate{X}    & \gate{W}& \qw      &
+\gate{X}    &
+\gate{X}    & \qw       & \qw \\
+\lstick{\ket{0}}    		    & \qw      & \qw      & \gate{X}    & \qw
+& \qw      & \qw        & \qw      & \qw      & \qw      & \gate{X}    &
+\ctrl{-1}
+& \gate{W}& \ctrl{-4} & \qw \\
+&&\mbox{{GHZ}}&&&&&\mbox{Téléportation d'une pair EPR}
+\gategroup{2}{2}{3}{2}{.7em}{--}\gategroup{4}{2}{6}{4}{.7em}{--}
+}
+\]
+
+\item Simuler ce circuit en utilisant QuTiP. Votre programme devrait:
+
+\begin{enumerate}
+\item Définir les portes logiques quantique du circuit.
+
+\item Définir de l'état d'entrée du circuit $\ket{EPR}\otimes\ket{GHZ}$ 
+(on prendra $|\alpha|^2=|\beta|^2=\frac{1}{2}$). Il faudra au préalable 
+évaluer les états $\ket{EPR}$ et $\ket{GHZ}$.
+
+\item Évaluer l'état de sortie du circuit, y extraire, à travers la trace 
+partielle, l'état final de la dernière ligne,
+
+\item Comparer avec l'état initial.
+\end{enumerate}
+\end{enumerate}
+
+\subsection{Transformée de Fourier Quantique}
+
+Évaluer la sortie du circuit quantique de la figure \ref{fig:QFT3},
+où $\mathtt{W}$ la porte 1-qubit de Walsh-Hadamard,
+$\mathtt{CR}_k=\ket{0}\bra{0}\otimes\mathbb{I}+\ket{1}\bra{1}\otimes\mathtt{R}
+_k$, avec $\mathtt{R}_k=\ket{0}\bra{0}+e^{\frac{2\pi i}{2^{k}}}\ket{1}\bra{1}$.
+
+\begin{figure}[ptbh]
+\[
+\Qcircuit @C=1em @R=1.em {
+\lstick{\ket{1}} & \gate{W} & \gate{R_2} & \gate{R_3} & \qw & \qw & \qw & \qw &
+\qw & \qswap & \qw \\
+\lstick{\ket{0}} & \qw & \ctrl{-1} & \qw & \gate{W} & \gate{R_2} & \qw & \qw  &
+\qw & \qw \qwx &\qw \\
+\lstick{\ket{1}} & \qw & \qw &\ctrl{-2} &\qw & \ctrl{-1} &\gate{W} & \qw  & \qw
+ & \qswap \qwx & \qw }
+\]
+\caption{Circuit implémentant la Transformation de Fourier Quantique (QFT) de
+$\ket{101}$.}
+\label{fig:QFT3}
+\end{figure}

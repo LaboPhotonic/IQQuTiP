@@ -1,0 +1,80 @@
+\chapter{Code RSA}
+\label{chap:RSA}
+Créé en 1977 par Rivest, Shamir et Adelman, ce code de cryptographie, a bâti
+sa fiabilité sur la difficulté de factoriser des grands nombres. Cependant, en
+novembre 2005, au moyen de cinq mois de calculs complexes réalisés sur plus de
+80 ordinateurs en réseau, des mathématiciens allemands réussissaient à
+factoriser un nombre de 193 chiffres, remportant ainsi un défi lancé par RSA.
+On pense qu'avec des ordinateurs quantiques effectuant des calculs parallèles,
+on peut relever le défi en quelques secondes.
+
+L'algorithme de ce code est le suivant:
+
+\begin{enumerate}
+\item Bob choisit deux nombres premiers $p$ et $q$ suffisamment grands et
+calcule $N = pq$.
+
+\item Bob choisit au hasard un nombre $c$ n'ayant pas de diviseur commun avec
+le produit $(p-1)(q-1)$, c'est-à-dire $\gcd(c,(p-1)(q-1))=1$.
+
+\item Bob calcule $d$ qui est l'inverse de $c$ pour la multiplication modulo
+$(p-1)(q-1)$
+\begin{equation}
+cd\equiv1\pmod{(p-1)(q-1)}.
+\end{equation}
+
+
+\item Bob publie la paire $(d,N)$. C'est la clé publique que n'importe qui
+peut utiliser pour envoyer un message à Bob.
+
+\item La paire $(c,N)$ est la clé privée que possède seule Bob. Ainsi, il est
+le seul à pouvoir déchiffrer un message chiffré au moyen de la clé publique.
+
+\item Alice veut envoyer à Bob un message codé, qui doit être représenté par
+un nombre $a<N$. Si le message est trop long, Alice le segmente en plusieurs
+sous messages $a_i<N$. Elle chiffre ensuite chaque sous-message en
+calculant,
+\begin{equation}
+b\equiv a_i^{d}\pmod{N},
+\end{equation}
+et envoie $b$ à Bob.
+
+\item Quand Bob reçoit le message qu'il déchiffre en calculant
+\begin{equation}
+b^{c}\pmod{N}=a_i(!)
+\end{equation}
+
+
+En effet, le fait que le résultat soit précisément $a_i$, c'est-à-dire le
+message original d'Alice, est un résultat de théorie des nombres.
+\end{enumerate}
+
+En résumé, sont envoyés sur voie publique, non sécurisée, les nombres $N$, $d$
+et $b$. Les avantages par rapport au code \emph{one-time Pad} sont:
+
+\begin{itemize}
+\item Il n'est point besoin de distribuer une clé secrète par un canal supposé
+sécurisé. La clé publique peut être utilisée par quiconque veut communiquer
+avec Bob, lequel possède seul la clé sécrète.
+
+\item La clé publique peut être re-utilisée autant de fois qu'on le désire.
+\end{itemize}
+
+\begin{example}
+$p=3$,\ $q=$, $7N=21$, $(p-1)(q-1)=12$.
+
+$c=5$ n'a aucun facteur commun avec $12$, et son inverse par rapport à la
+multiplication modulo $12$ est $d=5$ car $5\times5=24+1$. Alice choisit pour
+message $a=4$. Elle calcule
+
+\begin{equation}
+4^{5}=1024=21\times48+16,\qquad4^{5}=16\pmod{21}
+\end{equation}
+Alice envoie donc à Bob le message $16$. Bob calcule
+
+\begin{equation}
+b^{5}=16^{5}=49\ 932\times21+4,\qquad16^{5}=4\pmod{21}
+\end{equation}
+et Bob récupère donc le message original $a=4$.
+\end{example}
+

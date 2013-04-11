@@ -1,0 +1,342 @@
+%Définition des différents répertoires à prendre à compte
+\makeatletter\def\input@path{
+{/media/MYWIN7OS/swp55/Docs0512/PhysQuant/}
+% {/media/MYWIN7OS/swp55/Docs0512/MIL4AR08New/}
+}\makeatother
+%
+\documentclass[12pt,a4paper,oneside,openany]{book}%
+\usepackage{graphicx,amsmath,amsfonts,amssymb,cclicenses}
+% Box pour titres gestion des entêtes et pieds de pages
+\usepackage{fancybox,fancyhdr}
+%Gestion de la présentation des titres des chapitres
+\usepackage[Glenn]{fncychap}
+% Gestion de la langue française et de l'encodage
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% Gestion de la page (mode économique)
+\usepackage[a4paper,includeheadfoot,compat2]{geometry}
+%
+\usepackage{color,colortbl,array,lmodern}
+\usepackage{multicol,wrapfig}
+% Écriture des algorithmes
+\usepackage{algpseudocode} % Codes semblables à fortran ou pascal ou C
+\usepackage[section]{algorithm}
+%
+\usepackage[bf,textfont={small,it}]{caption}
+\usepackage[toc,page,title,titletoc,header]{appendix}
+\usepackage[Glenn]{fncychap}
+% Pour générer une mini-table de matière au début de chaque chapitre et dans
+%une boite
+\usepackage[french]{minitoc-hyper}
+\usepackage{myminitoc,titlebox}
+% Gestion des liens hypertextes
+\usepackage[colorlinks,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
+%
+% Gestion du fichier pdf
+\hypersetup{%
+   bookmarksnumbered=true,%
+   pdfauthor=Nana Engo,
+   pdfsubject={Uni Ndéré, Fac Sciences, MIL4R08-MIL4CS07},%
+   pdfkeywords={Qubits, Amplitude de probabilité, Opérateurs, Cryptographie et
+Téléportation quantiques, Portes et Circuits quantiques},%
+   pdftitle=Introduction à l'Information Quantique V13.04%
+}
+\setcounter{MaxMatrixCols}{30}
+\setlength{\abovecaptionskip}{0pt}
+\setlength{\belowcaptionskip}{0pt}
+\newtheorem{theorem}{Théorème}[section]
+\newtheorem{acknowledgement}{Remerciements}
+\newtheorem{example}{Exemple}[section]
+\newtheorem{exercise}{Exercice}[section]
+\newtheorem{problem}{Problème}[section]
+\newtheorem{remark}{Remarque}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{conclusion}{Conclusion}[section]
+\newtheorem{principe}{Principe}[section]
+\newtheorem{definition}{Définition}[section]
+%\newtheorem{algorithm}{Algorithme}[section]
+\newtheorem{solution}{Solution}[section]
+\newenvironment{proof}[1][Preuve]{\noindent\textbf{#1.} }{\ \rule{0.5em}{0.5em}}
+% Numérotations à deux chiffres des sections, figures et tableaux
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+\frenchbsetup{StandardLayout}
+% Commandes pour les unités et vecteurs en gras
+\newcommand{\opn}[1]{\ensuremath{\operatorname{#1}}} % Operatorname
+\newcommand{\bls}[1]{\ensuremath{\boldsymbol{#1}}} %Boldsymbol
+\newcommand{\av}[1]{\langle{#1}\rangle} %Average
+%
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[RE]{\textsl{\leftmark}}
+\fancyhead[LO]{\textsl{\rightmark}}
+\fancyhead[LE,RO]{\thepage}
+\fancyfoot[LE,RO]{V13.04}
+% \fancyfoot[LO,RE]{\footnotesize Copyright \copyright \! Nana Engo}
+\fancyfoot[LO,RE]{\tiny\copyright \! Nana Engo - Sous la licence \cc \bysa 3.0}
+\fancyfoot[CO,CE]{\tiny{\emph{INTRO A L'INFORMATION QUANTIQUE}}}
+\renewcommand{\footrulewidth}{0.4pt}
+%BeginMSIPreambleData
+\ifx\pdfoutput\relax\let\pdfoutput=\undefined\fi
+\newcount\msipdfoutput
+\ifx\pdfoutput\undefined\else
+\ifcase\pdfoutput\else
+\msipdfoutput=1
+\ifx\paperwidth\undefined\else
+\ifdim\paperheight=0pt\relax\else\pdfpageheight\paperheight\fi
+\ifdim\paperwidth=0pt\relax\else\pdfpagewidth\paperwidth\fi
+\fi\fi\fi
+%EndMSIPreambleData
+\input{Qcircuit}
+%
+\begin{document}
+\frontmatter
+\begin{titlepage}
+\begin{small}
+\begin{center}
+ \begin{tabular}[h]{l}
+  UNIVERSITÉ DE NGAOUNDÉRÉ \\FACULTÉ DES SCIENCES
+ \end{tabular}
+\hspace*{2em}
+\begin{minipage}{2cm}
+\includegraphics[width = 1.6cm]{graphics/LogoUN.png}
+\end{minipage}
+\hspace*{1em}
+\begin{tabular}[h]{r}
+  \\MATHS - INFORMATIQUE\\LICENCE DE MATHS-INFO
+ \end{tabular}
+\end{center}
+\end{small}
+\vspace*{5em}
+\begin{center}
+\color{black}\rule{14.75cm}{0.09cm}\color{black}
+\bigskip
+
+{\Huge INTRODUCTION A L'INFORMATION QUANTIQUE}
+
+\color{black}\rule{12.55cm}{0.09cm}\color{black}
+
+\vspace*{2em}
+
+MIL4AR08/CS07 - UE Optionnelle\\ CM: 30h - TD: 20h - Crédits: 5\\
+
+ \vspace*{5em}
+{\Large \textbf{NANA ENGO}}\vspace*{3em}
+\begin{center}
+\begin{tabular}{c}
+\Qcircuit @C=1em @R=1.em {
+&\mbox{EPR}\\
+\lstick{\alpha\ket{0}+\beta\ket{1}} & \ctrl{1} & \qw      & \qw      & \qw
+&  \qw     & \qw        & \qw      & \qw      & \qw      & \qw      & \qw
+& \ctrl{3} & \targ     & \qw \\
+\lstick{\ket{1}} 		    & \targ    & \qw      & \qw      & \gate{W}
+& \ctrl{1} & \gate{W}  & \qw      & \ctrl{2} & \qw      & \qw      & \qw       &
+\qw      & \qw       & \qw \\
+\lstick{\ket{0}} 		    & \gate{W}& \ctrl{1} & \ctrl{2} & \qw
+& \targ    & \ctrl{1}   & \qw      & \qw      & \qw      & \ctrl{2} & \qw
+& \qw      & \qw       & \qw \\
+\lstick{\ket{0}}    		    & \qw      & \targ    & \qw      & \qw
+& \qw      & \targ      & \gate{W}& \targ    & \gate{W}& \qw      & \targ     &
+\targ    & \qw       & \qw \\
+\lstick{\ket{0}}    		    & \qw      & \qw      & \targ    & \qw
+& \qw      & \qw        & \qw      & \qw      & \qw      & \targ    & \ctrl{-1}
+& \gate{W}& \ctrl{-4} & \qw \\
+&&\mbox{{GHZ}}&&&&&\mbox{Téléportation d'une pair EPR}
+\gategroup{2}{2}{3}{2}{.7em}{--}\gategroup{4}{2}{6}{4}{.7em}{--}
+}
+\end{tabular}
+\end{center}
+
+\vspace*{5cm}
+{\small \textbf{\emph{Année académique}} $2012-2013$ \\ Copyright ©\! 
+ Nana Engo - Sous la licence \cc \bysa 3.0}
+\end{center}
+
+\end{titlepage}
+\tableofcontents
+
+\chapter{Avant-propos}
+
+\markboth{Avant-Propos}{Avant-Propos} Cette unité d'enseignement (UE) a pour
+objectif d'exposer aux étudiants du cycle Licence des Mentions Mathématique et
+Informatique, les notions de bases de la théorie quantique nécessaires à la
+compréhension de l'information quantique. Laquelle permet de traiter et
+transmettre l'information en s'appuyant sur les spécificités de la théorie
+quantique.
+
+Les progrès des techniques et de la connaissance permettent aujourd'hui
+d'agencer de façon contrôlée un petit nombre d'atomes pour fabriquer des
+objets de taille nanométrique\footnote{Le millionième de millimètre!} qui
+présentent des propriétés extraordinaires, d'origine quantique, qui sont
+exploitées dans la quasi-totalité des domaines industriels.
+
+En effet, le monde de l'information dans lequel nous vivons aujourd'hui résulte
+de la synergie entre l'informatique et la théorie quantique à travers
+l'invention du transistor. Cependant, l'ultra-miniaturisation croissante des
+composants électronique, suit deux lois émise en 1965 par Gordon Moore,
+co-fondateur de la société INTEL:
+\begin{itemize}
+  \item\textbf{1ère loi de Moore:} \emph{tous les dix-huit mois, la complexité
+et les performances (rendement technologique) des circuits seront multipliées
+par deux};
+  \item\textbf{2ème loi de Moore:} \emph{à chaque génération le coût des
+équipements de fabrication sera multiplié par deux}.
+\end{itemize}
+
+En vertu de la 1ère loi,
+\begin{itemize}
+  \item L'augmentation du nombre de connexions limite les possibilités
+d'intégration sur une puce;
+  \item La réduction du temps de calcul est limitée par les délais de
+commutations entre transistors;
+  \item Le nombre important de composants sur une même puce entraîne \emph{ipso
+facto} une augmentation de la consommation électrique, et par voie de
+conséquent, à travers la loi de Ohm, celle de la quantité de chaleur dissipée
+dans la puce.
+\end{itemize}
+
+\begin{figure}[ptbh]
+\centering
+  \includegraphics{graphics/LoiMoore.png}
+\caption{Depuis quatre décennies, la densité des transistors réalisés sur une
+même puce double tous les dix-huit mois.}
+\label{fig:LoiMoore}
+\end{figure}
+
+Ainsi comme on peut le voir sur la figure \ref{fig:LoiMoore}, par rapport aux
+nombre de connexions, d'ici 2020 le bit d'information sera stocké sur une puce
+de dimension atomique. Et alors, les effets quantiques commenceront à être
+prédominants. Les électrons jusque là bien ordonnés révéleront leur nature
+quantique, qui est, entre autres, probabiliste. Les transistors pourraient
+ainsi, ne plus être de manière déterministe dans l'état ON ou OFF, mais se
+retrouver dans une superposition des deux, avec une certaine probabilité d'être
+dans l'état ON ou dans l'état OFF. Un tel comportement n'appelle aucune
+alternative: il faudra soit adapter l'architecture des ordinateurs pour
+minimiser les nuisances occasionnées par les effets quantiques, ou alors changer
+radicalement d'architecture en ouvrant les bras à ces effets quantiques.
+L'information quantique suit cette deuxième approche.
+
+Mais hormis ces effets quantiques, les considérations économiques, que met en
+évidence la 2ème loi de Moore, vont aussi rendre inopérants la 1ère loi de
+Moore. En effet, pour réduire les coûts de fabrication, on pense de plus en plus
+à l'\textbf{auto-assemblage} des composants. Celui-ci est possible depuis le
+début des années 1980 par \emph{la capacité des physiciens à manipuler et
+observer des objets quantiques élémentaires individuels}: atomes, photons,
+électrons, etc. Il est à noter que c'est l'auto-assemblage que suit la vie en
+pratiquant l'assemblage des molécules pour créer les protéines, enchaînement
+d'acides aminés, que de super-molécules, les acides nucléiques (ARN, ADN),
+savent faire produire au sein de cellules pour former des organismes, les faire
+fonctionner et se reproduire tout en se complexifiant. Cette voie, dite
+\emph{\textbf{bottom-up}}, vise à organiser la matière à partir des
+\emph{briques de base}, dont les atomes eux-mêmes sont les plus petits
+constituants, à l'instar du monde vivant. La nanoélectronique du futur cherche à
+emprunter cette voie d'assemblage pour aboutir à moindre coût à la fabrication
+d'éléments fonctionnels, puisque \textbf{la technologie ne progresse qu'en
+devenant moins chère!}
+
+Grâce à l'information quantique, on peut par exemple concevoir de nouvelles
+méthodes de cryptographie dont la sécurité s'appuie sur les bases du formalisme
+quantique, ou de nouvelles méthodes de calculs qui peuvent être
+exponentiellement plus efficaces que les méthodes classiques. L'information
+quantique ne concerne donc pas seulement les physiciens, mais aussi les
+théoriciens de l'information, les algorithmiciens, et les mathématiciens
+travaillant sur la théorie de la complexité.
+
+Ces notes de cours sont volontairement très détaillées et enrichies de nombreux
+exemples afin de palier à la carence d'ouvrages appropriés dans l'environnement
+actuel de l'étudiant de la Faculté des Sciences de l'Université de Ngaoundéré.
+
+Le contenu du cours est le suivant:
+
+\begin{itemize}
+\item \textbf{Chapitre I: Qubits et états quantiques}
+
+Qubit ou bit quantique et espace de Hilbert. Phénomènes quantiques (Interférence
+à une particule). Vecteurs d'état et amplitudes de probabilité. Règles de calcul
+des amplitudes de probabilité.
+
+\item \textbf{Chapitre II: Mesure et opérateurs linéaires}
+
+Mesure de grandeurs physiques et opérateurs. Opérateurs linéaires et
+représentation matricielle. Diagonalisation d'un opérateur hermitien. Ensemble
+complet d'opérateurs qui commutent (ECOC).
+
+\item \textbf{Chapitre III: Postulats et évolution temporelle}
+
+Postulats de la théorie quantique. Évolution temporelle. Inégalités
+d'Heisenberg. Manipulations des qubits: oscillations de Rabi.
+
+\item \textbf{Chapitre IV: Corrélations quantiques}
+
+Produit tensoriel. Interférences des états corrélés. Analyse EPR et inégalités
+de Bell. Non-clonage quantique. Cryptographie quantique. Téléportation
+quantique.
+
+\item \textbf{Chapitre V: Calculs quantiques}
+
+Calculs réversibles. Portes logiques et circuits quantiques. Bases de Bell.
+Algorithme de Deutsch-Jozsa. Transformation de Fourier quantique.
+\end{itemize}
+
+\mainmatter
+%
+%\input{test}
+
+\input{./QubitsEtatsQ.tex}
+
+\input{./MesuresOperateurs.tex}
+
+\input{./PostulatsQ.tex}
+
+\input{./CorrelationsQ.tex}
+
+\input{CalculsQ.tex}
+
+% \input{Correction.tex}
+
+\appendix
+
+\input{InstallQuTiP.tex}
+
+\input{TheorieInfoClas.tex}
+
+\input{EltsCryptologie.tex}
+
+\input{CodeRSA.tex}
+
+\input{Correction}
+\backmatter
+
+
+\begin{thebibliography}{99999999}
+                                         %
+
+
+\bibitem[MLB2005]{MLB2005}Michel Le Bellac,\emph{Introduction à l'Information
+Quantique}, Belin, 2005.
+
+\bibitem[VSC2004]{VSC2004}Valerio Scarani, \emph{Initiation à la Physique
+Quantique}, Vuibert, 2004.
+
+\bibitem[BCS2004]{BCS2004}Giuliano Benenti, Giulio Casati and Giuliano Strini,
+\emph{Principles of Quantum Computation and Information, Vol.I}, World
+Scientific, 2004.
+
+\bibitem[MLB2003]{MLB2003}Michel Le Bellac,\emph{Physique Quantique}, 2e
+Édition, CNRS ÉDITIONS, 2007.
+
+\bibitem[MNIC2000]{MNIC2000}Michael Nielsen and Isaac Chuang, \emph{Quantum
+Computation and Quantum Information}, Cambridge University Press, 2000.
+
+\bibitem[JPresk1998]{JPresk1998}John Preskill, \emph{Lecture note on quantum
+information and computation},
+\texttt{http://theory.caltech.edu/people/preskill/}
+
+\bibitem[SCHWWW]{SCHWWW}C. Schiller, \emph{Motion Mountain},
+\texttt{www.motionmountain.org}
+\end{thebibliography}
+
+
+\end{document}
