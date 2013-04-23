@@ -928,6 +928,21 @@ $m_1$, $m_2$ et $m_3$ lors d'une mesure de $M$ sur l'état $\ket{\psi(t)}$?
 moment magnétique.
 \end{enumerate}
 
+\subsection{QuTiP - Moment magnétique du Deutéron}
+Il sera question ici de reprendre l'exercice avec QuTiP. On prendra pour la suite $\hbar\omega=1$ et $\mu_0=1$
+\begin{enumerate}
+\item En utilisant la commande \texttt{basis(n,m)}, définir les états de base $\{\ket{+},\ket{0},\ket{-}\}$ ainsi que le hamiltonien \texttt{H} du noyau. Définir la matrice \texttt{M=A}. Pour définir \texttt{H} et \texttt{M}, définir d'abord les matrices de \texttt{H} et de \texttt{M} puis transformer les en un objet quantique à travers la commande \texttt{Qobj()}.
+
+\item Calculer les vecteurs propres normalisés et les valeurs propres de \texttt{M} (utiliser la commande \texttt{M.eigenstates()}). Définir les projecteurs \texttt{$P_1,P_2$} et $P_3$ sur les états $\ket{m_1},\ket{m_2}$ et $\ket{m_3}$. Il faut noter que la commande \texttt{eigenstates()} renvoie les valeurs propres ainsi que les vecteurs propres. Pour cela utiliser :\\
+\texttt{[m3,m2,m1],[vec3,vec2,vec1] = M.eigenstates()}.
+
+\item On suppose que le noyau est dans l'état initial $\ket{\psi(0)}=\ket{m_1}$. Calculer la valeur moyenne de $M$ dans cet état (utiliser la commande \texttt{expect(M,vec1)}). Calculer $\langle H\rangle$ et l'écart quadratique moyen $\Delta H$.
+
+\item Calculer pour $t\in[0,10]$, les valeurs moyennes de $M$, dans les états $\ket{\psi(t)}$ (utiliser \texttt{mesolve} dont l'utilisation est expliquée au chapitre précédent). On discrétisera l'intervalle de temps en $100$. Calculer en même temps les probabilités de trouver les valeurs $m_1$, $m_2$ et $m_3$ lors d'une mesure sur l'état $\ket{\psi(t)}$.
+
+\item Représenter sur la même figure les courbes d'évolution de la valeur moyenne de $M$ pour $t\in[0,10]$ ainsi que les probabilités de trouver les valeurs $m_1,m_2$ et $m_3$. On utilisera la commande \texttt{plot(Temps, Fonction)} où \texttt{Temps} représente les valeurs en abscisse et \texttt{Fonction} les valeurs en ordonnée ou la fonction à représenter.
+\end{enumerate}
+
 \subsection{Précession de Larmor}
 
 On considère un quanton de spin $\frac{1}{2}$ dont les états propres de
@@ -1119,17 +1134,22 @@ opération logique quantique?
 
 \subsection{QuTiP - Evolution d'un état de spin 1/2}
 
-Écrire un programme (script) en Python utilisant QuTiP pour répondre aux 
+Écrire un programme (script) en Python utilisant QuTiP pour répondre aux
 questions suivantes.
 
-L'évolution d'un quanton de spin 1/2, de moment magnétique $\mathbf{\mu}$, dans un champ magnétique $\textbf{B}(0,0,B)$, peut être décrit par l'hamiltonien $H=-\mathbf{\mu}.\textbf{B}=\omega S_z$. Le quanton pénètre dans le champ magnétique dans l'état $\ket{+}_x$. On prendra : $\hbar\omega=0.5$.
+L'évolution d'un quanton de spin 1/2, de moment magnétique $\mathbf{\mu}$, dans un champ magnétique $\textbf{B}(0,0,B)$, peut être décrit par l'hamiltonien \texttt{H}$=-\mathbf{\mu}.\textbf{B}=\omega S_z$. Le quanton pénètre dans le champ magnétique dans l'état $\ket{+}_x$. On prendra : $\hbar\omega=0.5$.
 \begin{enumerate}
-\item Définir l'hamiltonien $H$, ainsi que ses états propres $\ket{+}_z$ et $\ket{-}_z$.
-\item Exprimer les états $\ket{+}_x$ et $\ket{-}_x$ en fonction des états propres du hamiltonien $H$.
+\item Définir l'hamiltonien \texttt{H}, ainsi que ses états propres $\ket{+}_z$ et $\ket{-}_z$ en utilisant les commandes prédéfinies \texttt{sigmaz()} et \texttt{basis(n,m)}.
+
+\item Exprimer les états $\ket{+}_x$ et $\ket{-}_x$ en fonction des états propres du hamiltonien \texttt{H}.
+
 \item Définir les projecteurs $P_+$ et $P_-$ respectivement sur les états $\ket{+}_x$ et $\ket{-}_x$
-\item Le quanton initialement dans l'état $\ket{+}_x$ pénètre dans le champ magnétique à $t=0$. Résoudre l'équation de schr\"odonger, pour $t\in[0,30]$. Calculer en même temps les valeurs moyennes de $P_+$, $P_-$, $H$ et $H^2$.
+
+\item Le quanton initialement dans l'état $\ket{+}_x$ pénètre dans le champ magnétique à $t=0$. Résoudre l'équation de schr\"odonger, pour $t\in[0,30]$ en utilisant \texttt{mesolve(H, Temps, Psi0, [], [Pplus, Pmoins, H, H*H])}. Calculer en même temps les valeurs moyennes de $P_+$, $P_-$, $H$ et $H^2$.
 
 \textbf{Note} : la valeur moyenne $\bra{\psi(t)}P_+\ket{\psi(t)}=\bra{\psi(t)}+\rangle_x ._x\langle+\ket{\psi(t)}=\mathcal{P}_+(t)$, est la probabilité de trouver le quanton à l'instant $t$ dans l'état $\ket{+}_x$. De même pour $P_-$.
+
 \item Représenter, pour $t\in[0,30]$, les probabilités de trouver le quanton dans l'état $\ket{+}_x$ et $\ket{-}_x$. Que remarque-t-on?
-\item Calculer pour $t=30s$ la déviation standard de $\Delta H$.
+
+\item Calculer pour $t=30s$ la déviation standard $\Delta H$ de \texttt{H}.
 \end{enumerate}
