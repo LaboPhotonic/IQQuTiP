@@ -1,13 +1,17 @@
 \chapter{Installation de QuTiP et commandes usuelles}
 \label{sec:QuTiP}
 
-QuTiP (\textbf{Qu}antum \textbf{T}oolbox \textbf{i}n \textbf{P}ython) est un 
-logiciel \emph{libre ou open-source} de calculs d'optique quantique avec des 
-applications en information quantique. C'est un excellent outil d'appropriation 
-et de simulation des concepts fondamentaux de la théorie quantique. Grâce à ce 
-logiciel dont la maîtrise est aisée, l'étudiant peut facilement représenter un 
-état quantique ou un opérateur, calculer une valeur moyenne, simuler l'évolution 
-d'un système, implémenter des algorithmes de l'information quantique.
+QuTiP, \textbf{Qu}antum \textbf{T}oolbox \textbf{i}n \textbf{P}ython, est un 
+logiciel \emph{libre ou open-source} de calculs en optique quantique avec des 
+applications en information quantique\footnote{J. R. Johansson, P.D. Nation, and 
+F. Nori, \emph{QuTiP 2: A Python framework for the dynamics of open quantum 
+systems}, Comp. Phys. Comm. 184, 1234 (2013) ou 
+\url{http://arxiv.org/abs/1211.6518}.}. C'est un excellent outil 
+d'appropriation et de simulation des concepts fondamentaux de la théorie 
+quantique. Grâce à ce logiciel dont la maîtrise est aisée, l'étudiant peut 
+facilement représenter un état quantique ou un opérateur, calculer une valeur 
+moyenne, simuler l'évolution d'un système, implémenter des algorithmes de 
+l'information quantique.
 
 QuTiP étant rédiger en Python, il est nécessaire, pour utilisant optimale, 
 d'avoir quelques notions de base du langage de programmation Python. Pour 
@@ -17,43 +21,42 @@ http://uploads.siteduzero.com/pdf/223267-apprenez-a-programmer-en-python.pdf}.
 Il est important de souligner que Python est un langage de programmation 
 \textbf{interprété}, c'est-à-dire que les instructions que vous lui envoyez sont 
 transcrites en langage machine au fur et à mesure de leur lecture. Les langages 
-comme le C / C++ ou le fortran sont appelés \textbf{langages compilés} car, 
-avant de pouvoir les exécuter, un logiciel spécialisé se charge de transformer 
-le code du programme en langage machine par la \emph{compilation}. À chaque 
-modification du code, il faut rappeler une étape de compilation.
+comme le C/C++ ou le fortran sont appelés \textbf{langages compilés} car, avant 
+de pouvoir les exécuter, un logiciel spécialisé se charge de transformer le code 
+du programme en langage machine par la \emph{compilation}. À chaque modification 
+du code, il faut rappeler une étape de compilation.
  
 Nous présentons ici les étapes à suivre pour l'installation de QuTiP sous le 
 système d'exploitation libre \textbf{Linux}. Il est à noter que QuTiP fonctionne 
 aussi sous les systèmes d'exploitation \textbf{Mac OS X} et \textbf{Windows}. 
+La version présentée et utilisée ici est la 2.2.0 (site web: 
+\url{http://qutip.googlecode.com}; blog: \url{http://qutip.blogspot.com}).
 
 \section{Installation de QuTiP pour Ubuntu 12.04 et plus récente}
 
-Pour commencer, il faut déjà un ordinateur sur lequel est installé une variante 
-la distribution Linux Ubuntu (Ubuntu, Xubuntu, Kubuntu, Lubuntu, etc.). Se 
-connecter à Internet pour télécharger les \emph{paquets} nécessaires\footnote{Il 
-faut aussi préciser qu'il y a deux possibilités d'installer QuTiP : manuellement 
-et automatiquement. Nous allons présenter seulement l'installation automatique 
-pour sa simplicité. Pour l'installation manuel et l'installation sur d'autres 
-systèmes d'exploitation veuillez consulter le manuel de QuTiP \emph{QuTiP : The 
-Quantum Toolbox in Python release 2.2.0} disponible sur le site 
+Il faut disposer d'un ordinateur sur lequel est installé une variante la 
+distribution Linux Ubuntu (Ubuntu, Xubuntu, Kubuntu, Lubuntu, etc.). Se 
+connecter à Internet pour télécharger les \emph{paquets} nécessaires 
+en suivant la procédure ci-dessous.\footnote{Il faut préciser qu'on peut 
+installer QuTiP aussi bien manuellement qu'automatiquement. Cependant, nous ne 
+présentons ici que l'installation automatique du fait de sa simplicité. Pour 
+l'installation manuel et l'installation sur d'autres systèmes d'exploitation 
+veuillez consulter le manuel de QuTiP \emph{QuTiP : The Quantum Toolbox in 
+Python release 2.2.0} disponible sur le site 
 \url{http://qutip.googlecode.com/files/QuTiP-2.2.0-DOC.pdf}.}
 
-Aller sur le terminal et entrez la commande suivante, pour ajouter le dépôt 
-de QuTiP à la \emph{sourcelist}:\\
+Aller sur le terminal et entrer les commandes suivantes, pour ajouter le dépôt 
+de QuTiP à la \emph{sourcelist}; mettre ensuite cette liste de dépôt à jour; 
+et enfin installer QuTiP:\\
 \begin{tt}
 sudo add-apt-repository ppa:jrjohansson/qutip-releases\\
-\end{tt}
-Mettre ensuite cette liste de dépôt grâce à la commande\\
-\begin{tt}
 sudo apt-get update\\
-\end{tt}
-et installer QuTiP avec la commande\\
-\begin{tt}
 sudo apt-get install python-qutip\\
 \end{tt}
 
-Il est recommandé d'installer d'autres paquets afin de compléter l'installation. 
-Pour cela dans votre terminal, tapez les commandes suivantes:\\
+Il est recommandé d'installer d'autres paquets, pour utiliser \LaTeX dans les 
+figures et effectuer des tests, afin de compléter l'installation. Pour cela 
+entrer sur le terminal les commandes suivantes:\\
 \begin{tt}
 sudo apt-get install texlive-latex-extra\\
 sudo apt-get install python-nose
@@ -68,39 +71,66 @@ ou\\
 
 \section{Vérification de l'installation}
 
-Il est possible de vérifier si votre installation de QuTiP s'est bien dérouler. 
-Le temps de cette vérification est fonction de la puissance de votre ordinateur. 
+Il est possible de vérifier si l'installation de QuTiP s'est bien dérouler. Le 
+temps de cette vérification est fonction de la puissance de votre ordinateur. 
 Pour vérifier, il faut taper sur terminal les commandes :\\
-\begin{tt}
-ipython \# ou bpython si vous l'avez installé\\
-import qutip.testing as qt\\
+\texttt{ipython} \\
+\begin{lstlisting}
+import qutip.testing as qt
 qt.run()
-\end{tt}
+\end{lstlisting}
+Une fois la vérification faite QuTiP peut être utilisé.
 
-Une fois la vérification faite vous pouvez utiliser QuTiP.
 
 \section{Commandes usuelles}
 
+\subsection{Charger les modules QuTiP}
+
+Avant toute utilisation de QuTiP, il faut importer ses modules avec la commande
+\begin{lstlisting}
+from qutip import *
+\end{lstlisting}
+Ceci met toutes les fonctions et classes de QuTiP à disposition pour la suite 
+du programme.
+
+Il est aussi important d'importer la bibliothèque SciPy
+
 \subsection{Quantum object class}
-La classe \texttt{Qobj()} est une classe de QuTiP qui crée et manipule les états et les opérateurs, c'est-à-dire tout ce qui est un objet quantique. Cette classe possède des attribues et des fonctions. En effet, lorsqu'un objet de classe \texttt{Qobj()} est créé, il dispose des attribues qu'on peut accéder pour avoir des informations sur l'objet. Il existe aussi des fonctions que l'on peut appliquer à cet objet. Ces fonctions sont soit appliquer pour modifier ou transformer (i.e. normaliser, conjugué hermitien ...) l'objet, soit pour acquérir les informations plus interne de l'objet (i.e. valeurs propres, vecteurs propres ...).
+La classe \texttt{Qobj()} est une classe de QuTiP qui crée et manipule les 
+états et les opérateurs, c'est-à-dire tout ce qui est un objet quantique. Cette 
+classe possède des attributs et des fonctions. En effet, lorsqu'un objet de 
+classe \texttt{Qobj()} est créé, il dispose des attributs auxquels qu'on peut 
+accéder pour avoir des informations sur l'objet. Il existe aussi des fonctions 
+que l'on peut appliquer à cet objet. Ces fonctions sont soient appliquer pour 
+modifier ou transformer (i.e., normaliser, conjugué hermitien,\ldots) l'objet, 
+soit pour acquérir les informations plus interne de l'objet (i.e., valeurs 
+propres, vecteurs propres,\ldots).
 
 \subsection{États et opérateurs}
-Ici nous allons présenter comment on peut créer des états et des opérateurs. Il faut noter qu'en QuTiP, il y a deux façon de créer des états et des opérateurs :
+Ici nous allons présenter comment on peut créer des états et des opérateurs. Il 
+faut noter qu'en QuTiP, il y a deux façon de créer des états et des opérateurs :
 \begin{itemize}
-\item[$\bullet$] soit en définissant l'état ou l'opérateur à partir des états et des opérateurs prédéfinis,
-\item[$\bullet$] soit en donnant la forme matriciel de l'état/opérateur et transformer en un objet quantique de classe \texttt{Qobj()}.
+\item[$\bullet$] soit en définissant l'état ou l'opérateur à partir des états et 
+des opérateurs prédéfinis,
+\item[$\bullet$] soit en donnant la forme matricielle de l'état/opérateur et 
+transformer en un objet quantique de classe \texttt{Qobj()}.
 \end{itemize}
 
-Pour ce cours de l'information quantique, on utilise la commande \texttt{basis(N,m)} où \texttt{N} est le nombre de vecteur de la base et \texttt{m} est le numéro du vecteur de la base.\\
+Pour ce cours de l'information quantique, on utilise la commande 
+\texttt{basis(N,m)} où \texttt{N} est le nombre de vecteur de la base et 
+\texttt{m} est le numéro du vecteur de la base.\\
 \textbf{Exemple}\\
-Pour un système à deux niveaux de base $\{\ket{0},\ket{1}\}$, on définit l'état $\ket{\psi}=(\ket{0}+2\ket{1})$ par :\\
+Pour un système à deux niveaux de base $\{\ket{0},\ket{1}\}$, on définit l'état 
+$\ket{\psi}=(\ket{0}+2\ket{1})$ par :\\
 \begin{tt}
 ket0 = basis(2,0) \# la numérotation commence de $0$ à $N-1$\\
 ket1 = basis(2,1) \\
 Psi = ket0+2*ket1
 \end{tt}
 
-Les opérateurs prédéfinis en QuTiP sont \texttt{sigmax(), sigmay(), sigmaz(), qeye(N)} représentant $\sigma_x,\sigma_y,\sigma_z$ et la matrice identité d'ordre $N$.\\
+Les opérateurs prédéfinis en QuTiP sont \texttt{sigmax(), sigmay(), sigmaz(), 
+qeye(N)} représentant $\sigma_x,\sigma_y,\sigma_z$ et la matrice identité 
+d'ordre $N$.\\
 \textbf{Exemple}\\
 \begin{tt}
 X = sigmax() \# définit la matrice $\sigma_x$\\
@@ -109,7 +139,9 @@ Z = sigmaz() \# définit la matrice $\sigma_z$\\
 II = qeye(2) \# Matrice Identité d'ordre 2\\
 \end{tt}
 
-Ainsi on peut définir tout opérateur par combinaison de ces opérateur prédéfinis. Pour les opérateurs et états non prédéfinis, on utilise la définition matriciel.\\
+Ainsi on peut définir tout opérateur par combinaison de ces opérateur 
+prédéfinis. Pour les opérateurs et états non prédéfinis, on utilise la 
+définition matricielle.\\
 \textbf{Exemple}\\
 Définir la matrice carré d'ordre 3 suivant :
 \begin{equation}
@@ -123,11 +155,15 @@ A = [[1,1,0],[1,-1,1],[0,1,1]]\\
 A = Qobj(A)
 \end{tt}
 
-On peut ainsi définir les opérateurs tout comme les états. Lorsqu'il s'agira d'un ket ou d'un bra, définir d'abord un vecteur colonne ou linge respectivement et transformer en un objet de classe \texttt{Qobj}.\\
+On peut ainsi définir les opérateurs tout comme les états. Lorsqu'il s'agira 
+d'un ket ou d'un bra, définir d'abord un vecteur colonne ou linge respectivement 
+et transformer en un objet de classe \texttt{Qobj}.\\
 \textbf{Exemple}\\
-Dans la base $\{\ket{u_1},\ket{u_2},\ket{u_3}\}$ on considère le ket et le bra suivant :
+Dans la base $\{\ket{u_1},\ket{u_2},\ket{u_3}\}$ on considère le ket et le bra 
+suivant :
 \begin{equation}
-\ket{\phi}=\dfrac{1}{2}(\ket{u_1}+\ket{u_2}+\sqrt{2}\ket{u_3}) \qquad \bra{\psi}=\dfrac{1}{\sqrt{2}}(\bra{u_1}+\bra{u_3}).
+\ket{\phi}=\dfrac{1}{2}(\ket{u_1}+\ket{u_2}+\sqrt{2}\ket{u_3}) \qquad 
+\bra{\psi}=\dfrac{1}{\sqrt{2}}(\bra{u_1}+\bra{u_3}).
 \end{equation}
 \begin{tt}
 KetPhi = [[1/2.0],[1/2.0],[1/sqrt(2)]] \# vecteur colonne \\
@@ -136,9 +172,11 @@ BraPsi = [[1/sqrt(2),1/sqrt(2)]] \# vecteur ligne \\
 BraPsi = Qobj(BraPsi) \# état $\bra{\psi}$ \\
 \end{tt}
 
-\subsection{Les attribues d'une classe Qobj}
+\subsection{Les attributs d'une classe Qobj}
 
-Nous avons dit qu'un objet de classe \texttt{Qobj()} possède des attribues et fonctions. Ces attribues sont présentées sur la figure (\ref{qobj}). Le tableau (\ref{class}) donne les commandes et descriptions de ces attribues.
+Nous avons dit qu'un objet de classe \texttt{Qobj()} possède des attributs et 
+fonctions. Ces attributs sont présentées sur la figure (\ref{qobj}). Le tableau 
+(\ref{class}) donne les commandes et descriptions de ces attributs.
 \begin{table}[!h]
 \begin{center}
 \begin{tabular}{|l|l|l|} \hline \hline
@@ -162,22 +200,28 @@ Type	&Q.type	&Ket, bra, opértaeur ou superopérateur\\ \hline
 \label{qobj}
 \end{figure}
 
-La première colonne de ce tableau présente les attribues, la deuxième indique les commandes à exécuter pour accéder à ces attribues. En fin la dernière colonne explique en quelques mots ces attribues.\\
+La première colonne de ce tableau présente les attributs, la deuxième indique 
+les commandes à exécuter pour accéder à ces attributs. En fin la dernière 
+colonne explique en quelques mots ces attributs.\\
 \textbf{Exemple}\\
 Soit l'opérateur de Pauli $X=\sigma_x$.\\
 \begin{tt}
 X = sigmax() \# Définition de l'opérateur $X$\\
 X.data \# Affiche la matrice de $X$.\\
-X.isherm \# Indique si $X$ est hermitien : \emph{True} or \emph{False}. Ici \emph{True}\\
+X.isherm \# Indique si $X$ est hermitien : \emph{True} or \emph{False}. Ici 
+\emph{True}\\
 X.type \# Indique la nature de $X$. Ici \emph{oper} (operateur)\\
 X.shape \# Donne la dimension de $X$. Ici [2,2]\\
 \end{tt}
 
 \subsection{Qobj Math}
 
-On peut effectuer sur un objet de classe \texttt{Qobj()}, presque toutes les opérations mathématiques qu'on peut effectuer sur des variables ordinaires (l'addition, la soustraction, la multiplication, la puissance, etc ...).\\
+On peut effectuer sur un objet de classe \texttt{Qobj()}, presque toutes les 
+opérations mathématiques qu'on peut effectuer sur des variables ordinaires 
+(l'addition, la soustraction, la multiplication, la puissance, etc ...).\\
 \textbf{Exemple}\\
-Soit l'opérateur $A$ défini dans l'exemple précédant, et les matrices de Pauli $X = \sigma_x$, $Y=\sigma_y$ et $Z = \sigma_z$.\\
+Soit l'opérateur $A$ défini dans l'exemple précédant, et les matrices de Pauli 
+$X = \sigma_x$, $Y=\sigma_y$ et $Z = \sigma_z$.\\
 \begin{tt}
 X = sigmax() \# Permet de définir l'opérateur $X$\\
 Y = sigmay() \# Permet de définir l'opérateur $Y$\\
@@ -190,7 +234,7 @@ H = (1/sqrt(2))*(X+Z) \\
 
 \subsection{Fonction opérant sur une classe Qobj}
 
-En plus des attribues, une classe d'objet quantique a des fonctions qui
+En plus des attributs, une classe d'objet quantique a des fonctions qui
 agissent sur les instances Qobj. Les plus usuelles sont: \texttt{dag(), unit(), eigenenergies(), eigenstates(), tr(), ptrace()}.
 Le tableau \ref{fonction} présente ces fonctions.
 \begin{table}[!h]
