@@ -1939,3 +1939,45 @@ Résultat de Bob (publique) &  &  +&  &  & + &  & & - & + & +& + & -\\\hline
 \label{tab:Exp2}
 \end{table}
 
+\subsection{QuTiP - Systèmes composites}
+L'objectif visé ici, est la manipulation d'un système composé de plusieurs sous-systèmes. Pour définir les états et les opérateurs d'un système composite, on fait toujours intervenir le produit tensoriel.
+
+On désir étudier un système de deux électrons en interaction. Chaque électron est représenté par un sous-système à deux niveaux de base $\{\ket{0},\ket{1}\}$. Le hamiltonien du système est défini par
+\begin{equation}
+H = \sigma_x\otimes\sigma_z+W\otimes\mathbb{I},
+\end{equation}
+où $\sigma_x$ et $\sigma_z$ sont les matrices de Pauli et $W=\dfrac{1}{\sqrt{2}}\begin{pmatrix}1 & 1 \\ 1 & -1 \end{pmatrix}$.
+\begin{enumerate}
+\item Définir les états de base d'un sous-système $\ket{0}$ et $\ket{1}$ (commande \texttt{basis(n,m)}).
+
+\item Définir les états de base du système composé de ces deux électrons en utilisant la commande \texttt{tensor(ket1,ket2)} où \texttt{ket1} est un état du sous-système 1 et \texttt{ket2} est un état du sous-système 2. Les états de base du système sont $\ket{00}, \ket{01}, \ket{10}, \ket{11}$.
+
+\item Après avoir défini les opérateurs $\sigma_x$, $\sigma_z$, $\mathbb{I}$ et \texttt{W}, définir le hamiltonien du système. On utilisera les commandes \texttt{sigmax(), sigmaz() et qeye(2)} pour les trois premiers opérateurs respectivement. Remarquer que \texttt{W} s'exprime facilement en fonction de $\sigma_x$ et $\sigma_z$.
+
+\item Quels sont les vecteurs propres et les valeurs propres de \texttt{H} (commande \texttt{H.eigenstates()}).
+
+\item On note $\ket{\psi}=H\ket{00}$, $\ket{00}$ étant un état de base du système composé des deux électrons. Calculer $\ket{\psi}$ et normaliser le à l'aide de la commande \texttt{Psi.unit()}.
+
+\item  $\ket{\psi}$ peut s'écrire sous la forme $\ket{\psi}=\ket{\psi_1}\otimes\ket{\psi_2}$. Calculer l'opérateur projecteur $P$ sur $\ket{\psi_1}$. Vérifier que $P^2=P$. pour cela se servir de la commande \texttt{Psi.ptace(0)} pour extraire le premier sous système.
+\end{enumerate}
+
+\subsection{QuTiP - Construction d'un état corrélé}
+Dans cette exercice, il est question de préparer un état intriqué à partir de l'évolution d'un système de deux spins 1/2.
+
+On considère deux spins $\frac{1}{2}$ dont l'intrication est représentée par le hamiltonien
+\begin{equation}
+H = \dfrac{1}{2}\hbar\omega\vec{\sigma_1}.\vec{\sigma_2}.
+\end{equation}
+Avec, $\sigma_x = \begin{pmatrix}0 & 1 \\ 1 & 0 \end{pmatrix}$, $\sigma_y = \begin{pmatrix}0 & -i \\ i & 0 \end{pmatrix}$ et
+$\sigma_z = \begin{pmatrix}1 & 0 \\ 0 & -1 \end{pmatrix}$.
+
+La base de calcul est $\{\ket{00},\ket{01},\ket{10},\ket{11}\}$.
+\begin{enumerate}
+\item Définir le hamiltonien $H$ du système ainsi que les états de base de calcul. Il est à noter qu'ici il faut utiliser la commande \texttt{tensor} pour définir le 2-qubits et utiliser \texttt{sigmax(), sigmay() et sigmaz()} pour les opérateurs de Pauli.
+
+\item Vérifier pour tous les états de la base de calcul que $(\mathbb{I}+\vec{\sigma_1}.\vec{\sigma_2})\ket{ij}=2\ket{ji}$.
+
+\item Déterminer les vecteurs propres normalisés et les valeurs propres du hamiltonien \texttt{H} (commande \texttt{H.eigenstates()}).
+
+\item On suppose que l'état du système à $t=0$ est $\ket{\psi(0)}=\ket{10}$. Résoudre l'équation de shr\"odinger pour $t\in[0,2\pi]$ en utilisant la commande \texttt{mesolve(H, Psi0, Temps, [], [])}. Extraire les états $\ket{\psi(t)}$. Comparer $\ket{\psi(t=\pi/4)}$ et $(\ket{10}-i\ket{01})/\sqrt{2}$. Pour cela il faut calculer la fidélité : si elle vaut plus de 0.99, on suppose que ces deux états sont égaux. La fidélité se calcule à l'aide de la commande \texttt{fidelity(Psi1, Psi2)} : elle permet de comparer l'état \texttt{Psi1} à l'état \texttt{Psi2}.
+\end{enumerate}

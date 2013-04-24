@@ -2049,7 +2049,7 @@ la 3e ligne, $\ket{\psi}$.
 
 \end{enumerate}
 
-\subsection{Circuit intraportation avec QuTiP}
+\subsection{QuTiP - Circuit intraportation}
 En utilisant le logiciel QuTiP, simuler le circuit de l'exercice 
 \ref{sec:CircIntr}. Votre programme devrait faire ce qui suit:
 
@@ -2065,7 +2065,7 @@ du circuit.
 \end{enumerate}
 
 
-\subsection{Téléportation d'une paire EPR}
+\subsection{Téléportation d'une paire EPR}\label{CircuiEPR}
 
 Le circuit quantique ci-dessous qui présente la téléportation d'une paire 
 EPR\footnote{voir V.N. Gorbachev and A.I. Trubilko, \emph{Quantum teleportation 
@@ -2080,8 +2080,7 @@ et l'état GHZ (Greenberger, Horne et Zeilinger)%
 \frac{1}{\sqrt{2}}(\ket{000}+\ket{111}).
 \end{equation}
 
-\begin{enumerate}
-\item Montrer qu'à la sortie, l'état EPR (\ref{eq:EPRTelep}) est retrouvé aux 
+Montrer qu'à la sortie, l'état EPR (\ref{eq:EPRTelep}) est retrouvé aux
 deux dernières lignes du circuit.
 \[
 \Qcircuit @C=1em @R=1.em {
@@ -2109,20 +2108,22 @@ deux dernières lignes du circuit.
 }
 \]
 
-\item Simuler ce circuit en utilisant QuTiP. Votre programme devrait:
+
+\subsection{QuTiP - Téléportation d'une paire EPR}
+Simuler le circuit de l'exercice \ref{CircuiEPR} en utilisant QuTiP. Votre programme devrait
 
 \begin{enumerate}
-\item Définir les portes logiques quantique du circuit.
+\item Définir les portes logiques quantiques du circuit;
 
-\item Définir de l'état d'entrée du circuit $\ket{EPR}\otimes\ket{GHZ}$ 
+\item Définir l'état d'entrée du circuit $\ket{EPR}\otimes\ket{GHZ}$
 (on prendra $|\alpha|^2=|\beta|^2=\frac{1}{2}$). Il faudra au préalable 
-évaluer les états $\ket{EPR}$ et $\ket{GHZ}$.
+évaluer les états $\ket{EPR}$ et $\ket{GHZ}$;
 
 \item Évaluer l'état de sortie du circuit, y extraire, à travers la trace 
-partielle, l'état final de la dernière ligne,
+partielle, l'état final de la dernière ligne;
 
 \item Comparer avec l'état initial.
-\end{enumerate}
+
 \end{enumerate}
 
 \subsection{Transformée de Fourier Quantique}
