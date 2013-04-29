@@ -1806,36 +1806,38 @@ d'orthogonalité et de fermeture.
 
 \subsection{QuTiP - Opérateurs}
 
-\emph{Cet exercice à pour objet de familiariser l'étudiant à l'utilisation des 
-différentes classes (\textbf{Qobj()) associées aux fonctions \textbf{operator} 
-\textbf{state} avoir obtenir des informations sur les opérateurs.}
+\emph{Cet exercice à pour objet de familiariser l'étudiant à l'utilisation des
+différentes classes \texttt{qutip.Qobj} associées aux fonctions
+\textbf{operator} et \textbf{state} avoir obtenir des informations sur les
+opérateurs.}
 
-On considère un espace de Hilbert $\mathcal{H}$ d'un état de spin 1/2. Une base 
-de cet espace est $\{\ket{0},\ket1\}$. On considère en outre les trois matrices 
-de Pauli $\sigma_x = \begin{pmatrix}0 & 1 \\ 1 & 0 \end{pmatrix}$, $\sigma_y = 
+On considère un espace de Hilbert $\mathcal{H}$ d'un état de spin 1/2. Une base
+de cet espace est $\{\ket{0},\ket1\}$. On considère en outre les trois matrices
+de Pauli $\sigma_x = \begin{pmatrix}0 & 1 \\ 1 & 0 \end{pmatrix}$, $\sigma_y =
 \begin{pmatrix}0 & -i \\ i & 0 \end{pmatrix}$ et
-$\sigma_z = \begin{pmatrix}1 & 0 \\ 0 & -1 \end{pmatrix}$ dont les Qobj 
+$\sigma_z = \begin{pmatrix}1 & 0 \\ 0 & -1 \end{pmatrix}$ dont les Qobj
 prédéfinis sont \texttt{sigmax()}, \texttt{sigmay()}, \texttt{sigmaz()}.
 
 \begin{enumerate}
-\item En utilisant la commande \texttt{Q.eigenstates()} appropriée, calculer les 
-valeurs propres et vecteurs propres de $\sigma_x$. On notera $vec1$ et $vec2$ 
+\item En utilisant la commande \texttt{Q.eigenstates()} appropriée, calculer
+les
+valeurs propres et vecteurs propres de $\sigma_x$. On notera $vec1$ et $vec2$
 lesdits vecteurs propres.
 
 \item Évaluer $\sigma_z*vec1$ et $\sigma_z*vec2$ et commenter.
 
-\item Calculer les valeurs propres et vecteurs propres de l'opérateur 
-$\mathtt{H} = \frac{2}{\sqrt{2}} (\sigma_x+\sigma_y)$. 
+\item Calculer les valeurs propres et vecteurs propres de l'opérateur
+$\mathtt{H} = \frac{1}{\sqrt{2}} (\sigma_x+\sigma_z)$.
 
-\item En utilisant  la commande \texttt{Q.isherm} appropriée (Qobj attribue), 
-vérifier que $\mathtt{H}$ est hermitienne. Évaluer $\mathtt{H}^2$ et le comparer 
-à $\mathbb{I}_2$. En déduire que $\mathtt{H}$ est une matrice unitaire.
+\item En utilisant  la commande \texttt{Q.isherm} appropriée (Qobj attribue),
+vérifier que $\mathtt{H}$ est hermitienne. Évaluer $\mathtt{H}^2$ et le
+comparer à $\mathbb{I}_2$. En déduire que $\mathtt{H}$ est une matrice unitaire.
 
-\item Définir les projecteurs $P_1$ et $P_2$ sur les états propres de 
-$\mathtt{H}$. Vérifier les propriétés d'un opérateur projecteur sur $P_1$ 
-(i.e., $P_1^{\dag}=P_1$, $P_1^2=P_1$).
+\item Définir les projecteurs $\mathtt{P}_1$ et $\mathtt{P}_2$ sur les états
+propres de $\mathtt{H}$. Vérifier les propriétés d'un opérateur projecteur sur
+$\mathtt{P}_1$ (i.e., $\mathtt{P}_1^{\dag}=\mathtt{P}_1$,
+$\mathtt{P}_1^2=\mathtt{P}_1$).
 \end{enumerate}
-
 
 \subsection{Formule de Baker-Campbell-Hausdorff}
 
@@ -1923,51 +1925,50 @@ Compatibles).
 
 \subsection{QuTiP - ECOC}
 
-\emph{Il s'agit ici d'utiliser les fonctions \textbf{state} et \textbf{operator} 
-de QuTiP pour résoudre l'exercice (\ref{Ch2:Ex4}). Il est  conseiller, de 
-rédiger un programme (script) en python en utilisant la commande 
-\texttt{print()} pour visionner les attributs Qobj.}
+Il s'agit ici d'utiliser les fonctions \textbf{state} et \textbf{operator} de
+QuTiP pour résoudre l'exercice (\ref{Ch2:Ex4}). Il est  conseiller, de rédiger
+un programme (script) en python en utilisant la commande \texttt{print()} pour
+visionner les attributs Qobj.
 
-\begin{enumerate}
-\item Définir les états $\ket{u1}$, $\ket{u2}$, $\ket{u3}$ ainsi que le 
-hamiltonien $\mathtt{H}$.
-
-\item En utilisant la commande \texttt{Q.eigenstates()} appropriée, calculer 
-les énergies $E1$, $E2$, $E3$ et les vecteurs propres $\ket{E_1}$, $\ket{E_2}$, 
-$\ket{E_3}$ associés.
-
-\item Avec la classe des objets \texttt{Odedata} ou \texttt{qutip.Odedata}, 
-QuTiP permet de résoudre l'équation de Schr\"odinger 
-$i\hbar\frac{\partial}{\partial t}\ket{\psi}=\mathtt{H}\ket{\psi}$, de calculer 
-les états $\ket{\psi(t)}$ pour un intervalle de temps données et les valeurs 
-moyennes des opérateurs voulus, avec la commande 
-\texttt{ mesolve(operator, state, tlist, [], [exp_op_list]}.
+Avec la classe des objets \texttt{qutip.Odedata}, QuTiP permet de résoudre
+l'équation de Schr\"odinger $i\hbar\frac{\partial}{\partial
+t}\ket{\psi}=\mathtt{H}\ket{\psi}$, de calculer les états $\ket{\psi(t)}$ pour
+un intervalle de temps données et les valeurs moyennes des opérateurs voulus,
+avec la commande \texttt{mesolve(operator, state, tlist, [], [exp-op-list])}.
 \begin{itemize}
-\item \texttt{operator}=opérateur hamiltonien \texttt{H},;
-\item \texttt{state}=état $\ket{\psi}$;
-\item \texttt{tlist}=intervalle de temps que l'on définit en utilisant la 
-commande \texttt{linspace(temps_initial,temps_final,pas)};
-\item \texttt{[exp_op_list]}=liste des opérateurs dont évaluera les valeurs 
+ \item \texttt{operator}=opérateur hamiltonien \texttt{H},;
+ \item \texttt{state}=état $\ket{\psi}$;
+  \item \texttt{tlist}=utilise la commande
+\texttt{linspace(temps-initial,temps-final,pas)} pour définir l' intervalle de
+temps;
+\item \texttt{[exp-op-list]}=liste des opérateurs dont évaluera les valeurs
 moyennes pendant \texttt{tlist}.
 \end{itemize}
-On utilise les commandes \texttt{odedata.state} et \texttt{odedata.expect} pour 
+On utilise les commandes \texttt{odedata.state} et \texttt{odedata.expect} pour
 extraire les informations sur l'état du système la valeur moyenne calculés.
+
 \begin{enumerate}
-\item Calculer pour $t\in[0,10]$, avec 10 pas, les états $\ket{\psi(t)}$ 
+\item Définir les états $\ket{u1}$, $\ket{u2}$, $\ket{u3}$ ainsi que le
+hamiltonien $\mathtt{H}$.
+
+\item En utilisant la commande \texttt{Q.eigenstates()} appropriée, calculer
+les énergies $E1$, $E2$, $E3$ et les vecteurs propres $\ket{E_1}$, $\ket{E_2}$,
+$\ket{E_3}$ associés.
+
+\item Calculer pour $t\in[0,10]$, avec 10 pas, les états $\ket{\psi(t)}$
 lorsque l'état initial du système est $\ket{u1}$.
 
-\item Calculer la déviation standard de $\mathtt{H}$, 
-$\sqrt{\av{\mathtt{H}^2}-\av{\mathtt{H}}^2}$ pour $t=10\opn{s}$.
-\end{enumerate}
+\item Calculer, pour $t=10\opn{s}$, la déviation standard de $\mathtt{H}$,
+$\sqrt{\langle\mathtt{H}^2\rangle-\langle\mathtt{H}\rangle^2}$.
 
-\item Définir les projecteurs $P_1$, $P_2$ et $P_3$ sur les états propres de 
+\item Définir les projecteurs $\mathtt{P}_1$, $\mathtt{P}_2$ et $\mathtt{P}_3$ sur les états propres de
 $\mathtt{H}$.
 
-\item Exprimer $\mathtt{K}$ en fonction de $P_1,P_2$ et $P_3$.
+\item Exprimer $\mathtt{K}$ en fonction de $\mathtt{P}_1,\mathtt{P}_2$ et $\mathtt{P}_3$.
 
 \item Calculer les valeurs propres et les vecteurs propres de $\mathtt{K}$.
 
-\item Vérifier que les vecteurs propres de $\mathtt{K}$ sont vecteurs propres 
+\item Vérifier que les vecteurs propres de $\mathtt{K}$ sont vecteurs propres
 de $\mathtt{H}$. $\{\mathtt{H},\mathtt{K}\}$ forme-t-il un ECOC?
 \end{enumerate}
 

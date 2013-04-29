@@ -2054,13 +2054,18 @@ En utilisant le logiciel QuTiP, simuler le circuit de l'exercice
 \ref{sec:CircIntr}. Votre programme devrait faire ce qui suit:
 
 \begin{enumerate}
-\item Définir toutes les portes logiques du circuit intraportation.
-\item Définir particulièrement l'opérateur \texttt{B} qui permet de générer 
-la paire EPR $\ket{\Phi^{+}}$ partager par Alice et Bob.
-\item Définir l'état d'entrée $\ket{\psi}_{in}=\ket{\psi}\otimes\ket{\Phi^{+}}$ 
-du circuit.
-\item Évaluer l'état de sortie $\ket{\psi}_{out}$ du circuit.
-\item Évaluer $\rho_{Bob}$, en prenant la trace partielle de $\ket{\psi}_{out}$,
+\item Définir en QuTiP toutes les portes logiques du circuit intraportation. Ici pour définir un opérateur $\mathtt{Ai}$ sur la $i^{ème}$ ligne, on utilise la commande \texttt{tensor(I,...,Ai,...,I)} où \texttt{Ai} se trouve à la $i^{ème}$ position et les \texttt{I} sont des opérateur identité d'ordre 2.
+
+Un opérateur de contrôle \texttt{CA} (contrôle : ligne 1, cible : ligne 3) est défini par la commande \texttt{CA=tensor(ket0*ket0.dag(),I,I)+tensor(ket1*ket1.dag(),I,A)} où \texttt{ket0 = basis(2,0)} et \texttt{ket1 = basis(2,1)}. La ligne de contrôle est indiquée par la présence de \texttt{ket0*ket0.dag()} et de \texttt{ket1*ket1.dag()} alors que la ligne cible est indiquée par \texttt{I} et \texttt{A};
+
+\item Définir particulièrement l'opérateur $\mathtt{B}$ qui permet de générer l'état EPR partager par Alice et Bob;
+
+\item Définir l'état d'entrée $\ket{\psi}_{in}=\ket{\psi}\otimes\ket{EPR}$ du circuit en utilisant la commande \texttt{tensor(Psi,EPR)}. On prendra pour $\ket{\psi}$, $\alpha=\beta=1/\sqrt{2}$;
+
+\item Evaluer l'état de sortie $\ket{\psi}_{out}$ du circuit;
+
+\item Evaluer $\rho_{Bob}$, en prenant la trace partielle de $\ket{\psi}_{out}$ : \texttt{rhoBob = PsiOut.ptrace(2)}. $\rho_{Bob}$ est le projecteur sur l'état qui se trouve à la $3^{ème}$ ligne du circuit;
+
 \item Calculer $\bra{\psi}\rho_{Bob}\ket{\psi}$. Vous devez trouver le résultat $1$.
 \end{enumerate}
 
@@ -2110,7 +2115,7 @@ deux dernières lignes du circuit.
 
 
 \subsection{QuTiP - Téléportation d'une paire EPR}
-Simuler le circuit de l'exercice \ref{CircuiEPR} en utilisant QuTiP. Votre programme devrait
+Simuler le circuit de l'exercice \ref{CircuiEPR} en utilisant QuTiP. Votre programme devrait faire ce qui suit :
 
 \begin{enumerate}
 \item Définir les portes logiques quantiques du circuit;
