@@ -6,12 +6,11 @@ logiciel \emph{libre ou open-source} de calculs en optique quantique avec des
 applications en information quantique\footnote{J. R. Johansson, P.D. Nation, and 
 F. Nori, \emph{QuTiP 2: A Python framework for the dynamics of open quantum 
 systems}, Comp. Phys. Comm. 184, 1234 (2013) ou 
-\url{http://arxiv.org/abs/1211.6518}.}. C'est un excellent outil 
-d'appropriation et de simulation des concepts fondamentaux de la théorie 
-quantique. Grâce à ce logiciel dont la maîtrise est aisée, l'étudiant peut 
-facilement représenter un état quantique ou un opérateur, calculer une valeur 
-moyenne, simuler l'évolution d'un système, implémenter des algorithmes de 
-l'information quantique.
+\url{http://arxiv.org/abs/1211.6518}.}. C'est un excellent outil d'appropriation 
+et de simulation des concepts fondamentaux de la théorie quantique. Grâce à ce 
+logiciel dont la maîtrise est aisée, l'étudiant peut facilement représenter un 
+état quantique ou un opérateur, calculer une valeur moyenne, simuler l'évolution 
+d'un système, implémenter des algorithmes de l'information quantique.
 
 QuTiP étant rédiger en Python, il est nécessaire, pour utilisant optimale, 
 d'avoir quelques notions de base du langage de programmation Python. Pour 
@@ -48,19 +47,19 @@ Python release 2.2.0} disponible sur le site
 Aller sur le terminal et entrer les commandes suivantes, pour ajouter le dépôt 
 de QuTiP à la \emph{sourcelist}; mettre ensuite cette liste de dépôt à jour; 
 et enfin installer QuTiP:\\
-\begin{tt}
+\begin{lstlisting}
 sudo add-apt-repository ppa:jrjohansson/qutip-releases\\
 sudo apt-get update\\
 sudo apt-get install python-qutip\\
-\end{tt}
+\end{lstlisting}
 
 Il est recommandé d'installer d'autres paquets, pour utiliser \LaTeX dans les 
 figures et effectuer des tests, afin de compléter l'installation. Pour cela 
 entrer sur le terminal les commandes suivantes:\\
-\begin{tt}
+\begin{lstlisting}
 sudo apt-get install texlive-latex-extra\\
 sudo apt-get install python-nose
-\end{tt}
+\end{lstlisting}
 
 La dernière étape de la procédure consiste à installer une console Python ou 
 interpréteur. A cet effet nous suggérons \texttt{IPython} ou \texttt{bpython} 
@@ -90,165 +89,320 @@ Avant toute utilisation de QuTiP, il faut importer ses modules avec la commande
 \begin{lstlisting}
 from qutip import *
 \end{lstlisting}
-Ceci met toutes les fonctions et classes de QuTiP à disposition pour la suite 
-du programme.
+qui met toutes les fonctions et classes de QuTiP, dont le diagramme est donnée 
+par la figure \ref{fig:qutip_org}, à disposition pour la suite du programme.
 
-Il est aussi important d'importer la bibliothèque SciPy
+Il est aussi important d'importer la bibliothèque \emph{SciPy} avec la commande
+\begin{lstlisting}
+from qutip scipy *
+\end{lstlisting}
+SciPy est un projet visant à unifier et fédérer un ensemble de bibliothèques 
+Python à usage scientifique (fonctions spéciales, interpolation, intégration, 
+optimisation, traitement d'images). Scipy utilise les tableaux et matrices du 
+module \emph{NumPy}. Lequel module permet d'appliquer des opérations 
+simultanément sur l'ensemble d'un tableau permettant d'écrire un code plus 
+lisible, plus facile à maintenir et donc plus efficace.
+
+SciPy offre également des possibilités avancées de visualisation grâce au 
+module \emph{matplotlib}.
+
+\begin{figure}[htbp]
+ \centering
+ \includegraphics{graphics/qutip_org.png}
+ % qutip_org.png: 1000x1013 pixel, 130dpi, 19.58x19.83 cm, bb=0 0 555 562
+ \caption{Diagramme des classes et fonction prédéfinies de QuTiP.}
+ \label{fig:qutip_org}
+\end{figure}
 
 \subsection{Quantum object class}
-La classe \texttt{Qobj()} est une classe de QuTiP qui crée et manipule les 
-états et les opérateurs, c'est-à-dire tout ce qui est un objet quantique. Cette 
-classe possède des attributs et des fonctions. En effet, lorsqu'un objet de 
-classe \texttt{Qobj()} est créé, il dispose des attributs auxquels qu'on peut 
-accéder pour avoir des informations sur l'objet. Il existe aussi des fonctions 
-que l'on peut appliquer à cet objet. Ces fonctions sont soient appliquer pour 
-modifier ou transformer (i.e., normaliser, conjugué hermitien,\ldots) l'objet, 
-soit pour acquérir les informations plus interne de l'objet (i.e., valeurs 
-propres, vecteurs propres,\ldots).
 
-\subsection{États et opérateurs}
-Ici nous allons présenter comment on peut créer des états et des opérateurs. Il 
-faut noter qu'en QuTiP, il y a deux façon de créer des états et des opérateurs :
+La classe \texttt{qutip.Qobj} ou \texttt{Qobj()} est une classe de QuTiP qui 
+crée et manipule les objets quantiques, sous forme de matrices. Cette classe 
+possède 
 \begin{itemize}
-\item[$\bullet$] soit en définissant l'état ou l'opérateur à partir des états et 
-des opérateurs prédéfinis,
-\item[$\bullet$] soit en donnant la forme matricielle de l'état/opérateur et 
-transformer en un objet quantique de classe \texttt{Qobj()}.
+ \item des \emph{attributs} auxquels qu'on peut accéder pour avoir des 
+informations sur l'objet quantique (\texttt{dims=}dimension (de l'espace de 
+Hilbert) de la fonction; \texttt{shape=}dimension de l'argument de la fonction; 
+\texttt{type=}'oper', 'ket', 'bra'; \texttt{isherm=}'True', 'False' (l'opérateur 
+est-il ou non hermitien?));
+
+\item des \emph{fonctions} que l'on peut appliquer à cet objet quantique  
+\begin{itemize}
+\item soit pour le modifier ou le transformer (i.e., normaliser, conjugué 
+hermitien,\ldots), 
+\item soit pour acquérir des informations plus interne de l'objet (i.e., 
+valeurs propres, vecteurs propres,\ldots).                                  
 \end{itemize}
 
-Pour ce cours de l'information quantique, on utilise la commande 
-\texttt{basis(N,m)} où \texttt{N} est le nombre de vecteur de la base et 
-\texttt{m} est le numéro du vecteur de la base.\\
-\textbf{Exemple}\\
-Pour un système à deux niveaux de base $\{\ket{0},\ket{1}\}$, on définit l'état 
-$\ket{\psi}=(\ket{0}+2\ket{1})$ par :\\
-\begin{tt}
-ket0 = basis(2,0) \# la numérotation commence de $0$ à $N-1$\\
-ket1 = basis(2,1) \\
-Psi = ket0+2*ket1
-\end{tt}
+\end{itemize}
 
-Les opérateurs prédéfinis en QuTiP sont \texttt{sigmax(), sigmay(), sigmaz(), 
-qeye(N)} représentant $\sigma_x,\sigma_y,\sigma_z$ et la matrice identité 
-d'ordre $N$.\\
-\textbf{Exemple}\\
-\begin{tt}
-X = sigmax() \# définit la matrice $\sigma_x$\\
-Y = sigmay() \# définit la matrice $\sigma_y$\\
-Z = sigmaz() \# définit la matrice $\sigma_z$\\
-II = qeye(2) \# Matrice Identité d'ordre 2\\
-\end{tt}
+\emph{Il est à noter que par convention, les classes d'objet en Python comme} 
+\texttt{Qobj()} \emph{diffère d'une fonction par l'utilisation d'une lettre 
+majuscule au début.}
 
-Ainsi on peut définir tout opérateur par combinaison de ces opérateur 
-prédéfinis. Pour les opérateurs et états non prédéfinis, on utilise la 
-définition matricielle.\\
-\textbf{Exemple}\\
-Définir la matrice carré d'ordre 3 suivant :
-\begin{equation}
-A =
-\begin{pmatrix}
-1&1&0\\1&-1&1\\0&1&1
-\end{pmatrix}
-\end{equation}
-\begin{tt}
-A = [[1,1,0],[1,-1,1],[0,1,1]]\\
-A = Qobj(A)
-\end{tt}
+\subsection{États et opérateurs}
 
-On peut ainsi définir les opérateurs tout comme les états. Lorsqu'il s'agira 
-d'un ket ou d'un bra, définir d'abord un vecteur colonne ou linge respectivement 
-et transformer en un objet de classe \texttt{Qobj}.\\
-\textbf{Exemple}\\
+Avec QuTiP, il y a deux façon de créer des états et des opérateurs :
+\begin{itemize}
+\item Soit à partir des \texttt{qutip.Qobj} prédéfinis, comme par exemple 
+\texttt{qutip.operators.sigmax}, \texttt{qutip.operators.sigmay}, 
+\texttt{qutip.operators.sigmaz}, \texttt{qutip.operators.sigmap}, 
+\texttt{qutip.operators.sigmam}, \texttt{qutip.states.basis}, et  
+\texttt{qutip.states.fock}. 
+
+\begin{lstlisting}
+In [1]: sigmax() # définit la matrice Sigma-X
+Out[1]: 
+Quantum object: dims = [[2], [2]], shape = [2, 2], type = oper, isherm = True
+Qobj data =
+[[ 0.  1.]
+ [ 1.  0.]]
+
+In [2]: sigmay() # définit la matrice Sigma-Y
+Out[2]: 
+Quantum object: dims = [[2], [2]], shape = [2, 2], type = oper, isherm = True
+Qobj data =
+[[ 0.+0.j  0.-1.j]
+ [ 0.+1.j  0.+0.j]]
+
+In [3]: sigmaz() # définit la matrice Sigma-Z
+Out[3]: 
+Quantum object: dims = [[2], [2]], shape = [2, 2], type = oper, isherm = True
+Qobj data =
+[[ 1.  0.]
+ [ 0. -1.]]
+
+In [4]: sigmap() # définit la matrice Sigma_+
+Out[4]: 
+Quantum object: dims = [[2], [2]], shape = [2, 2], type = oper, isherm = False
+Qobj data =
+[[ 0.  1.]
+ [ 0.  0.]]
+
+In [5]: sigmam() # définit la matrice Sigma_-
+Out[5]: 
+Quantum object: dims = [[2], [2]], shape = [2, 2], type = oper, isherm = False
+Qobj data =
+[[ 0.  0.]
+ [ 1.  0.]]
+
+In [6]: qeye(2) # définit la matrice identité d'ordre 2
+Out[6]: 
+Quantum object: dims = [[2], [2]], shape = [2, 2], type = oper, isherm = True
+Qobj data =
+[[ 1.  0.]
+ [ 0.  1.]]
+
+In [7]: basis(2,0) #définit un vecteur d'état de dimension N=2, de position 
+m=1-1 dans la base
+Out[7]: 
+Quantum object: dims = [[2], [1]], shape = [2, 1], type = ket
+Qobj data =
+[[ 1.]
+ [ 0.]]
+
+In [8]: basis(2,1) #définit un vecteur d'état de dimension N=2, de position 
+m=2-1 dans la base
+Out[8]: 
+Quantum object: dims = [[2], [1]], shape = [2, 1], type = ket
+Qobj data =
+[[ 0.]
+ [ 1.]]
+
+In [9]: fock(2,0) #définit un vecteur d'état de dimension N=2, de position 
+m=1-1 dans la base
+Out[9]: 
+Quantum object: dims = [[2], [1]], shape = [2, 1], type = ket
+Qobj data =
+[[ 1.]
+ [ 0.]]
+
+In [10]: fock(2,1) #définit un vecteur d'état de dimension N=2, de position 
+m=2-1 dans la base
+Out[10]: 
+Quantum object: dims = [[2], [1]], shape = [2, 1], type = ket
+Qobj data =
+[[ 0.]
+ [ 1.]]
+\end{lstlisting}
+
+\item Soit en définissant soi-même les données du \texttt{Qobj()}, comme par 
+exemple, pour la matrice carré d'ordre $3\times3$ $A =\begin{pmatrix}
+1&1&0\\1&-1&1\\0&1&1\end{pmatrix}$ et les vecteurs ligne 
+$\begin{pmatrix}1&2&3&4&5\end{pmatrix}$ et colonne 
+$\begin{pmatrix}1\\2\\3\\4\\5\end{pmatrix}$,
+\begin{lstlisting}
+In [11]: Qobj([[1,1,0],[1,-1,1],[0,1,1]])
+Out[11]: 
+Quantum object: dims = [[3], [3]], shape = [3, 3], type = oper, isherm = True
+Qobj data =
+[[ 1.  1.  0.]
+ [ 1. -1.  1.]
+ [ 0.  1.  1.]]
+
+In [12]: Qobj([1,2,3,4,5])
+Out[12]: 
+Quantum object: dims = [[1], [5]], shape = [1, 5], type = bra
+Qobj data =
+[[ 1.  2.  3.  4.  5.]]
+
+In [13]: Qobj( array([[1],[2],[3],[4],[5]]))
+Out[13]: 
+Quantum object: dims = [[5], [1]], shape = [5, 1], type = ket
+Qobj data =
+[[ 1.]
+ [ 2.]
+ [ 3.]
+ [ 4.]
+ [ 5.]]
+\end{lstlisting}
+
+\begin{exercice}
 Dans la base $\{\ket{u_1},\ket{u_2},\ket{u_3}\}$ on considère le ket et le bra 
-suivant :
 \begin{equation}
 \ket{\phi}=\dfrac{1}{2}(\ket{u_1}+\ket{u_2}+\sqrt{2}\ket{u_3}) \qquad 
 \bra{\psi}=\dfrac{1}{\sqrt{2}}(\bra{u_1}+\bra{u_3}).
 \end{equation}
-\begin{tt}
-KetPhi = [[1/2.0],[1/2.0],[1/sqrt(2)]] \# vecteur colonne \\
-KetPhi = Qobj(KetPhi)  \# état $\ket{\phi}$ \\
-BraPsi = [[1/sqrt(2),1/sqrt(2)]] \# vecteur ligne \\
-BraPsi = Qobj(BraPsi) \# état $\bra{\psi}$ \\
-\end{tt}
+Sans utiliser des \texttt{qutip.Qobj} prédéfinis, définir $\ket{\phi}$ et 
+$\bra{\psi}$.
+\end{exercice}
+
+\begin{solution}
+\begin{lstlisting}
+In [14]: Qobj([[1/2.0],[1/2.0],[1/sqrt(2)]]) # état ket(phi)
+Out[14]: 
+Quantum object: dims = [[3], [1]], shape = [3, 1], type = ket
+Qobj data =
+[[ 0.5       ]
+ [ 0.5       ]
+ [ 0.70710678]]
+
+In [15]: Qobj([1/sqrt(2),1/sqrt(2)]) # état bra(psi)
+Out[15]: 
+Quantum object: dims = [[1], [2]], shape = [1, 2], type = bra
+Qobj data =
+[[ 0.70710678  0.70710678]]
+\end{lstlisting}
+\end{solution}
 
 \subsection{Les attributs d'une classe Qobj}
 
 Nous avons dit qu'un objet de classe \texttt{Qobj()} possède des attributs et 
-fonctions. Ces attributs sont présentées sur la figure (\ref{qobj}). Le tableau 
-(\ref{class}) donne les commandes et descriptions de ces attributs.
-\begin{table}[!h]
-\begin{center}
+fonctions. Ces attributs sont présentées sur la Figure \ref{fig:qobj}. Le 
+Tableau \ref{atb:class} donne les commandes et descriptions de ces attributs.
+
+\begin{figure}[htbp]
+\centering
+ \includegraphics{graphics/basics-qobj-box.png}
+ % basics-qobj-box.png: 400x272 pixel, 150dpi, 6.77x4.61 cm, bb=0 0 192 131
+% \includegraphics[height=6cm]{ClasseQobj.png}
+\caption{Attributs d'un objet de classe \texttt{Qobj()}}
+\label{fig:qobj}
+\end{figure}
+
+\begin{table}[htpb]
+\centering
 \begin{tabular}{|l|l|l|} \hline \hline
-\textbf{Attribues} &\textbf{Commandes}	&\textbf{Description}\\ \hline \hline
+\textbf{Attributs} &\textbf{Commandes}	&\textbf{Description}\\ \hline \hline
 Data	&Q.data	&Matrice représentant Q\\ \hline
 Dimensions	&Q.dims	&Permet d'identifier un système composite\\ \hline
 Shape	&Q.shape	&Dimension de Q\\ \hline
 is Hermitian?	&Q.isherm	&Q est-il hermitien?\\ \hline
-Type	&Q.type	&Ket, bra, opértaeur ou superopérateur\\ \hline
+Type	&Q.type	&Ket, bra, opérateur ou superopérateur\\ \hline
 \end{tabular}
-\caption{Attribues d'un objet de classe \texttt{Qobj} : descriptions}
-\label{class}
-\end{center}
+\caption{Attributs d'un objet de classe \texttt{Qobj} : descriptions}
+\label{tab:class}
 \end{table}
 
-\begin{figure}[!h]
-\begin{center}
-\includegraphics[height=6cm]{ClasseQobj.png}
-\end{center}
-\caption{Attribues d'un objet de classe \texttt{Qobj()}}
-\label{qobj}
-\end{figure}
-
-La première colonne de ce tableau présente les attributs, la deuxième indique 
-les commandes à exécuter pour accéder à ces attributs. En fin la dernière 
-colonne explique en quelques mots ces attributs.\\
-\textbf{Exemple}\\
+\begin{example}
 Soit l'opérateur de Pauli $X=\sigma_x$.\\
-\begin{tt}
-X = sigmax() \# Définition de l'opérateur $X$\\
-X.data \# Affiche la matrice de $X$.\\
-X.isherm \# Indique si $X$ est hermitien : \emph{True} or \emph{False}. Ici 
-\emph{True}\\
-X.type \# Indique la nature de $X$. Ici \emph{oper} (operateur)\\
-X.shape \# Donne la dimension de $X$. Ici [2,2]\\
-\end{tt}
+\begin{lstlisting}
+In [16]: X = sigmax() # Définit de l'opérateur Sigma-X
+
+In [17]: X.data # Affiche la matrice de X
+Out[17]: 
+<2x2 sparse matrix of type '<type 'numpy.complex128'>'
+	with 2 stored elements in Compressed Sparse Row format>
+
+In [18]: X.isherm # Indique si X est hermitien ou non
+Out[18]: True
+
+In [19]: X.type # Indique la nature de X
+Out[19]: 'oper'
+
+In [20]: X.shape # Donne la dimension de X
+Out[20]: [2, 2]
+\end{lstlisting}
+\end{example}
 
 \subsection{Qobj Math}
 
 On peut effectuer sur un objet de classe \texttt{Qobj()}, presque toutes les 
 opérations mathématiques qu'on peut effectuer sur des variables ordinaires 
-(l'addition, la soustraction, la multiplication, la puissance, etc ...).\\
-\textbf{Exemple}\\
-Soit l'opérateur $A$ défini dans l'exemple précédant, et les matrices de Pauli 
-$X = \sigma_x$, $Y=\sigma_y$ et $Z = \sigma_z$.\\
-\begin{tt}
-X = sigmax() \# Permet de définir l'opérateur $X$\\
-Y = sigmay() \# Permet de définir l'opérateur $Y$\\
-Z = sigmaz() \# Permet de définir l'opérateur $Z$\\
-B = A$\pm$X \# l'addition ou soustraction des opérateurs\\
-C = A*X \# Calcul les produit des opérateurs $A$ et $X$\\
-D = A**3 \# Calcul A à la puissance 3\\
-H = (1/sqrt(2))*(X+Z) \\
-\end{tt}
+(l'addition, la soustraction, la multiplication, la puissance, etc).\\
+\begin{example}
+Soit l'opérateur $A =\begin{pmatrix}1&1&0\\1&-1&1\\0&1&1\end{pmatrix}$, et les 
+matrices de Pauli $X = \sigma_x$, $Y=\sigma_y$ et $Z = \sigma_z$.\\
+\begin{lstlisting}
+In [21]: X = sigmax() # Définit l'opérateur X
+
+In [22]: Y = sigmay() # Définit l'opérateur Y
+
+In [23]: Z = sigmaz() # Définit de définir l'opérateur Z
+
+In [24]: X+Z # Addition des opérateurs X et Z
+Out[24]: 
+Quantum object: dims = [[2], [2]], shape = [2, 2], type = oper, isherm = True
+Qobj data =
+[[ 1.  1.]
+ [ 1. -1.]]
+
+In [25]: (1/sqrt(2))*(X+Z) # Produit d'un scalaire et de l'addition de X et Z
+Out[25]: 
+Quantum object: dims = [[2], [2]], shape = [2, 2], type = oper, isherm = True
+Qobj data =
+[[ 0.70710678  0.70710678]
+ [ 0.70710678 -0.70710678]]
+ 
+In [26]: X*X # Produit d'une matrice de Pauli
+Out[26]: 
+Quantum object: dims = [[2], [2]], shape = [2, 2], type = oper, isherm = True
+Qobj data =
+[[ 1.  0.]
+ [ 0.  1.]]
+
+In [26]: A=Qobj([[1,1,0],[1,-1,1],[0,1,1]])
+
+In [27]: A**3 # A à la puissance 3
+Out[27]: 
+Quantum object: dims = [[3], [3]], shape = [3, 3], type = oper, isherm = True
+Qobj data =
+[[ 2.  3.  1.]
+ [ 3. -3.  3.]
+ [ 1.  3.  2.]]
+ \end{lstlisting}
+\end{example}
 
 \subsection{Fonction opérant sur une classe Qobj}
 
-En plus des attributs, une classe d'objet quantique a des fonctions qui
-agissent sur les instances Qobj. Les plus usuelles sont: \texttt{dag(), unit(), eigenenergies(), eigenstates(), tr(), ptrace()}.
-Le tableau \ref{fonction} présente ces fonctions.
+Le tableau \ref{tab:fonction} présente les fonctions les usuelles qui agissent 
+sur les instances \texttt{Qobj()}.
 \begin{table}[!h]
-\begin{center}
+\centering
 \begin{tabular}{|l|l|l|} \hline \hline
-\textbf{Fonction}	& \textbf{Commande}	& \textbf{Description} \\ \hline \hline
+\textbf{Fonction}	& \textbf{Commande}	& \textbf{Description} \\ 
+\hline \hline
 Conjugate	& Q.conj()	& Conjugué de Q\\ \hline
 Dagger (adjoint)	& Q.dag()	& Conjugué hermitien de Q\\ \hline
 Diagonal	& Q.diag()	& Matrice diagonale de Q\\ \hline
-Eigenenergies	& Q.eigenenergies()	&  Energies (valeurs) propres de Q\\ \hline
-Eigenstates	& Q.eigenstates()	& Valeurs et vecteurs propres de Q\\ \hline
+Eigenenergies	& Q.eigenenergies()	&  Energies (valeurs) propres de Q\\ 
+\hline
+Eigenstates	& Q.eigenstates()	& Valeurs et vecteurs propres de Q\\ 
+\hline
 Exponential	& Q.expm()	& Matrice exponentielle de Q\\ \hline
 Full	& Q.full()	& Donne juste la matrice de Q\\ \hline
-Groundstate	& Q.groundstate()	& Energie et ket de l'état fondamentale\\ \hline
+Groundstate	& Q.groundstate()	& Energie et ket de l'état 
+fondamentale\\ \hline
 Partial Trace	& Q.ptrace(sel)	& Trace partielle choisi par "sel"\\ \hline
 Sqrt	& Q.sqrtm()	& Matrice racine carré de Q\\ \hline
 Trace	& Q.tr()	&  Trace de Q \\ \hline
@@ -256,113 +410,188 @@ Transpose	&  Q.trans()	& Matrice transposé de Q \\ \hline
 Unit	& Q.unit()	& Renvoie Q normalisé \\ \hline
 \end{tabular}
 \caption{Fonction applicable à un objet de classe \texttt{Qobj()}}
-\label{fonction}
-\end{center}
+\label{tab:fonction}
 \end{table}
 
-\textbf{Exemple}\\
-On considère l'opérateur de Pauli $X$ et l'état $\ket{\psi}=\ket{0}+2\ket{1}$ d'un système à deux niveaux.\\
-\begin{tt}
-X = sigmax()\\
-X.dag() \# Conjugué hermitien de $X$\\
-X.eigenstates() \# Calcul les valeurs propres et vecteurs propres de $X$\\
-X.tr() \# Calcul la trace de $X$\\
-ket0 = basis(2,0) \# Définition de $\ket{0}$\\
-ket1 = basis(2,1) \# Définition de $\ket{1}$\\
-Psi = ket0+2*ket1 \# Définition de $\ket{\psi}$\\
-Psi.dag() \# Calcul bra de Psi : $\bra{\psi}$\\
-Psi.unit() \# Permet de normaliser $\ket{\psi}$\\
-\end{tt}
-\section{Manipuler les états et opérateurs}
+\begin{example}
+On considère l'opérateur de Pauli $X$ et l'état $\ket{\psi}=\ket{0}+2\ket{1}$ 
+d'un système à deux niveaux.\\
+\begin{lstlisting}
+In [28]: X = sigmax()
 
-\subsection{États ket et bra}
+In [29]: X.dag() # Conjugué hermitien de X
+Out[29]: 
+Quantum object: dims = [[2], [2]], shape = [2, 2], type = oper, isherm = True
+Qobj data =
+[[ 0.  1.]
+ [ 1.  0.]]
 
-Expliquer en prenant des exemples compatibles avec le niveau de compréhension
-ou de connaissances des étudiants.
+In [30]: evals, evecs=X.eigenstates() # Calcul les valeurs propres et vecteurs 
+propres de X
 
-\subsection{Qubit}
+In [31]: evals # Donne les valeurs propres de X
+Out[31]: array([-1.,  1.])
 
-Un Qubit (\textbf{Qu}antum \textbf{bit}) est un bit quantique ou un état d'un système à deux niveaux. Pour ce cours de l'information quantique, nous allons beaucoup parler des Qubits. La base de ce système est $\{\ket{+},\ket{-}\}\equiv\{\ket{0},\ket{1}\}$.
+In [32]: evecs # Donne les vecteurs propres de X
+Out[32]: 
+array([ Quantum object: dims = [[2], [1]], shape = [2, 1], type = ket
+Qobj data =
+[[-0.70710678]
+ [ 0.70710678]],
+       Quantum object: dims = [[2], [1]], shape = [2, 1], type = ket
+Qobj data =
+[[ 0.70710678]
+ [ 0.70710678]]], dtype=object)
 
-\textbf{Exemple} : les états suivants sont des qubits\\
-\begin{tt}
-ket0 = basis(2,0) \\
-ket1 = basis(2,1)\\
-Phi = (ket0+3*ket1).unit()\\
-Psi = (ket0+ket1).unit()\\
-Psi2 = (ket0+ket1)/sqrt(2)\\
-\end{tt}
+In [33]: X.tr() # Calcul la trace de X
+Out[33]: 0.0
+
+In [34]: Psi = basis(2,0)+2*basis(2,1) # Définition de ket{psi}
+
+In [35]: Psi # Donne le ket{psi}
+Out[35]: 
+Quantum object: dims = [[2], [1]], shape = [2, 1], type = ket
+Qobj data =
+[[ 1.]
+ [ 2.]]
+ 
+In [36]: Psi.dag() # Calcul bra{psi}
+Out[36]: 
+Quantum object: dims = [[1], [2]], shape = [1, 2], type = bra
+Qobj data =
+[[ 1.  2.]]
+
+In [37]: Psi.unit() # Permet de normaliser ket{psi}
+Out[37]: 
+Quantum object: dims = [[2], [1]], shape = [2, 1], type = ket
+Qobj data =
+[[ 0.4472136 ]
+ [ 0.89442719]]
+\end{lstlisting}
+\end{example}
+
+\begin{exercise}
+Dans la base de $\{\ket{0},\ket{1}\}$, utiliser \texttt{qutip.Qobj.unit} pour
+normaliser les qubits $\ket{\psi_1}=\ket{0}+3\ket{1}$, 
+$\ket{\psi_2}=\ket{0}+\ket{1}$.
+\end{exercise}
 
 \subsection{Valeurs moyennes}
 
-En QuTiP on calcule facilement la valeur moyenne d'un opérateur dans un état donné. Cela se fait grâce à la commande \texttt{expect()} qui veut dire moyenne en anglais. La commande s'utilise de la manière suivante : \texttt{expect(A,Psi)} qui calcule la moyenne de l'opérateur $A$ dans l'état \texttt{Psi}.\\
-\textbf{Exemple}
-On considère l'opérateur $X=\sigma_x$, et l'état $\ket{\psi}=(\ket{0}+\ket{1})/\sqrt{2}$. On calcule la valeur moyenne de $X$ dans $\ket{\psi}$ par les commandes :\\
-\begin{tt}
-X = sigmax()\\
-Psi = (basis(2,0)+basis(2,1))/sqrt(2)\\
-Moyenne = expect(X,Psi)\\
-\end{tt}
+La fonction \texttt{qutip.expect}, à travers la commande \texttt{expect(oper, 
+state)}, permet de calculer la valeur moyenne d'un opérateur (\texttt{oper}) 
+dans un état (\texttt{state}) donné. 
+
+\begin{example}
+On considère l'opérateur $X=\sigma_x$, et l'état 
+$\ket{\psi}=(\ket{0}+\ket{1})/\sqrt{2}$. On calcule la valeur moyenne de $X$ 
+dans $\ket{\psi}$ par les commandes :\\
+\begin{lstlisting}
+X = sigmax()
+Psi = (basis(2,0)+basis(2,1))/sqrt(2)
+Moyenne = expect(X,Psi)
+In [38]: X = sigmax()
+
+In [39]: Psi = (basis(2,0)+basis(2,1))/sqrt(2)
+
+In [40]: Moyenne = expect(X,Psi)
+
+In [41]: Moyenne
+Out[41]: 0.9999999999999998
+\end{lstlisting}
+\end{example}
 
 \section{Produit tensoriel et trace partielle}
 
-Lorsqu'on travail sur des systèmes composites (composés de plusieurs sous système), on utilise le produit tensoriel entre les états/opérateurs de chaque sous-système pour avoir l'état/opérateur du système global étudié.
+Lorsqu'on travail sur des systèmes composites (composés de plusieurs sous 
+système), on utilise le produit tensoriel entre les états/opérateurs de chaque 
+sous-système pour avoir l'état/opérateur du système global étudié.
 
-En QuTiP, la commande utilisé est \texttt{tensor(op1, op2, op3, ...., opn)} op1, op2, ..., opn sont soit tous des opérateurs des sous-systèmes dans le cas de l'opérateur global, soit tous des états des sous-systèmes dans le cas de l'état global du système.
+En QuTiP, la commande utilisé est \texttt{tensor(op1, op2, op3, ...., opn)} 
+op1, op2, ..., opn sont soit tous des opérateurs des sous-systèmes dans le cas 
+de l'opérateur global, soit tous des états des sous-systèmes dans le cas de 
+l'état global du système.
 
-La trace partielle quant-à elle peut être comprise comme l'opération inverse du produit tensoriel. Elle permet en fait d'extraire l'état/opérateur d'un ou des plusieurs sous-système contenu dans l'état/opérateur du système global.
+La trace partielle quant-à elle peut être comprise comme l'opération inverse du 
+produit tensoriel. Elle permet en fait d'extraire l'état/opérateur d'un ou des 
+plusieurs sous-système contenu dans l'état/opérateur du système global.
 
-En QuTiP, la commande qui permet de calculer la trace partielle est \texttt{ptrace(Op,sel)}, \texttt{Op} est l'état/opérateur du système global et \texttt{sel} est le/les numéro(s) du/des sous-système(s) à extraire. La commande \texttt{ptrace()} renvoie le résultat sous la forme d'un opérateur projecteur lorsqu'il s'agit des états ($\ket{\psi}\bra{\psi}$ lorsque l'état voulu est $\ket{\psi}$). Nous allons voir plus d'exemple dans la suite.
+En QuTiP, la commande qui permet de calculer la trace partielle est 
+\texttt{ptrace(Op,sel)}, \texttt{Op} est l'état/opérateur du système global et 
+\texttt{sel} est le/les numéro(s) du/des sous-système(s) à extraire. La 
+commande \texttt{ptrace()} renvoie le résultat sous la forme d'un opérateur 
+projecteur lorsqu'il s'agit des états ($\ket{\psi}\bra{\psi}$ lorsque l'état 
+voulu est $\ket{\psi}$). Nous allons voir plus d'exemple dans la suite.
 \subsection{Produit tensoriel} \label{tensor}
-Un système est composé de trois électrons de spin 1/2. Chaque sous-systèmes dispose d'une base $\{\ket{0},\ket{1}\}$. Le système se trouve dans l'état initial $\ket{\psi_0}=\ket{000}$. On suppose que le hamiltonien d'évolution du système est $H$ défini par :
+Un système est composé de trois électrons de spin 1/2. Chaque sous-systèmes 
+dispose d'une base $\{\ket{0},\ket{1}\}$. Le système se trouve dans l'état 
+initial $\ket{\psi_0}=\ket{000}$. On suppose que le hamiltonien d'évolution du 
+système est $H$ défini par :
 \begin{equation}
 H = \sigma_x\otimes\sigma_y\otimes\mathbb{I}+\sigma_z\otimes\mathbb{I}\otimes W
 \end{equation}
-où $\sigma_x,\sigma_y,\sigma_z$ sont les trois opérateurs de Pauli et $W=(\sigma_x+\sigma_z)/\sqrt{2}$. La base du système global est $\{\ket{000},\ket{001},\ket{010},\ket{011},\ket{100},\ket{101},\ket{110},\ket{111}\}$.
+où $\sigma_x,\sigma_y,\sigma_z$ sont les trois opérateurs de Pauli et 
+$W=(\sigma_x+\sigma_z)/\sqrt{2}$. La base du système global est 
+$\{\ket{000},\ket{001},\ket{010},\ket{011},\ket{100},\ket{101},\ket{110},\ket{
+111}\}$.
 
 On défini l'état initial et le hamiltonien par :\\
-\begin{tt}
-ket0 = basis(2,0)\\
-ket1 = basis(2,1)\\
-Psi0 = tensor(ket0,ket0,ket0) \# Calcul l'état $\ket{\psi_0}$\\
-X = sigmax()\\
-Y = sigmay()\\
-Z = sigmaz()\\
-W = (X+W)/sqrt(2)\# Matrice de $W$\\
-I = qeye(2)\# Matrice identité d'ordre 2\\
-H = tensor(X,Y,I)+tensor(Z,I,W)\# Calcul l'hamiltonien $H$\\
-Psi = H*Psi0 \# Action de $H$ sur $\ket{\psi_0}$\\.
-\end{tt}
+\begin{lstlisting}
+ket0 = basis(2,0)
+ket1 = basis(2,1)
+Psi0 = tensor(ket0,ket0,ket0) # Calcul l'état $\ket{\psi_0}$
+X = sigmax()
+Y = sigmay()
+Z = sigmaz()
+W = (X+W)/sqrt(2)# Matrice de $W$
+I = qeye(2)# Matrice identité d'ordre 2
+H = tensor(X,Y,I)+tensor(Z,I,W)# Calcul l'hamiltonien $H$
+Psi = H*Psi0 # Action de $H$ sur $\ket{\psi_0}$
+\end{lstlisting}
 
 
 \subsection{Trace partielle}
 
 On considère le système décrit à la section (\ref{tensor}).
 
-On extrait l'état du sous-système 2 de l'état $\ket{\psi}=H\ket{\psi_0}$ par la commande :\\
-\begin{tt}
-Psi2 = Psi.ptrace(1) ou Psi2 = ptrace(Psi,1)\# la numérotation commence à 0\\
-\end{tt}
-Comme nous l'avions dit précédemment la commande \texttt{ptrace} renvoie l'opérateur projecteur sur l'état recherché. \texttt{Psi2} que nous venons de calculer est en fait égale à $P_2=\ket{\psi_2}\bra{\psi_2}$.
+On extrait l'état du sous-système 2 de l'état $\ket{\psi}=H\ket{\psi_0}$ par la 
+commande :\\
+\begin{lstlisting}
+Psi2 = Psi.ptrace(1) ou Psi2 = ptrace(Psi,1)# la numérotation commence à 0
+\end{lstlisting}
+Comme nous l'avions dit précédemment la commande \texttt{ptrace} renvoie 
+l'opérateur projecteur sur l'état recherché. \texttt{Psi2} que nous venons de 
+calculer est en fait égale à $P_2=\ket{\psi_2}\bra{\psi_2}$.
 
-De même on peut extraire l'état du sous-système 1 et 3 respectivement par :\\ \texttt{Psi1=ptrace(Psi,0) et Psi3 = ptrace(Psi,2)}.
+De même on peut extraire l'état du sous-système 1 et 3 respectivement par :\\ 
+\texttt{Psi1=ptrace(Psi,0) et Psi3 = ptrace(Psi,2)}.
 
 \section{Sphère de Bloch}
-La sphère de Bloch permet de représenter un l'état d'un qubit (un système à deux niveaux). En QuTiP, on utilise deux classe pour dessiner la sphère de Bloch et y ajouter des points, des états ou même des vecteurs : la class \texttt{Bloch()} et la class \texttt{Bloch3d}. Ces commandes sont simples à utiliser. Commençons par la class \texttt{Bloch()}. Ces deux classes utilise les memes commande pour ajouter des points, des vecteurs ou des états. Les commandes utilisable sont regroupées dans le tableau (\ref{Bloch}).
+La sphère de Bloch permet de représenter un l'état d'un qubit (un système à 
+deux niveaux). En QuTiP, on utilise deux classe pour dessiner la sphère de Bloch 
+et y ajouter des points, des états ou même des vecteurs : la class 
+\texttt{Bloch()} et la class \texttt{Bloch3d}. Ces commandes sont simples à 
+utiliser. Commençons par la class \texttt{Bloch()}. Ces deux classes utilise les 
+memes commande pour ajouter des points, des vecteurs ou des états. Les commandes 
+utilisable sont regroupées dans le tableau (\ref{Bloch}).
 \begin{table}[!h]
 \begin{center}
 \begin{tabular}{|c|c|c|}\hline \hline
-\textbf{Commande \# $\equiv$ optionnel} & \textbf{Variable d'entrée} & \textbf{Description} \\ \hline \hline
-\texttt{add\_points(pnts,\#meth)} & \texttt{pnts} : Points ou liste des points & Ajoute un ou plusieurs\\
+\textbf{Commande # $\equiv$ optionnel} & \textbf{Variable d'entrée} & 
+\textbf{Description} \\ \hline \hline
+\texttt{add\_points(pnts,#meth)} & \texttt{pnts} : Points ou liste des points & 
+Ajoute un ou plusieurs\\
  & \texttt{meth}='m': multicolore & points à la sphère de Bloch \\ \hline
-\texttt{add\_states(state,\#kind)} & \texttt{state} : état ou liste d'état & Ajoute un ou plusieurs \\
+\texttt{add\_states(state,#kind)} & \texttt{state} : état ou liste d'état & 
+Ajoute un ou plusieurs \\
  & \texttt{kind}='points': si state est & états à la sphère de Bloch \\
  & est représenté comme un point & \\ \hline
 \texttt{add\_vectors(vec)} & \texttt{vec} : vecteur ou & Ajoute un vecteur ou \\
  & liste de vecteur & un ensemble de vecteurs \\ \hline
 \texttt{clear()} & & Enlève toute donnée \\
  & & sur la sphère de Bloch \\ \hline
-\texttt{save(\#format,\#dirc)} & \texttt{format} : format du fichier & Sauvegarde la sphère \\
+\texttt{save(#format,#dirc)} & \texttt{format} : format du fichier & 
+Sauvegarde la sphère \\
  & \texttt{dirc} : répertoire à utiliser & dans un fichier \\ \hline
 \texttt{show()} & & Génère la sphère de Bloch\\ \hline
 \end{tabular}
@@ -373,52 +602,62 @@ La sphère de Bloch permet de représenter un l'état d'un qubit (un système à
 
 \subsection{Bloch class}
 
-Pour créer une sphère de Bloch, on utilise la commande : \texttt{Bloch()}. Dans l'exemple qui suit, nous allons créer une sphère de Bloch et voir comment y ajouter des états, vecteurs etc...\\
-\begin{tt}
-B = Bloch() \# Crée une sphère de Bloch vide\\
-B.show() \# Montre la sphère\\
-\end{tt}
-En fait lorsqu'une sphère est créée, elle est gardée en mémoire. Il faut utiliser la commande \texttt{show()} pour le faire apparaître ou littéralement pour montrer la sphère.\\
-\begin{tt}
-ket0 = basis(2,0)\\
-ket1 = basis(2,1)\\
-Psi = (-ket0+3ket1).unit()\\
-B.add\_states(ket0) \# Représente ket0 sur la sphère B créée\\
-B.add\_states([ket1,Psi]) \# Représente plusieurs états au même moment sur B\\
-\end{tt}
+Pour créer une sphère de Bloch, on utilise la commande : \texttt{Bloch()}. Dans 
+l'exemple qui suit, nous allons créer une sphère de Bloch et voir comment y 
+ajouter des états, vecteurs etc...\\
+\begin{lstlisting}
+B = Bloch() # Crée une sphère de Bloch vide
+B.show() # Montre la sphère
+\end{lstlisting}
+En fait lorsqu'une sphère est créée, elle est gardée en mémoire. Il faut 
+utiliser la commande \texttt{show()} pour le faire apparaître ou littéralement 
+pour montrer la sphère.\\
+\begin{lstlisting}
+ket0 = basis(2,0)
+ket1 = basis(2,1)
+Psi = (-ket0+3ket1).unit()
+B.add\_states(ket0) # Représente ket0 sur la sphère B créée
+B.add\_states([ket1,Psi]) # Représente plusieurs états au même moment sur B
+\end{lstlisting}
 On peut aussi ajouter des vecteurs sur la sphère B créée \\
-\begin{tt}
-vec = [0,1/sqrt(2),1/sqrt(2)] \# vecteur en trois dimensions\\
-vec2 = [0,1,0] \# vecteur y en trois dimensions\\
-vec3 = [1/sqrt(3),1/sqrt(3),1/sqrt(3)] \# vecteur normaliser en trois dimensions\\
-B.add\_vectors(vec) \# Ajoute le vecteur vec à la sphère B\\
-B.add\_vectors([vec2,vec3]) \# Ajoute plusieurs vecteurs au même moment à B.\\
-\end{tt}
+\begin{lstlisting}
+vec = [0,1/sqrt(2),1/sqrt(2)] # vecteur en trois dimensions
+vec2 = [0,1,0] # vecteur y en trois dimensions
+vec3 = [1/sqrt(3),1/sqrt(3),1/sqrt(3)] # vecteur normaliser en trois 
+dimensions
+B.add\_vectors(vec) # Ajoute le vecteur vec à la sphère B
+B.add\_vectors([vec2,vec3]) # Ajoute plusieurs vecteurs au même moment à B
+\end{lstlisting}
 On peut aussi ajouter des points sur la sphère de Bloch B créée\\
-\begin{tt}
+\begin{lstlisting}
 pnt = [1,0,1] \\
-xp = [cos(tt) for tt in linspace(0,2*pi,5)] \# définit des coordonnées de x\\
-yp = [sin(tt) for tt in linspace(0,2*pi,5)] \# définit des coordonnées de y\\
-zp = [zeros(20)] \# définit des coordonnées de z\\
-B.add\_points(pnt)\# Ajoute le \texttt{pnt} à la sphère B\\
-B.add\_points([xp,yp,zp]) \# Ajoute un ensemble de 5 points à B\\
-B.show() \# Génère la sphère de Bloch\\
-\end{tt}
+xp = [cos(tt) for tt in linspace(0,2*pi,5)] # définit des coordonnées de x
+yp = [sin(tt) for tt in linspace(0,2*pi,5)] # définit des coordonnées de y
+zp = [zeros(20)] # définit des coordonnées de z
+B.add\_points(pnt)# Ajoute le \texttt{pnt} à la sphère B
+B.add\_points([xp,yp,zp]) # Ajoute un ensemble de 5 points à B
+B.show() # Génère la sphère de Bloch
+\end{lstlisting}
 
 \subsection{Bloch3d class}
 
-La classe \texttt{Bloch3d} est une classe qui génère la sphère de Bloch comme \texttt{Bloch}. Ces deux commandes s'utilisent de la même manière. Il suffit juste de remplacer \texttt{Bloch} par \texttt{Bloch3d} dans les exemples de la section précédente.\\
-\texttt{B = Bloch3d() \# Pour créer une sphère de Bloch3d}
+La classe \texttt{Bloch3d} est une classe qui génère la sphère de Bloch comme 
+\texttt{Bloch}. Ces deux commandes s'utilisent de la même manière. Il suffit 
+juste de remplacer \texttt{Bloch} par \texttt{Bloch3d} dans les exemples de la 
+section précédente.\\
+\texttt{B = Bloch3d() # Pour créer une sphère de Bloch3d}
 
 \subsection{Différences entre Bloch and Bloch3d}
 
 
 \section{Évolution temporelle unitaire}
-L'évolution d'un système quantique revient à résoudre l'équation d'évolution temporelle de Schr\"odinger
+L'évolution d'un système quantique revient à résoudre l'équation d'évolution 
+temporelle de Schr\"odinger
 \begin{equation}
 i\hbar\dfrac{d\ket{\psi}}{dt}=H\ket{\psi}.
 \end{equation}
-En QuTiP, on utilise la commande \texttt{mesolve} pour résoudre l'équation de schr\"odinger.\\
+En QuTiP, on utilise la commande \texttt{mesolve} pour résoudre l'équation de 
+schr\"odinger.\\
 \texttt{ mesolve(operator, states, tlist, [], [exp\_op\_list])}
 \begin{itemize}
 \item \texttt{operator}=opérateur hamiltonien \texttt{H},;
@@ -428,12 +667,14 @@ commande \texttt{linspace(temps\_initial,temps\_final,pas)};
 \item \texttt{[exp\_op\_list]}=liste des opérateurs dont on évaluera les valeurs
 moyennes pendant \texttt{tlist}.
 \end{itemize}
-La commande \texttt{mesolve}, renvoie un objet de classe \texttt{Odedata}. Cet objet possède plusieurs propriétés dont nous regroupons dans le tableau suivant.
+La commande \texttt{mesolve}, renvoie un objet de classe \texttt{Odedata}. Cet 
+objet possède plusieurs propriétés dont nous regroupons dans le tableau suivant.
 \begin{center}
 \begin{tabular}{|c|c|} \hline \hline
 \textbf{Attribues} & \textbf{Description} \\ \hline \hline
 \texttt{solver} & chaine de caractère précisant la méthode utilisée \\ \hline
-\texttt{times} & Temps pour lesquelles on a résolu l'équation d'évolution\\ \hline
+\texttt{times} & Temps pour lesquelles on a résolu l'équation d'évolution\\ 
+\hline
 \texttt{expect} & Liste des valeurs moyennes calculées\\ \hline
 \texttt{states} & liste des états calculés pour \texttt{times}\\ \hline
 \texttt{num\_expect} & Nombre des valeurs moyennes calculés\\ \hline
@@ -445,15 +686,17 @@ On considère un système à deux niveaux dont le hamiltonien est
 \begin{equation}
 H = 0.25\times\sigma_z
 \end{equation}
-On considère que le système se trouve dans l'état initial $\ket{\psi_0}=(\ket{0}+\ket{1})/\sqrt{2}$. La résolution de l'équation d'évolution pour $t\in[0,10]$ se fait avec les commandes :\\
-\begin{tt}
-Psi0 = (basis(2,0)+basis(2,1))/sqrt(2)\\
-H = 0.25*sigmaz()\\
-P0 = basis(2,0)*basis(2,0).dag()\\
-tlist = linspace(0,10,100)\\
-data = mesolve(H,Psi0,tlist,[],[H,P0])\\
-MoyH = data.expect[0] \# extrait la 1ère valeur moyenne i.e. Moyenne de H\\
-MoyP0 = data.expect[1] \# extrait la 2ième valeur moyenne i.e. Moyenne de P0\\
-T = data.times \# donne la liste du temps pour laquelle l'équation est résolue\\
-Etats = data.states \# Calcul les états du système pour les temps \texttt{times}\\
-\end{tt}
+On considère que le système se trouve dans l'état initial 
+$\ket{\psi_0}=(\ket{0}+\ket{1})/\sqrt{2}$. La résolution de l'équation 
+d'évolution pour $t\in[0,10]$ se fait avec les commandes :\\
+\begin{lstlisting}
+Psi0 = (basis(2,0)+basis(2,1))/sqrt(2)
+H = 0.25*sigmaz()
+P0 = basis(2,0)*basis(2,0).dag()
+tlist = linspace(0,10,100)
+data = mesolve(H,Psi0,tlist,[],[H,P0])
+MoyH = data.expect[0] # extrait la 1ère valeur moyenne i.e. Moyenne de H
+MoyP0 = data.expect[1] # extrait la 2ième valeur moyenne i.e. Moyenne de P0
+T = data.times # donne la liste du temps pour laquelle l'équation est résolue
+Etats = data.states # Calcul les états du système pour les temps 'times'
+\end{lstlisting}

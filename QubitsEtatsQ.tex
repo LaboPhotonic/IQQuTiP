@@ -167,36 +167,6 @@ répond \textbf{NON} alors que la théorie quantique répond \textbf{OUI mais av
 une probabilité} $|\alpha|^{2}$ par exemple.}
 }}
 
-\subsection{Représentation de la sphère de Bloch avec QuTiP}
-
-En utilisant le logiciel QuTiP\footnote{Voir l'Annexe \ref{sec:QuTiP} pour 
-l'installation de QuTiP.}, on peut représenter sur la sphère de Bloch un 
-qubit.
-
-Les commandes suivantes représentent respectivement les états $\ket{0}$, 
-$\ket{1}$ et $(\ket{0}+\ket{1})/\sqrt{2}$. Le symbole \# introduit un 
-commentaire.
-
-\begin{tt}
-from qutip import *\\
-B=Bloch() \# crée une sphère de Bloch vide\\
-ket0 = basis(2,0) \# définit le $\ket{0}$\\
-ket1 = basis(2,1) \# définit le $\ket{1}$\\
-B.add\_states(ket0) \# représente le $\ket{0}$ sur B\\
-B.add\_states(ket1) \# représente le $\ket{1}$ sur B\\
-B.add\_states((ket0+ket1)/sqrt(2)) \# représente l'état 
-$(\ket{0}+\ket{1})/\sqrt{2}$ sur B\\
-B.show() \# permet de visualiser la sphère B avec les trois états ajoutés.
-\end{tt}
-L'image obtenue peut être sauvegardé pour utilisation ultérieur.
-
-\begin{figure}[!h]
-\begin{center}
-\includegraphics[height=7cm]{graphics/Bloch3.png}
-\caption{Représentation avec QuTiP de la sphère de Bloch avec les états 
-$\ket{0}$, $\ket{1}$ et $(\ket{0}+\ket{1})/\sqrt{2}$.}
-\end{center}
-\end{figure}
 
 \begin{exercise}
 For each of the following qubits, if a measurement is made, what is the
@@ -207,9 +177,6 @@ probability that we find the qubit in the state $\ket{1}$?
  \item $\ket{\psi}=\frac{i}{2}\ket{0}+\frac{\sqrt{3}}{2}\ket{1}$.
  \item $\ket{\psi}=\frac{1+i}{\sqrt{3}}\ket{0}-\frac{i}{\sqrt{3}}\ket{1}$.
 \end{enumerate}
- Compute with QuTiP the probabilities of finding the state $\ket{\psi}$ in 
-$\ket{0}$ or in $\ket{1}$. Plot on the Bloch sphere the state $\ket{0}$, 
-$\ket{1}$ and $\ket{\psi}$.
 \end{exercise}
 
 \begin{footnotesize}
@@ -268,20 +235,6 @@ Again, these probabilities sum to $1$:
 \end{subequations}
 
 \end{enumerate}
-As the probability of finding the state $\ket{\psi}$ in $\ket{i}$ is given by 
-$p_i=|\bra{i}\psi\rangle|^2=\bra{i}\psi\rangle\bra{i}\psi\rangle^*$, $i=0,1$, 
-the QuTiP script should be \\
-\begin{tt}
-from qutip import *\\
-ket0 = basis(2,0)\\
-bra0 = ket0.dag()\\
-ket1 = basis(2,1)\\
-bra1 = ket1.dag()\\
-psi = (ket0+sqrt(2)*ket1)/sqrt(3) \\
-p0 = (bra0*psi)*(bra0*psi).dag()\\
-p1 = (bra1*psi)*(bra1*psi).dag()
-\end{tt}
-Do the same for the other cases.
 
 \textbf{\emph{Pas du tout compliqué n'est-ce pas?}}
 \end{solution}
@@ -404,19 +357,8 @@ tridimensionnels.
 
 Considérons les vecteurs de base de $\mathcal{V}$%
 \begin{equation}
-\bls{e}_1=\begin{pmatrix}
-1\\
-0\\
-0
-\end{pmatrix},\ \bls{e}_2=\begin{pmatrix}
-0\\
-1\\
-0
-\end{pmatrix},\ \bls{e}_{3}=\begin{pmatrix}
-0\\
-0\\
-1
-\end{pmatrix},
+\bls{e}_1=\begin{pmatrix}1\\0\\0\end{pmatrix},\ \bls{e}_2=\begin{pmatrix}
+0\\1\\0\end{pmatrix},\ \bls{e}_{3}=\begin{pmatrix}0\\0\\1\end{pmatrix},
 \end{equation}
 et deux vecteurs de $\mathcal{V}$%
 \begin{equation}
@@ -684,16 +626,16 @@ une alternance de franges brillantes et de franges sombres.}%
 \end{minipage}
 \end{figure}
 
-Utilisons maintenant un dispositif spécial dont la source $S$ ne produit que des
-électrons uniques qui sont dirigés vers les fentes $F_1$ et $F_2$.
-L'électron a une charge bien déterminée et la proposition \emph{un seul électron
-est bien passé soit par $F_1$, soit par $F_2$} est bien décidable (deux
-\textbf{chemins possibles}). Chaque électron est capté en un \emph{point bien
-précis} du détecteur comme on peut le voir sur la figure \ref{fig:InterfPhotons}
-(a). Ces points d'impact sont cependant \textbf{aléatoires}: les différents
-électrons indépendants préparés dans les \emph{mêmes} conditions ont des impacts
-\emph{différents}. Ce qui est en contradiction avec le
-\textbf{\emph{déterminisme}} classique qui veut à des \emph{conditions initiales
+Utilisons maintenant un dispositif spécial dont la source $S$ ne produit que des 
+électrons uniques qui sont dirigés vers les fentes $F_1$ et $F_2$. L'électron a 
+une charge bien déterminée et la proposition \emph{un seul électron est bien 
+passé soit par $F_1$, soit par $F_2$} est bien décidable (deux \textbf{chemins 
+possibles}). Chaque électron est capté en un \emph{point bien précis} du 
+détecteur comme on peut le voir sur la figure \ref{fig:InterfPhotons} (a). Ces 
+points d'impact sont cependant \textbf{aléatoires}: les différents électrons 
+indépendants préparés dans les \emph{mêmes} conditions ont des impacts 
+\emph{différents}. Ce qui est en contradiction avec le 
+\textbf{\emph{déterminisme}} classique qui veut à des \emph{conditions initiales 
 identiques}, correspondent des \emph{conditions finales identiques}.
 
 \begin{figure}[htbp]
@@ -714,7 +656,7 @@ Advanced Research Laboratory, Saitama, Japan].}%
 Au bout \emph{d'un temps suffisamment long}, on observe avec surprise que les
 impacts des électrons forment une figure d'interférence comme illustrée par la
 figure \ref{fig:InterfPhotons} (d). Ce résultat est surprenant en ce sens que
-l'électron est un \textbf{corpuscule}. Or nous savons q'une onde emplit tout
+l'électron est un \textbf{corpuscule}. Or nous savons qu'une onde emplit tout
 l'espace! Les électrons sont uns et \textbf{indivisibles}, donc il n'y a pas de
 fragmentation d'un quantum d'énergie $\hbar\omega$. D'après Paul Dirac,
 \textbf{chaque électron interfère avec lui-même} comme une onde\footnote{En
@@ -1255,7 +1197,7 @@ probabilités quantiques, il faut définir des règles précises.
 \begin{definition}
 \textbf{L'amplitude quantique}, qui détermine où et quand on peut trouver un
 objet quantique et avec quelle probabilité, n'est définie que lorsque l'état
-initial $\ket{i}$ et l'étal final $\ket{f}$ du système quantique considéré sont
+initial $\ket{i}$ et l'état final $\ket{f}$ du système quantique considéré sont
 spécifiés de façon unique, c'est-à-dire décrivent exhaustivement le système tout
 entier. Ces états $\ket{i}$ et $\ket{f}$ définissent une \textbf{transition
 quantique.}
@@ -1376,7 +1318,7 @@ Soulignons qu'à travers la superposition des états, la cryptographie
 quantique repose sur le principe d'indétermination d'Heisenberg qui induit
 que\emph{\ toute mesure perturbe nécessairement l'état des électrons }. Donc
 toute tentative d'interception est détectée, même si on intercepte et que l'on
-réinjecte un électron dans le système après lecture.
+ré-injecte un électron dans le système après lecture.
 
 \item Lorsqu'une transition peut se faire par des voies intermédiaires en
 principe discernables, chacun de ces états peut être considéré comme final
@@ -1772,7 +1714,6 @@ l'autre fente est de la forme%
 \right].
 \end{equation}
 
-
 \item Pour quelles valeurs de la différence de marche $r_2-r_1$, en
 fonction de $\lambda$, a-t-on les franges brillantes et des franges sombres
 (voir la figure (\ref{fig:FigInterfPhotons}))?
@@ -1807,7 +1748,5 @@ vivant et $t_2$ celui au bout duquel il a une chance sur quatre d'être vivant.
 Exprimer les états $\ket{\psi_1}$ et $\ket{\psi_2}$ du chat correspondant à
 ces instants.
 \end{enumerate}
-\item En utilisant QuTiP, représenter sur une sphère de Bloch les états 
-$\ket{m}$, $\ket{v}$, $\ket{\psi_1}$ et $\ket{\psi_2}$.
 \end{enumerate}
 
