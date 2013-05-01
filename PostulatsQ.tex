@@ -529,10 +529,102 @@ non-diagonaux non nuls marque la possibilité de \textbf{transitions} du quanton
 entre ces deux états de base stationnaires.}
 }}
 
+\subsection{QuTiP - Évolution temporelle unitaire}
+
+QuTiP utilise la fonction \texttt{qutip.sesolve} pour résoudre l'équation de 
+schr\"odinger. La syntaxe est\\
+\begin{lstlisting}
+ sesolve(H, states, tlist, [exp_op_list])}
+\end{lstlisting}
+avec
+\begin{itemize}
+\item \texttt{H}=l'opérateur Hamiltonien;
+\item \texttt{states}=l'état initial $\ket{\psi}$;
+\item \texttt{tlist}=l'intervalle de temps que l'on définit en utilisant la
+commande \texttt{linspace(temps\_initial,temps\_final,pas)};
+\item \texttt{[exp\_op\_list]}=la liste des opérateurs dont on évaluera les 
+valeurs moyennes pendant \texttt{tlist}.
+\end{itemize}
+
+La fonction \texttt{qutip.sesolve}, renvoie à une classe 
+d'objet\footnote{ODE=Ordinary Differential Equation, Équation Différentielle 
+Ordinaire.} \texttt{qutip.Odedata}. Cette fonction utilise la solution 
+(intégrations) d'une équation différentielle ordinaire pour faire évoluer 
+l'état $\ket{\psi}$ (\texttt{states}) et évaluer les valeurs moyennes 
+des opérateurs (\texttt{exp\_op\_list}) pendant de l'intervalle de temps 
+(\texttt{tlist}).
+
+Une classe d'objet générique \texttt{qutip.Odedata} possède plusieurs 
+propriétés 
+qui stockent les informations sur la simulation et qui sont regroupées dans le 
+tableau ci-dessous:
+\centering
+\begin{tabular}{|l|l|l} \hline \hline
+\textbf{Attributs} & \textbf{Description} & \textbf{Schrödinger}\\ \hline \hline
+\texttt{odedata.solver} & Chaîne de caractère précisant la méthode utilisée & 
+\texttt{sesolver}\\ \hline
+\texttt{odedata.times} & Intervalle de temps pour lequel on a résolu 
+l'équation d'évolution & \texttt{tlist}\\ \hline
+\texttt{odedata.states} & liste des états calculés pendant \texttt{tlist} & 
+\texttt{states} \\ \hline
+\texttt{odedata.expect} & Liste des valeurs moyennes calculées & 
+\texttt{exp\_op\_list} \\ \hline
+\texttt{odedata.num\_expect} & Nombre des valeurs moyennes calculées & $n$ \\ 
+\hline
+\\\hline
+\end{tabular}
+
+Pour visualiser l'évolution du système, on utilise la commande 
+\texttt{plot(odedata.times,odedata.expect)}.
+
+\begin{example}
+On considère un système à deux niveaux dont l'état initial est 
+$\ket{\psi_0}=\ket{0}$ a pour le Hamiltonien
+\begin{equation}
+\mathtt{H} = \frac{2\pi}{10}\sigma_x.
+\end{equation}
+La simulation de l'évolution de ce système pendant l'intervalle de temps 
+$t\in[0,10]$, pour les valeurs moyennes $\av{\sigma_z}_{\ket{\psi(t)}}$ et 
+$\av{P_0}_{\ket{\psi(t)}}$, $P_0=\ket{0}\bra{0}$, peut se fait avec le 
+script suivant :
+\end{example}
+\begin{lstlisting}[commentstyle=\scriptsize]
+# coding: utf-8 
+#
+from qutip import *
+from pylab import *
+
+Psi0 = basis(2,0) # vecteur d'%é%tat $\ket{\psi_0}$
+H = 2*pi*0.1*sigmax() # Hamiltonien
+P0 = basis(2,0)*basis(2,0).dag() # Projecteur $P_0=\ket{0}\bra{0}$
+tlist = linspace(0,10,100) # Intervalle de 1 %à% 10 par pas de 10/100
+data = sesolve(H,Psi0,tlist,[sigmaz(),P0]) # Evolution du syst%è%me
+
+#Tracer de l'%é%volution
+
+plot(tlist,data.expect[0],tlist,data.expect[1])
+xlabel('Time')
+ylabel('Valeurs moyennes')
+title('Evolution dun systeme')
+legend(("Moyenne de Sigma-Z", "Moyenne de P0"))
+show()
+\end{lstlisting}
+Le tracé de cette évolution est donnée par la Figure 
+\ref{fig:EvolSyst1}.
+\begin{figure}[htbp]
+\centering
+ \includegraphics[scale=.6]{./graphics/EvolSyst1.png}
+ % EvolSyst1.png: 812x612 pixel, 100dpi, 20.62x15.54 cm, bb=0 0 585 441
+ \caption{Evolution dans l'intervalle de temps $t\in[0,10]$ du système 
+initialement dans l'état $\ket{0}$ de Hamiltonien $\mathtt{H} = 
+\frac{2\pi}{10}\sigma_x$ pour les valeurs moyennes 
+$\av{\sigma_z}_{\ket{\psi(t)}}$ et $\av{P_0}_{\ket{\psi(t)}}$.}
+ \label{fig:EvolSyst1}
+\end{figure}
+
 
 \section{Manipulations de qubits - Oscillations de Rabi}
 \label{sec:ESpin12}
-
 
 Il est légitime de chercher à savoir comment évolue un qubit au cours du temps.
 Nous allons rentrer à nouveau au laboratoire pour examiner cela avec un qubit
@@ -666,8 +758,8 @@ $\ket{\psi}$ sur la figure \ref{fig:ReprSpin12Bloch}) faisons tourner la
 direction du champ magnétique du filtre de Stern et Gerlach et alignons le dans
 la direction arbitraire
 \begin{equation}
-\bls{\hat{u}}(\theta,\varphi)=(\sin\theta\cos\varphi,
-\sin\theta\sin\varphi,\cos\theta).
+\bls{\hat{u}}(\theta,\varphi)=(\sin\theta\cos\varphi,\sin\theta\sin\varphi, 
+\cos\theta).
 \end{equation}
 
 Ainsi, seule la composante $B_{\bls{u}}=\bls{B}\cdot\bls{\hat{u}}$ du champ
@@ -1166,19 +1258,19 @@ l'installation de QuTiP.}, on peut représenter sur la sphère de Bloch un
 qubit.
 
 Les commandes suivantes représentent respectivement les états $\ket{0}$, 
-$\ket{1}$ et $(\ket{0}+\ket{1})/\sqrt{2}$. Le symbole \# introduit un 
+$\ket{1}$ et $\ket{\psi}=(\ket{0}+\ket{1})/\sqrt{2}$. Le symbole \# introduit 
+un 
 commentaire.
 
 \begin{lstlisting}
-from qutip import *\\
-B=Bloch() \# crée une sphère de Bloch vide\\
-ket0 = basis(2,0) \# définit le $\ket{0}$\\
-ket1 = basis(2,1) \# définit le $\ket{1}$\\
-B.add\_states(ket0) \# représente le $\ket{0}$ sur B\\
-B.add\_states(ket1) \# représente le $\ket{1}$ sur B\\
-B.add\_states((ket0+ket1)/sqrt(2)) \# représente l'état 
-$(\ket{0}+\ket{1})/\sqrt{2}$ sur B\\
-B.show() \# permet de visualiser la sphère B avec les trois états ajoutés.
+from qutip import *
+B=Bloch() # Cree une sphère de Bloch vide
+ket0 = basis(2,0) # $\ket{0}$
+ket1 = basis(2,1) # $\ket{1}$
+B.add\_states(ket0) # Represente $\ket{0}$ sur B
+B.add\_states(ket1) # Represente $\ket{1}$ sur B
+B.add\_states((ket0+ket1)/sqrt(2)) # Represente $\ket{\psi}$ sur B
+B.show() # Permet de visualiser B avec $\ket{0}$, $\ket{1}$ et $\ket{\psi}$.
 \end{lstlisting}
 L'image obtenue peut être sauvegardé pour utilisation ultérieur.
 

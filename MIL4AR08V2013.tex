@@ -40,7 +40,12 @@ language=Python,
 basicstyle=\footnotesize,
 numbers=left,
 numberstyle=\footnotesize,
-numbersep=7pt
+numbersep=5pt,
+backgroundcolor=\color[gray]{.95},
+mathescape=true,
+numberblanklines=false,
+numberbychapter=true
+escapechar=\%
 }
 % Gestion du fichier pdf
 \hypersetup{%
@@ -170,7 +175,7 @@ MIL4AR08/CS07 - UE Optionnelle\\ CM: 30h - TD: 20h - Crédits: 5\\
 
 \markboth{Avant-Propos}{Avant-Propos} Cette unité d'enseignement (UE) a pour
 objectif d'exposer aux étudiants du cycle Licence des Mentions Mathématique et
-Informatique, les notions de bases de la théorie quantique nécessaires à la
+Informatique, les notions de base de la théorie quantique nécessaires à la
 compréhension de l'information quantique. Laquelle permet de traiter et
 transmettre l'information en s'appuyant sur les spécificités de la théorie
 quantique.
@@ -247,7 +252,7 @@ devenant moins chère!}
 
 Grâce à l'information quantique, on peut par exemple concevoir de nouvelles
 méthodes de cryptographie dont la sécurité s'appuie sur les bases du formalisme
-quantique, ou de nouvelles méthodes de calculs qui peuvent être
+quantique, ou de nouvelles méthodes de calculs qui peuvent être 
 exponentiellement plus efficaces que les méthodes classiques. L'information
 quantique ne concerne donc pas seulement les physiciens, mais aussi les
 théoriciens de l'information, les algorithmiciens, et les mathématiciens
@@ -315,13 +320,12 @@ Algorithme de Deutsch-Jozsa. Transformation de Fourier quantique.
 
 \input{CodeRSA.tex}
 
-\input{Correction}
+% \input{Correction}
 \backmatter
 
 
 \begin{thebibliography}{99999999}
                                          %
-
 
 \bibitem[MLB2005]{MLB2005}Michel Le Bellac,\emph{Introduction à l'Information
 Quantique}, Belin, 2005.
@@ -340,11 +344,14 @@ Scientific, 2004.
 Computation and Quantum Information}, Cambridge University Press, 2000.
 
 \bibitem[JPresk1998]{JPresk1998}John Preskill, \emph{Lecture note on quantum
-information and computation},
-\texttt{http://theory.caltech.edu/people/preskill/}
+information and computation}, \url{http://theory.caltech.edu/people/preskill/}.
 
 \bibitem[SCHWWW]{SCHWWW}C. Schiller, \emph{Motion Mountain},
-\texttt{www.motionmountain.org}
+\url{http://www.motionmountain.org}
+
+\bibitem[QUTIP]{QUTIP}P.D. Nation, J.R. Johansson, \emph{QuTiP: Quantum 
+Toolbox in Python}, 2011–2012. \url{http://qutip.googlecode.com/}.
+
 \end{thebibliography}
 
 
