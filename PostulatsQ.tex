@@ -622,7 +622,6 @@ $\av{\sigma_z}_{\ket{\psi(t)}}$ et $\av{P_0}_{\ket{\psi(t)}}$.}
  \label{fig:EvolSyst1}
 \end{figure}
 
-
 \section{Manipulations de qubits - Oscillations de Rabi}
 \label{sec:ESpin12}
 
@@ -988,13 +987,14 @@ Cette propriété, la précession, est à la base des techniques de
 \section{Exercices et problèmes}
 
 \subsection{Moment magnétique du deutéron}
+\label{sec:deuteron}
 
-Un noyau de deutérium plongé dans un champ magnétique $\bls{B}$ possède
-trois états $\ket{+}$, $\ket{0} $, $\ket{-}$ d'énergie $+E_0$, $0$, $-E_0$
-respectivement, avec $E_0=\hbar\omega$. Ce noyau a un moment magnétique et on
-suppose que l'opérateur $M$ associé à la projection de ce moment sur une
-direction fixe perpendiculaire au champ $\bls{B}$ a la forme
-$M=\mu_0A,$ avec $\mu_0>0$ et $A$ défini par%
+Un noyau de deutérium plongé dans un champ magnétique $\bls{B}$ possède trois 
+états $\ket{+}$, $\ket{0} $, $\ket{-}$ d'énergie $+E_0$, $0$, $-E_0$ 
+respectivement, avec $E_0=\hbar\omega$. Ce noyau a un moment magnétique et on 
+suppose que l'opérateur $M$ associé à la projection de ce moment sur une 
+direction fixe perpendiculaire au champ $\bls{B}$ a la forme $M=\mu_0A,$ avec 
+$\mu_0>0$ et $A$ défini par%
 \begin{equation}
 A\ket{+}=\frac{1}{\sqrt{2}}\ket{0},\,A\ket{0}=\frac{1}{\sqrt{2}}(\ket{+}+\ket{-}
 ),\,A\ket{-} =\frac{1}{\sqrt{2}}\ket{0} .
@@ -1009,7 +1009,7 @@ $m_1>m_2>m_3$) et déterminer les vecteurs propres normalisés correspondant
 $\ket{m_1}$, $\ket{m_2}$, $\ket{m_3}$.
 
 \item On suppose qu'à l'instant $t=0$, le noyau est dans l'état
-$\ket{\psi(0)}=\ket{m_1}$. Calculer $\ket{E}$ et $\Delta E$ dans cet état.
+$\ket{\psi(0)}=\ket{m_1}$. Calculer $\av{E}$ et $\Delta E$ dans cet état.
 
 \item Calculer $\av{M}$ dans l'état $\ket{\psi(t)}$ en fonction de $\omega$.
 
@@ -1022,18 +1022,34 @@ moment magnétique.
 
 \subsection{QuTiP - Moment magnétique du Deutéron}
 
-Il sera question ici de reprendre l'exercice avec QuTiP. On prendra pour la suite $\hbar\omega=1$ et $\mu_0=1$
+On reprendre ici l'Exercice \ref{sec:deuteron} avec QuTiP, en posant 
+$\hbar\omega=1$ et $\mu_0=1$.
+
 \begin{enumerate}
-\item En utilisant la commande \texttt{basis(n,m)}, définir les états de base $\{\ket{+},\ket{0},\ket{-}\}$ ainsi que le hamiltonien \texttt{H} du noyau. Définir la matrice \texttt{M=A}. Pour définir \texttt{H} et \texttt{M}, définir d'abord les matrices de \texttt{H} et de \texttt{M} puis transformer les en un objet quantique à travers la commande \texttt{Qobj()}.
+\item En utilisant \texttt{qutip.states.basis}, définir les états de base 
+$\{\ket{+},\ket{0},\ket{-}\}$ ainsi que le Hamiltonien \texttt{H} du noyau. 
+Définir la matrice \texttt{A} et vérifier son hermiticité avec l'instruction 
+appropriée.
 
-\item Calculer les vecteurs propres normalisés et les valeurs propres de \texttt{M} (utiliser la commande \texttt{M.eigenstates()}). Définir les projecteurs $\mathtt{P}_1,\mathtt{P}_2$ et $\mathtt{P}_3$ sur les états $\ket{m_1},\ket{m_2}$ et $\ket{m_3}$. Il faut noter que la commande \texttt{eigenstates()} renvoie les valeurs propres ainsi que les vecteurs propres. Pour cela utiliser :\\
-\texttt{[m3,m2,m1],[vec3,vec2,vec1] = M.eigenstates()}.
+\item En utilisant la commande QuTiP appropriée, calculer les valeurs propres 
+\texttt{[m3,m2,m1]} et les vecteurs propres normalisés \texttt{[vec3,vec2,vec1]} 
+de la matrice \texttt{A}. Définir les projecteurs $\mathtt{P}_1,\mathtt{P}_2$ et 
+$\mathtt{P}_3$ sur les états $\ket{m_1},\ket{m_2}$ et $\ket{m_3}$.
 
-\item On suppose que le noyau est dans l'état initial $\ket{\psi(0)}=\ket{m_1}$. Calculer la valeur moyenne de $\mathtt{M}$ dans cet état (utiliser la commande \texttt{expect(M,vec1)}). Calculer $\langle \mathtt{H}\rangle$ et l'écart quadratique moyen $\Delta \mathtt{H}$.
+\item On suppose qu'initialement le noyau est dans l'état 
+$\ket{\psi(0)}=\ket{m_1}$. Calculer la valeur moyenne de $\mathtt{A}$ dans cet 
+état. Calculer $\av{\mathtt{H}}$ et l'écart quadratique moyen $\Delta 
+\mathtt{H}$.
 
-\item Calculer pour $t\in[0,10]$, les valeurs moyennes de $\mathtt{M}$, dans les états $\ket{\psi(t)}$ (utiliser \texttt{mesolve} dont l'utilisation est expliquée au chapitre précédent). On discrétisera l'intervalle de temps en $100$. Calculer en même temps les probabilités de trouver les valeurs $m_1$, $m_2$ et $m_3$ lors d'une mesure sur l'état $\ket{\psi(t)}$.
+\item Calculer pour $t\in[0,10]$, les valeurs moyennes de $\mathtt{A}$, dans 
+les états $\ket{\psi(t)}$ en utilisant la fonction \texttt{qutip.sesolve}. On 
+discrétisera l'intervalle par pas de $100$. Calculer les probabilités de trouver 
+les valeurs $m_1$, $m_2$ et $m_3$ lors d'une mesure sur l'état $\ket{\psi(t)}$.
 
-\item Représenter sur la même figure les courbes d'évolution de la valeur moyenne de $\mathtt{M}$ pour $t\in[0,10]$ ainsi que les probabilités de trouver les valeurs $m_1,m_2$ et $m_3$. On utilisera la commande \texttt{plot(Temps, Fonction)} où \texttt{Temps} représente les valeurs en abscisse et \texttt{Fonction} les valeurs en ordonnée ou la fonction à représenter.
+\item Utiliser \texttt{plot(odedata.times,odedata.expect)} pour représenter sur 
+la même figure les courbes d'évolution de la valeur moyenne de $\mathtt{A}$ 
+pour $t\in[0,10]$ ainsi que les probabilités de trouver les valeurs $m_1,m_2$ 
+et $m_3$.
 \end{enumerate}
 
 \subsection{Précession de Larmor}
@@ -1228,56 +1244,37 @@ opération logique quantique?
 \subsection{QuTiP - Evolution d'un état de spin 1/2}
 
 Écrire un programme (script) en Python utilisant QuTiP pour répondre aux
-questions suivantes.
+questions ci-dessous.
 
-L'évolution d'un quanton de spin 1/2, de moment magnétique $\mathbf{\mu}$, dans un champ magnétique $\textbf{B}(0,0,B)$, peut être décrit par l'hamiltonien \texttt{H}$=-\mathbf{\mu}.\textbf{B}=\omega S_z$. Le quanton pénètre dans le champ magnétique dans l'état $\ket{+}_x$. On prendra : $\hbar\omega=0.5$.
+L'évolution d'un quanton de spin 1/2, de moment magnétique $\mathbf{\mu}$, dans 
+un champ magnétique $\textbf{B}(0,0,B)$, peut être décrit par l'Hamiltonien 
+$\mathtt{H}=-\mathbf{\mu}\cdot\textbf{B}=\omega S_z$. Le quanton pénètre dans 
+le champ magnétique dans l'état $\ket{+}_x$. On prendra : $\hbar\omega=0.5$.
+
 \begin{enumerate}
-\item Définir l'hamiltonien \texttt{H}, ainsi que ses états propres $\ket{+}_z$ et $\ket{-}_z$ en utilisant les commandes prédéfinies \texttt{sigmaz()} et \texttt{basis(n,m)}.
+\item En utilisant \texttt{qutip.states.basis} et 
+\texttt{qutip.operators.sigmax} définir l'Hamiltonien \texttt{H}, ainsi que ses 
+états propres $\ket{+}_z$ et $\ket{-}_z$.
 
-\item Exprimer les états $\ket{+}_x$ et $\ket{-}_x$ en fonction des états propres du hamiltonien \texttt{H}.
-
-\item Définir les projecteurs $\mathtt{P}_+$ et $\mathtt{P}_-$ respectivement sur les états $\ket{+}_x$ et $\ket{-}_x$
+\item Exprimer les états $\ket{+}_x$ et $\ket{-}_x$ en fonction des états  
+propres du hamiltonien \texttt{H} et définir les projecteurs $\mathtt{P}_+$ et 
+$\mathtt{P}_-$ respectivement sur les états $\ket{+}_x$ et $\ket{-}_x$.
 
 \item Le quanton initialement dans l'état $\ket{+}_x$ pénètre dans le champ 
-magnétique à $t=0$. Résoudre l'équation de schr\"odinger, pour $t\in[0,30]$ en 
-utilisant \texttt{mesolve(H, Temps, Psi0, [], [Pplus, Pmoins, H, H*H])}. 
-Calculer en même temps les valeurs moyennes de $\mathtt{P}_+$, $\mathtt{P}_-$, 
-$\mathtt{H}$ et $\mathtt{H^2}$.
+magnétique à $t=0$. Utiliser la fonction la fonction \texttt{qutip.sesolve} pour 
+résoudre l'équation de schr\"odinger pendant l'intervalle de temps 
+$t\in[0,30]$. Calculer, dans le même intervalle de temps les valeurs moyennes 
+de $\mathtt{P}_+$, $\mathtt{P}_-$, $\mathtt{H}$ et $\mathtt{H^2}$.
 
-\textbf{Note} : la valeur moyenne $\bra{\psi(t)}\mathtt{P}_+\ket{\psi(t)}=\bra{\psi(t)}+\rangle_x ._x\langle+\ket{\psi(t)}=\mathcal{P}_+(t)$, est la probabilité de trouver le quanton à l'instant $t$ dans l'état $\ket{+}_x$. De même pour $\mathtt{P}_-$.
+On rappelle que la valeur moyenne 
+$\bra{\psi(t)}\mathtt{P}_+\ket{\psi(t)}=\bra{\psi(t)}+\rangle_x 
+\cdot_x\langle+\ket{\psi(t)}=\mathcal{P}_+(t)$, est la probabilité de trouver 
+le quanton à l'instant $t$ dans l'état $\ket{+}_x$. Il en est de même pour 
+$\mathtt{P}_-$.
 
-\item Représenter, pour $t\in[0,30]$, les probabilités de trouver le quanton dans l'état $\ket{+}_x$ et $\ket{-}_x$. Que remarque-t-on?
+\item Représenter, pour $t\in[0,30]$, les probabilités de trouver le quanton 
+dans l'état $\ket{+}_x$ et $\ket{-}_x$. Que remarque-t-on?
 
-\item Calculer pour $t=30s$ la déviation standard $\Delta \mathtt{H}$ de \texttt{H}.
+\item Calculer pour $t=30s$ la déviation standard $\Delta \mathtt{H}$.
 \end{enumerate}
 
-\subsection{QuTiP - Représentation de la sphère de Bloch avec }
-
-En utilisant le logiciel QuTiP\footnote{Voir l'Annexe \ref{sec:QuTiP} pour 
-l'installation de QuTiP.}, on peut représenter sur la sphère de Bloch un 
-qubit.
-
-Les commandes suivantes représentent respectivement les états $\ket{0}$, 
-$\ket{1}$ et $\ket{\psi}=(\ket{0}+\ket{1})/\sqrt{2}$. Le symbole \# introduit 
-un 
-commentaire.
-
-\begin{lstlisting}
-from qutip import *
-B=Bloch() # Cree une sphère de Bloch vide
-ket0 = basis(2,0) # $\ket{0}$
-ket1 = basis(2,1) # $\ket{1}$
-B.add\_states(ket0) # Represente $\ket{0}$ sur B
-B.add\_states(ket1) # Represente $\ket{1}$ sur B
-B.add\_states((ket0+ket1)/sqrt(2)) # Represente $\ket{\psi}$ sur B
-B.show() # Permet de visualiser B avec $\ket{0}$, $\ket{1}$ et $\ket{\psi}$.
-\end{lstlisting}
-L'image obtenue peut être sauvegardé pour utilisation ultérieur.
-
-\begin{figure}[!h]
-\begin{center}
-\includegraphics[height=7cm]{graphics/Bloch3.png}
-\caption{Représentation avec QuTiP de la sphère de Bloch avec les états 
-$\ket{0}$, $\ket{1}$ et $(\ket{0}+\ket{1})/\sqrt{2}$.}
-\end{center}
-\end{figure}

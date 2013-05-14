@@ -2191,6 +2191,63 @@ qui commutent (ECOC) grâce à la commande python
 \end{lstlisting}
 où \texttt{[exp\_op\_list]} est la liste des opérateurs qui commutent.
 
+\subsection{Sphère de Bloch}
+La sphère de Bloch permet de représenter un l'état d'un qubit (un système à 
+deux niveaux). La classe \texttt{qutip.Bloch} utilise la bibliothèque
+\emph{Matplotlib} pour dessiner la sphère de Bloch à travers la commande 
+\texttt{Bloch()}et y ajouter des points, des états ou même des vecteurs avec 
+l'une des commandes listée dans la Table (\ref{tab:Bloch}).
+
+\begin{table}[htpb]
+\centering
+\begin{tabular}{|l|p{5.5cm}|p{4.5cm}|}\hline \hline
+\textbf{Commande} & \textbf{Variable d'entrée} & \textbf{Description} \\ \hline 
+\hline
+\texttt{add\_points(pnts,\#meth)} & \texttt{pnts} : liste/tableau des 
+points (x,y,z); \texttt{meth}='m' (par défaut 's'): points multicolores & 
+Ajoute un ou plusieurs points à la sphère de Bloch \\ \hline
+\texttt{add\_states(state,\#kind)} & \texttt{state} : Qobj ou liste de Qobj 
+représentant l'état ou l'opérateur densité du système à deux niveaux;  
+\texttt{kind}: chaînes de caractères spécifiant si l'état doit 
+être représenté comme point ('points') ou vecteur (par défaut)&  Ajoute un ou 
+plusieurs états à la sphère de Bloch \\ \hline
+\texttt{add\_vectors(vec)} & \texttt{vec} : liste/tableau des points 
+(x,y,z) donnant la direction et la longueur du vecteur d'état & 
+Ajoute un vecteur ou un ensemble de vecteurs \\ \hline
+\texttt{clear()} & & Efface toute donnée sur la sphère de Bloch \\ \hline
+\texttt{save(\#format,\#dirc)} & \texttt{format} : format ('png' par défaut) du 
+fichier de sortie; \texttt{dirc} : répertoire à utiliser & Sauvegarde la sphère 
+ dans un fichier \\ \hline
+\texttt{show()} & & Génère la sphère de Bloch\\ \hline
+\end{tabular}
+\caption{Commandes applicables à la classe \texttt{qutip.Bloch}. Le symbole \# 
+signifie que l'argument de la commande est optionnelle.}
+\label{tab:Bloch}
+\end{table}
+
+Dans l'exemple qui suit, on créé une sphère de Bloch, on y ajoute des 
+états et on visualise (voir la figure \ref{fig:bloch_0}).\\
+\begin{lstlisting}[commentstyle=\scriptsize]
+psi0 = (basis(2,0) + basis(2,1)).unit()
+psi1 = (basis(2,0) - 3 * basis(2,1)).unit()
+b1=Bloch()
+b1.size=[4,4]
+b1.font_size=14
+b1.add_states([psi0,psi1,basis(2,0),basis(2,1)])
+b1.save(dirc='Images') #saving images to Images directory in current working 
+#directory
+b1.show()
+\end{lstlisting}
+\begin{figure}[htbp]
+\centering
+ \includegraphics[scale=.7]{./graphics/bloch_0.png}
+ % bloch_0.png: 400x400 pixel, 100dpi, 10.16x10.16 cm, bb=0 0 288 288
+ \caption{Sphère de Bloch obtenue avec les états $\ket{0}$, $\ket{1}$, 
+$\ket{\psi_0}=\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$, 
+$\ket{\psi_1}=\frac{1}{\sqrt{10}}(\ket{0}-3\ket{1})$.}
+ \label{fig:bloch_0}
+\end{figure}
+
 \newpage
 
 
