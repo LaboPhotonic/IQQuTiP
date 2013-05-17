@@ -508,12 +508,12 @@ registre de $n$ qubits en n'importe quel état de type $\ket{\psi_1}
 arbitraire de $\ket{0}$ et $\ket{1}$. Ce sont ces états $n$-qubits qu'on appelle
 \textbf{états produit tensoriel ou état séparables}.
 
-Le tableau (\ref{tab:PorteUnit}) présente les portes unitaires single-qubit les
+La Table (\ref{tab:PorteUnit}) présente les portes unitaires single-qubit les
 plus usuelles.
 \begin{table}[htbp]
 \centering
 \begin{tabular}
-[c]{|l|p{6cm}|l|}\hline
+[c]{|l|p{6.5cm}|l|}\hline
 \rowcolor[gray]{.8}\textbf{Nom} & \textbf{Diagramme} & \textbf{Matrice dans}
 $\{\ket{0},\ket{1}\}$\\\hline
 \texttt{Walsh-Hadamard} $\mathtt{W}$ & \hspace*{1em} \mbox{\Qcircuit @C=1em
@@ -745,8 +745,32 @@ en produit d'opérations unitaires single qubit (1-qubit) et de \texttt{CNOT}.
 \end{theorem}
 }}
 \begin{exercise}
-Implémenter, en utilisant QuTiP, la porte logique quantique $CX$.
+En utilisant QuTiP, donner la matrice de la porte logique quantique $CX$.
 \end{exercise}
+
+\begin{solution}
+The QuTiP script of the matrix representation of $\mathtt{CX}$ could be 
+the following 
+\end{solution}
+\begin{lstlisting}
+In [1]: from qutip import *
+
+In [2]: P0=basis(2,0)*basis(2,0).dag()
+
+In [3]: P1=basis(2,1)*basis(2,1).dag()
+
+In [4]: CX=tensor(P0,qeye(2))+tensor(P1,sigmax())
+
+In [13]: CX
+Out[13]: 
+Quantum object: dims = [[2, 2], [2, 2]], shape = [4, 4], type = oper, isherm = 
+True
+Qobj data =
+[[ 1.  0.  0.  0.]
+ [ 0.  1.  0.  0.]
+ [ 0.  0.  0.  1.]
+ [ 0.  0.  1.  0.]]
+\end{lstlisting}
 
 \begin{exercise}
 The most general separable state of the two qubits can be written, up to an
@@ -892,6 +916,7 @@ d'analogue classique.
 input state are $\ket{01}$ and $\ket{11}$.
 \item Give the matrix representation and the Dirac notation representation of
 $\mathtt{CW}$.
+\item Use QuTiP to find the matrix representation of $\mathtt{CW}$.
 \end{enumerate}
 \end{exercise}
 
@@ -921,8 +946,30 @@ respectively
 \ket{10}\bra{11}+\ket{11}\bra{10}-\ket{11}\bra{11}).
 \end{align}
 \end{subequations}
+\item The QuTiP script of the matrix representation of $\mathtt{CW}$ could be 
+the following
 \end{enumerate}
 \end{solution}
+
+\begin{lstlisting}
+In [1]: from qutip import *
+
+In [2]: P0=basis(2,0)*basis(2,0).dag()
+
+In [3]: P1=basis(2,1)*basis(2,1).dag()
+
+In [4]: CW=tensor(P0,qeye(2))+tensor(P1,W)
+
+In [5]: CW
+Out[5]: 
+Quantum object: dims = [[2, 2], [2, 2]], shape = [4, 4], type = oper, isherm = 
+True Qobj data =
+[[ 1.          0.          0.          0.        ]
+ [ 0.          1.          0.          0.        ]
+ [ 0.          0.          0.70710678  0.70710678]
+ [ 0.          0.          0.70710678 -0.70710678]]
+\end{lstlisting}
+
 \end{footnotesize}
 
 \begin{remark}
@@ -1223,6 +1270,55 @@ Mais pourquoi donc est-ce si difficile? Parce que
 \item Le calcul doit être effectué rapidement (\textbf{\emph{décohérence}}).
 \end{itemize}
 
+\subsection{QuTiP - Portes logiques quantiques}
+
+Pour représenter les matrices des portes quantiques \texttt{W}, 
+\texttt{Phase-Shift}, \texttt{CNOT} et \texttt{TOFFOLI}, QuTiP utilise 
+respectivement les objets quantiques ou Qobj prédéfinis \texttt{snot()}, 
+\texttt{phasegate(theta)}, \texttt{cnot()} et \texttt{toffoli()}:
+\begin{lstlisting}
+In [1]: from qutip import *
+
+In [2]: snot()
+Out[2]: 
+Quantum object: dims = [[2], [2]], shape = [2, 2], type = oper, isherm = True
+Qobj data =
+[[ 0.70710678  0.70710678]
+ [ 0.70710678 -0.70710678]]
+
+In [3]: phasegate(pi/4)
+Out[3]: 
+Quantum object: dims = [[2], [2]], shape = [2, 2], type = oper, isherm = False
+Qobj data =
+[[ 1.00000000+0.j          0.00000000+0.j        ]
+ [ 0.00000000+0.j          0.70710678+0.70710678j]]
+
+In [4]: cnot()
+Out[4]: 
+Quantum object: dims = [[2, 2], [2, 2]], shape = [4, 4], type = oper, isherm = 
+True
+Qobj data =
+[[ 1.  0.  0.  0.]
+ [ 0.  1.  0.  0.]
+ [ 0.  0.  0.  1.]
+ [ 0.  0.  1.  0.]]
+
+In [5]: toffoli()
+Out[5]: 
+Quantum object: dims = [[2, 2, 2], [2, 2, 2]], shape = [8, 8], type = oper, 
+isherm = True
+Qobj data =
+[[ 1.  0.  0.  0.  0.  0.  0.  0.]
+ [ 0.  1.  0.  0.  0.  0.  0.  0.]
+ [ 0.  0.  1.  0.  0.  0.  0.  0.]
+ [ 0.  0.  0.  1.  0.  0.  0.  0.]
+ [ 0.  0.  0.  0.  1.  0.  0.  0.]
+ [ 0.  0.  0.  0.  0.  1.  0.  0.]
+ [ 0.  0.  0.  0.  0.  0.  0.  1.]
+ [ 0.  0.  0.  0.  0.  0.  1.  0.]]
+\end{lstlisting}
+
+
 \subsection{Évaluation quantique d'une fonction}
 
 Pour évaluer une fonction $f:\{0,1\}^n\rightarrow\{0,1\}^{m}$, on a besoin
@@ -1332,8 +1428,7 @@ implémentant cet algorithme est donné par la figure \ref{fig:DJ1}.
 \item L'algorithme commence avec deux qubit dans l'état $\ket{0}\ket{1}$.
 
 \item Une transformation de Walsh-Hadamard est d'abord appliquée à chaque
-qubit. Cela
-donne
+qubit. Cela donne
 \begin{equation}
 W\ket{0} W\ket{1}=\frac{1}{2}(\ket{0}+\ket{1})(\ket{0}-\ket{1}).
 \end{equation}
@@ -2050,23 +2145,48 @@ la 3e ligne, $\ket{\psi}$.
 \end{enumerate}
 
 \subsection{QuTiP - Circuit intraportation}
+
 En utilisant le logiciel QuTiP, simuler le circuit de l'exercice 
 \ref{sec:CircIntr}. Votre programme devrait faire ce qui suit:
 
 \begin{enumerate}
-\item Définir en QuTiP toutes les portes logiques du circuit intraportation. Ici pour définir un opérateur $\mathtt{Ai}$ sur la $i^{ème}$ ligne, on utilise la commande \texttt{tensor(I,...,Ai,...,I)} où \texttt{Ai} se trouve à la $i^{ème}$ position et les \texttt{I} sont des opérateur identité d'ordre 2.
+\item Définir, en utilisant autant que possible les \texttt{qutip.qobj} 
+prédéfinis, toutes les portes logiques du circuit intraportation. Il est à 
+noter que, sachant que $I=\texttt{qeye(2)}$ est la matrice identité d'ordre 2, 
+pour définir sur un circuit à $n$ fils ou lignes,
+\begin{itemize}
+\item un opérateur $\mathtt{A}_i$ sur la $i^e$ ligne, on utilise la commande 
+\begin{center}
+$\mathtt{tensor(I_1,\ldots,I_{i-1},A_i,I_{i+1},\ldots,I_n)}$;
+\end{center}
 
-Un opérateur de contrôle \texttt{CA} (contrôle : ligne 1, cible : ligne 3) est défini par la commande \texttt{CA=tensor(ket0*ket0.dag(),I,I)+tensor(ket1*ket1.dag(),I,A)} où \texttt{ket0 = basis(2,0)} et \texttt{ket1 = basis(2,1)}. La ligne de contrôle est indiquée par la présence de \texttt{ket0*ket0.dag()} et de \texttt{ket1*ket1.dag()} alors que la ligne cible est indiquée par \texttt{I} et \texttt{A};
+\item un opérateur de contrôle $\mathtt{CU}_{ij}$, i.e., le contrôle étant sur 
+la ligne $i$ et la cible sur la ligne $j$, on  peut utiliser par la commande, 
+\begin{center}
+$\mathtt{CU}=\mathtt{tensor(I_1,\ldots,I_{i-1},P0,I_{i+1},\ldots,I_j,\ldots,
+I_n)}$\\
+$+ \mathtt{tensor(I_1,\ldots,I_{i-1},P1,I_{i+1},\ldots,U_j,\ldots,I_n)}$,
+   \end{center}
+où \texttt{P0 = basis(2,0)*basis(2,0).dag()} et \texttt{P1= 
+basis(2,1)*basis(2,1).dag()}. 
+\end{itemize}
 
-\item Définir particulièrement l'opérateur $\mathtt{B}$ qui permet de générer l'état EPR partager par Alice et Bob;
+\item Définir l'opérateur $\mathtt{B}$ qui permet de générer l'état EPR 
+partager 
+par Alice et Bob.
 
-\item Définir l'état d'entrée $\ket{\psi}_{in}=\ket{\psi}\otimes\ket{EPR}$ du circuit en utilisant la commande \texttt{tensor(Psi,EPR)}. On prendra pour $\ket{\psi}$, $\alpha=\beta=1/\sqrt{2}$;
+\item Définir l'état d'entrée normalisé 
+$\ket{\psi}_{in}=\ket{\psi}\otimes\ket{EPR}$ du circuit. 
 
-\item Evaluer l'état de sortie $\ket{\psi}_{out}$ du circuit;
+\item Évaluer l'état de sortie $\ket{\psi}_{out}$ du circuit.
 
-\item Evaluer $\rho_{Bob}$, en prenant la trace partielle de $\ket{\psi}_{out}$ : \texttt{rhoBob = PsiOut.ptrace(2)}. $\rho_{Bob}$ est le projecteur sur l'état qui se trouve à la $3^{ème}$ ligne du circuit;
+\item Évaluer $\rho_{Bob}$, en prenant la trace partielle de 
+$\ket{\psi}_{out}$; $\rho_{Bob}$ est le projecteur sur l'état qui se trouve à 
+la $3^e$ ligne du circuit.
 
-\item Calculer $\bra{\psi}\rho_{Bob}\ket{\psi}$. Vous devez trouver le résultat $1$.
+\item Calculer $\bra{\psi}\rho_{Bob}\ket{\psi}$ et comparer avec l'état 
+initial.
+
 \end{enumerate}
 
 
@@ -2115,19 +2235,16 @@ deux dernières lignes du circuit.
 
 
 \subsection{QuTiP - Téléportation d'une paire EPR}
-Simuler le circuit de l'exercice \ref{CircuiEPR} en utilisant QuTiP. Votre programme devrait faire ce qui suit :
+Simuler le circuit de l'exercice \ref{CircuiEPR} en utilisant QuTiP. Votre 
+programme devrait faire ce qui suit :
 
 \begin{enumerate}
-\item Définir les portes logiques quantiques du circuit;
+\item Définir les portes logiques quantiques du circuit.
 
-\item Définir l'état d'entrée du circuit $\ket{EPR}\otimes\ket{GHZ}$
-(on prendra $|\alpha|^2=|\beta|^2=\frac{1}{2}$). Il faudra au préalable 
-évaluer les états $\ket{EPR}$ et $\ket{GHZ}$;
+\item Définir l'état normalisé d'entrée du circuit $\ket{EPR}\otimes\ket{GHZ}$. 
+Il faudra au préalable évaluer les états $\ket{EPR}$ et $\ket{GHZ}$.
 
-\item Évaluer l'état de sortie du circuit, y extraire, à travers la trace 
-partielle, l'état final de la dernière ligne;
-
-\item Comparer avec l'état initial.
+\item Évaluer l'état de sortie du circuit et comparer avec l'état initial.
 
 \end{enumerate}
 

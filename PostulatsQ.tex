@@ -532,16 +532,19 @@ entre ces deux états de base stationnaires.}
 \subsection{QuTiP - Évolution temporelle unitaire}
 
 QuTiP utilise la fonction \texttt{qutip.sesolve} pour résoudre l'équation de 
-schr\"odinger. La syntaxe est\\
-\begin{lstlisting}
- sesolve(H, states, tlist, [exp_op_list])}
-\end{lstlisting}
+schr\"odinger. La syntaxe est
+\begin{center}
+ \texttt{sesolve(H, states, tlist, [exp\_op\_list])}
+\end{center}
 avec
 \begin{itemize}
 \item \texttt{H}=l'opérateur Hamiltonien;
 \item \texttt{states}=l'état initial $\ket{\psi}$;
 \item \texttt{tlist}=l'intervalle de temps que l'on définit en utilisant la
-commande \texttt{linspace(temps\_initial,temps\_final,pas)};
+commande 
+\begin{center}
+\texttt{linspace(temps\_initial,temps\_final,pas)};
+\end{center}
 \item \texttt{[exp\_op\_list]}=la liste des opérateurs dont on évaluera les 
 valeurs moyennes pendant \texttt{tlist}.
 \end{itemize}
@@ -556,10 +559,12 @@ des opérateurs (\texttt{exp\_op\_list}) pendant de l'intervalle de temps
 
 Une classe d'objet générique \texttt{qutip.Odedata} possède plusieurs 
 propriétés 
-qui stockent les informations sur la simulation et qui sont regroupées dans le 
-tableau ci-dessous:
+qui stockent les informations sur la simulation et qui sont regroupées dans la 
+Table \ref{tab:Odedata}.
+
+\begin{table}[htp]
 \centering
-\begin{tabular}{|l|l|l} \hline \hline
+\begin{tabular}{|l|p{7cm}|l|} \hline \hline
 \textbf{Attributs} & \textbf{Description} & \textbf{Schrödinger}\\ \hline \hline
 \texttt{odedata.solver} & Chaîne de caractère précisant la méthode utilisée & 
 \texttt{sesolver}\\ \hline
@@ -571,11 +576,15 @@ l'équation d'évolution & \texttt{tlist}\\ \hline
 \texttt{exp\_op\_list} \\ \hline
 \texttt{odedata.num\_expect} & Nombre des valeurs moyennes calculées & $n$ \\ 
 \hline
-\\\hline
 \end{tabular}
+\caption{Commandes applicables à la classe \texttt{qutip.Odedata}.}
+\label{tab:Odedata}
+\end{table}
 
 Pour visualiser l'évolution du système, on utilise la commande 
+\begin{center}
 \texttt{plot(odedata.times,odedata.expect)}.
+\end{center}
 
 \begin{example}
 On considère un système à deux niveaux dont l'état initial est 
@@ -609,8 +618,8 @@ title('Evolution dun systeme')
 legend(("Moyenne de Sigma-Z", "Moyenne de P0"))
 show()
 \end{lstlisting}
-Le tracé de cette évolution est donnée par la Figure 
-\ref{fig:EvolSyst1}.
+Le tracer de cette évolution est donnée par la Figure \ref{fig:EvolSyst1}.
+
 \begin{figure}[htbp]
 \centering
  \includegraphics[scale=.6]{./graphics/EvolSyst1.png}

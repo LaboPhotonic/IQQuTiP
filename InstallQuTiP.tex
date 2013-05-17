@@ -1,6 +1,11 @@
 \chapter{Installation de QuTiP et commandes usuelles}
 \label{sec:QuTiP}
 
+\minitoc
+
+\bigskip
+
+
 QuTiP, \textbf{Qu}antum \textbf{T}oolbox \textbf{i}n \textbf{P}ython, est un 
 logiciel \emph{libre ou open-source} de calculs en optique quantique avec des 
 applications en information quantique\footnote{J. R. Johansson, P.D. Nation, and 
@@ -121,8 +126,7 @@ crée et manipule les objets quantiques, sous forme de matrices. Cette classe
 possède 
 \begin{itemize}
  \item des \emph{attributs} auxquels on peut accéder pour avoir des 
-informations 
-sur l'objet quantique 
+informations sur l'objet quantique 
 \begin{itemize}
 \item \texttt{dims=}dimension (de l'espace de Hilbert) de la fonction; 
 
@@ -516,9 +520,9 @@ Out[41]: 0.9999999999999998
 
 QuTiP permet de faire la diagonalisation simultanée de matrices hermitiennes 
 qui commutent (ECOC) grâce à la commande python
-\begin{lstlisting}
- simdiag([exp_op_list], evals=True)
-\end{lstlisting}
+\begin{center}
+ \texttt{simdiag([exp\_op\_list], evals=True)}
+\end{center}
 où \texttt{[exp\_op\_list]} est la liste des opérateurs qui commutent.
 
 \subsection{Sphère de Bloch}
@@ -528,7 +532,7 @@ deux niveaux). La classe \texttt{qutip.Bloch} utilise la bibliothèque
 \texttt{Bloch()}et y ajouter des points, des états ou même des vecteurs avec 
 l'une des commandes listée dans la Table (\ref{tab:Bloch}).
 
-\begin{table}[htpb]
+\begin{table}[htp]
 \centering
 \begin{tabular}{|l|p{5.5cm}|p{4.5cm}|}\hline \hline
 \textbf{Commande} & \textbf{Variable d'entrée} & \textbf{Description} \\ \hline 
@@ -586,16 +590,19 @@ temporelle de Schr\"odinger
 i\hbar\dfrac{d\ket{\psi}}{dt}=\texttt{H}\ket{\psi}.
 \end{equation}
 QuTiP utilise la fonction \texttt{qutip.sesolve} pour résoudre l'équation de 
-schr\"odinger. La syntaxe est\\
-\begin{lstlisting}
- sesolve(H, states, tlist, [exp_op_list])}
-\end{lstlisting}
+schr\"odinger. La syntaxe est
+\begin{center}
+ \texttt{sesolve(H, states, tlist, [exp\_op\_list])}
+\end{center}
 avec
 \begin{itemize}
 \item \texttt{H}=l'opérateur Hamiltonien;
 \item \texttt{states}=l'état initial $\ket{\psi}$;
 \item \texttt{tlist}=l'intervalle de temps que l'on définit en utilisant la
-commande \texttt{linspace(temps\_initial,temps\_final,pas)};
+commande 
+\begin{center}
+\texttt{linspace(temps\_initial,temps\_final,pas)};
+\end{center}
 \item \texttt{[exp\_op\_list]}=la liste des opérateurs dont on évaluera les 
 valeurs moyennes pendant \texttt{tlist}.
 \end{itemize}
@@ -609,11 +616,12 @@ des opérateurs (\texttt{exp\_op\_list}) pendant de l'intervalle de temps
 (\texttt{tlist}).
 
 Une classe d'objet générique \texttt{qutip.Odedata} possède plusieurs propriétés 
-qui stockent les informations sur la simulation et qui sont regroupées dans le 
-tableau ci-dessous:
+qui stockent les informations sur la simulation et qui sont regroupées dans la 
+Table \ref{tab:Odedata}
 
-\begin{center}
-\begin{tabular}{|l|l|l} \hline \hline
+\begin{table}[htp]
+\centering
+\begin{tabular}{|l|p{7cm}|l|} \hline \hline
 \textbf{Attributs} & \textbf{Description} & \textbf{Schrödinger}\\ \hline \hline
 \texttt{odedata.solver} & Chaîne de caractère précisant la méthode utilisée & 
 \texttt{sesolver}\\ \hline
@@ -625,12 +633,15 @@ l'équation d'évolution & \texttt{tlist}\\ \hline
 \texttt{exp\_op\_list} \\ \hline
 \texttt{odedata.num\_expect} & Nombre des valeurs moyennes calculées & $n$ \\ 
 \hline
-\\\hline
 \end{tabular}
-\end{center}
+\caption{Commandes applicables à la classe \texttt{qutip.Odedata}.}
+\label{tab:Odedata}
+\end{table}
 
 Pour visualiser l'évolution du système, on utilise la commande 
+\begin{center}
 \texttt{plot(odedata.times,odedata.expect)}.
+\end{center}
 
 \begin{example}
 On considère un système à deux niveaux dont l'état initial est 
@@ -664,8 +675,8 @@ title('Evolution dun systeme')
 legend(("Moyenne de Sigma-Z", "Moyenne de P0"))
 show()
 \end{lstlisting}
-Le tracé de cette évolution est donnée par la Figure 
-\ref{fig:EvolSyst1}.
+Le tracer de cette évolution est donnée par la Figure \ref{fig:EvolSyst1}.
+
 \begin{figure}[htbp]
 \centering
  \includegraphics[scale=.6]{./graphics/EvolSyst1.png}
@@ -760,30 +771,88 @@ Qobj data =
  [ 0.00000000+0.j]]
 \end{lstlisting}
 
-% \subsection{Trace partielle}
-% 
-% La trace partielle quant-à elle peut être comprise comme l'opération inverse du 
-% produit tensoriel. Elle permet en fait d'extraire l'état/opérateur d'un ou des 
-% plusieurs sous-système contenu dans l'état/opérateur du système global.
-% 
-% En QuTiP, la commande qui permet de calculer la trace partielle est 
-% \texttt{ptrace(Op,sel)}, \texttt{Op} est l'état/opérateur du système global et 
-% \texttt{sel} est le/les numéro(s) du/des sous-système(s) à extraire. La 
-% commande \texttt{ptrace()} renvoie le résultat sous la forme d'un opérateur 
-% projecteur lorsqu'il s'agit des états ($\ket{\psi}\bra{\psi}$ lorsque l'état 
-% voulu est $\ket{\psi}$). Nous allons voir plus d'exemple dans la suite.
-% 
-% On considère le système décrit à la section (\ref{tensor}).
-% 
-% On extrait l'état du sous-système 2 de l'état $\ket{\psi}=H\ket{\psi_0}$ par la 
-% commande :\\
-% \begin{lstlisting}
-% Psi2 = Psi.ptrace(1) ou Psi2 = ptrace(Psi,1)# la numérotation commence à 0
-% \end{lstlisting}
-% Comme nous l'avions dit précédemment la commande \texttt{ptrace} renvoie 
-% l'opérateur projecteur sur l'état recherché. \texttt{Psi2} que nous venons de 
-% calculer est en fait égale à $P_2=\ket{\psi_2}\bra{\psi_2}$.
-% 
-% De même on peut extraire l'état du sous-système 1 et 3 respectivement par :\\ 
-% \texttt{Psi1=ptrace(Psi,0) et Psi3 = ptrace(Psi,2)}.
+\subsection{Trace partielle}
 
+La trace partielle peut être comprise comme l'opération inverse du produit 
+tensoriel. Elle permet d'extraire l'état/opérateur d'un ou des plusieurs 
+sous-système contenu dans l'état/opérateur du système global.
+
+QuTiP utilise la classe \texttt{ qutip.Qobj.ptrace}, pour calculer la trace 
+partielle à travers la commande \texttt{ptrace(Op,sel)}, où \texttt{Op} est 
+l'état/opérateur du système global et \texttt{sel} est le/les numéro(s) du/des 
+sous-système(s) à extraire. La commande \texttt{ptrace()} renvoie le résultat 
+sous la forme d'un opérateur projecteur lorsqu'il s'agit des états 
+($\ket{\psi}\bra{\psi}$ lorsque l'état voulu est $\ket{\psi}$).
+
+On considère le système décrit à la section (\ref{sec:tensor}). On extrait 
+l'état des sous-systèmes 1, 2 et 3 de l'état $\ket{\psi}=H\ket{\psi_0}$ par le 
+script suivant:\\
+\begin{lstlisting}
+Psi1=Psi.ptrace(0) # ou Psi1 = ptrace(Psi,0)
+Psi2=Psi.ptrace(1) # ou Psi2 = ptrace(Psi,1)
+Psi3=Psi.ptrace(2) # ou Psi3 = ptrace(Psi,2)
+
+print (Psi1)
+print (Psi2)
+print (Psi3)
+\end{lstlisting}
+On obtient à la sortie,
+\begin{lstlisting}
+Quantum object: dims = [[2], [2]], shape = [2, 2], type = oper, isherm = True
+Qobj data =
+[[ 1.  0.]
+ [ 0.  1.]]
+Quantum object: dims = [[2], [2]], shape = [2, 2], type = oper, isherm = True
+Qobj data =
+[[ 1.  0.]
+ [ 0.  1.]]
+Quantum object: dims = [[2], [2]], shape = [2, 2], type = oper, isherm = True
+Qobj data =
+[[ 1.5  0.5]
+ [ 0.5  0.5]]
+\end{lstlisting}
+
+\texttt{Psin} que nous venons de calculer est en fait égale à 
+$P_n=\ket{\psi_n}\bra{\psi_n}$.
+
+\subsection{Sauvegarder les objets QuTiP et les données}
+
+\begin{enumerate}
+\item Le contenu des objets quantiques  (qutip.Qobj, qutip.Odedata, etc.) peut 
+être stocké dans un fichier et lu ultérieurement respectivement avec les 
+fonctions \texttt{qutip.fileio.qsave} et \texttt{qutip.fileio.qload} à travers 
+les syntaxes 
+
+\begin{center}
+\texttt{qsave(data, name='filename')},
+\end{center}
+qui sauvegarde le \emph{data} dans fichier '\emph{filename.qu}' dans le 
+répertoire courant;
+\begin{center}
+qload('filename'),
+\end{center}
+qui charge le contenu du fichier '\emph{filename.qu}' du répertoire courant.
+
+\item Lorsque les données exportées dans un programme autre que QuTiP ou 
+python, il est préférable de les stocker sous forme d'un fichier texte de 
+type CSV (comma-separated values) pour d'autres calculs ou TSV (tab-separated 
+values) pour une visualisation (tracer de figures). On utilise alors, pour 
+stocker et lire ou charger les données, les fonctions 
+\texttt{qutip.file\_data\_store} et \texttt{qutip.file\_data\_read} à travers 
+les syntaxes
+\begin{center}
+\texttt{file\_data\_store('filename.dat', data, numtype="complex", 
+numformat="decimal", sep=",")},
+\end{center}
+où '\emph{filename.dat}' est le nom du fichier, \emph{data} est le contenu à 
+stocker (un vecteur \textbf{numpy}), \emph{numtype} (optionel) est un drapeau 
+indiquant le type valeurs numériques (complexe ou réelle), \texttt{numformat} 
+(optionel) est un drapeau spécifiant le format numérique des valeurs 
+(\texttt{exp} pour le format 1.0e1 et \texttt{decimal} pour le format 
+10.0), et \emph{sep} indiquant le type de séparation (tab, space, comma, 
+semicolon, etc.);
+
+\begin{center}
+file\_data\_read('filename.dat', sep=",").
+\end{center}
+\end{enumerate}
